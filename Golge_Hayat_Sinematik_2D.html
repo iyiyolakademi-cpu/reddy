@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gölge Hayat</title>
+<style>
+*{box-sizing:border-box}
+:root{
+  --bg:#0b0e13;
+  --panel:#151a22;
+  --panel2:#1b222d;
+  --line:#2a3442;
+  --text:#f3f0ea;
+  --muted:#9da7b4;
+  --accent:#c69b5e;
+  --accent2:#8ea2ba;
+  --danger:#b96363;
+}
+body{
+  margin:0;
+  min-height:100vh;
+  color:var(--text);
+  font-family:Inter,Arial,Helvetica,sans-serif;
+  background:
+    radial-gradient(circle at 50% -12%,#223042 0,#111720 42%,#090c11 78%,#07090d 100%);
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;
+  background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px);
+  background-size:42px 42px;
+}
+.game{max-width:440px;margin:auto;min-height:100vh;padding:20px 14px 36px;position:relative}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo h1{margin:0;font-family:Georgia,serif;font-style:italic;font-size:30px;letter-spacing:.01em}
+.logo p{margin:4px 0 0;color:var(--muted);font-size:12px}
+.reset{
+  border:1px solid #364353;background:#151b23;color:#d8c7a8;border-radius:12px;
+  width:42px;height:42px;font-size:19px;cursor:pointer
+}
+.life{margin:17px 0 13px}
+.row{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
+.track{height:6px;background:#ffffff0c;border-radius:999px;overflow:hidden;margin-top:6px;border:1px solid #ffffff08}
+.fill{height:100%;background:linear-gradient(90deg,#7d93aa,#c69b5e);transition:.35s ease}
+.stats{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:7px;
+  background:#111720cc;border:1px solid var(--line);border-radius:17px;padding:11px;
+  backdrop-filter:blur(8px)
+}
+.stat{min-width:0}
+.statname{font-size:9px;color:#aab3bf;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.statnum{font-weight:700;font-size:13px;margin:5px 0;color:#f2eee7}
+.stat .track{height:5px;margin:0}
+.stat .fill{background:linear-gradient(90deg,#7690aa,#c7a36f)}
+.chapter{margin-top:16px;font-size:10px;letter-spacing:.14em;color:#c6a476;font-weight:800}
+.scene{
+  margin-top:8px;background:linear-gradient(180deg,#19212b,#131922);
+  border:1px solid #303a48;border-radius:20px;overflow:hidden;
+  box-shadow:0 20px 50px #0008
+}
+.stage{
+  height:310px;position:relative;overflow:hidden;
+  background:
+    linear-gradient(180deg,rgba(6,9,13,.12),rgba(7,10,14,.7)),
+    radial-gradient(circle at 63% 24%,rgba(211,175,115,.18),transparent 28%),
+    linear-gradient(135deg,#1d2936 0,#111820 47%,#17191c 100%);
+}
+.stage:before{
+  content:"";position:absolute;inset:0;
+  background:
+    linear-gradient(90deg,transparent 0 66%,rgba(222,184,118,.08) 66% 67%,transparent 67%),
+    linear-gradient(180deg,transparent 0 67%,rgba(255,255,255,.035) 67% 68%,transparent 68%);
+  opacity:.65
+}
+.stage:after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:88px;
+  background:linear-gradient(transparent,#10151c 88%);
+  z-index:10
+}
+.person{
+  position:absolute;bottom:2px;width:185px;height:292px;
+  transition:.35s ease;filter:brightness(.45) saturate(.75);opacity:.6;
+  transform-origin:bottom center;z-index:3
+}
+.person.active{filter:brightness(1) saturate(1);opacity:1;transform:scale(1.04);z-index:6}
+.person.left{left:-4px}.person.right{right:-4px}
+.portrait{width:100%;height:100%;overflow:visible}
+.nameplate{
+  position:absolute;bottom:11px;left:50%;transform:translateX(-50%);
+  z-index:12;background:#0a0d12df;border:1px solid #3b4654;border-radius:999px;
+  padding:6px 11px;font-size:11px;white-space:nowrap;color:#ebe4d9
+}
+.dialogue{padding:18px 18px 20px;background:linear-gradient(180deg,#171e27,#111720)}
+.speaker{font-size:10px;font-weight:800;letter-spacing:.12em;color:#c9a66f}
+.title{font-family:Georgia,serif;font-size:21px;margin:8px 0 10px;line-height:1.3}
+.text{font-size:14px;line-height:1.6;color:#e2e5e9;min-height:74px}
+.choices{display:grid;gap:9px;margin-top:17px}
+.choice{
+  width:100%;text-align:left;padding:14px 14px;border-radius:13px;
+  border:1px solid #34404d;background:#1a222c;color:#f3f0ea;
+  cursor:pointer;font-size:14px;font-weight:700;transition:.2s ease
+}
+.choice:hover{background:#222d39;border-color:#566576;transform:translateY(-1px)}
+.result{
+  margin-top:14px;padding:14px;border-radius:13px;
+  background:#b78c5517;border:1px solid #b78c5552;font-size:13.5px;line-height:1.55
+}
+.next{
+  margin-top:12px;width:100%;padding:13px;border:0;border-radius:12px;
+  background:linear-gradient(135deg,#d2ad76,#b98b4d);color:#15110c;font-weight:800;cursor:pointer
+}
+.hidden{display:none}
+.relations{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.badge{
+  padding:6px 9px;border-radius:999px;background:#0d1218;border:1px solid #303a47;
+  font-size:11px;color:#b8c0ca
+}
+.mem{
+  margin-top:15px;background:#0f141bcc;border:1px solid #252e39;border-radius:15px;padding:13px
+}
+.mem h3{font-size:12px;margin:0 0 8px;color:#d8c7aa}
+.mem div{font-size:11.5px;color:#929daa;line-height:1.55}
+@media(max-width:370px){
+  .stage{height:278px}
+  .person{width:168px;height:272px}
+  .person.left{left:-13px}.person.right{right:-13px}
+}
+</style>
+</head>
+<body>
+<div class="game">
+  <div class="top">
+    <div class="logo"><h1>Gölge Hayat</h1><p>Seçimlerin seni yıllarca takip eder.</p></div>
+    <button class="reset" id="reset">↻</button>
+  </div>
+
+  <div class="life">
+    <div class="row"><span id="ageLabel">18 Yaş</span><span>Hayat</span></div>
+    <div class="track"><div class="fill" id="lifeBar" style="width:18%"></div></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="statname">❤️ Sağlık</div><div class="statnum" id="h">75</div><div class="track"><div class="fill" id="hb"></div></div></div>
+    <div class="stat"><div class="statname">🙂 Mutluluk</div><div class="statnum" id="m">68</div><div class="track"><div class="fill" id="mb"></div></div></div>
+    <div class="stat"><div class="statname">💰 Para</div><div class="statnum" id="p">35</div><div class="track"><div class="fill" id="pb"></div></div></div>
+    <div class="stat"><div class="statname">🤝 İlişki</div><div class="statnum" id="r">72</div><div class="track"><div class="fill" id="rb"></div></div></div>
+  </div>
+
+  <div class="chapter" id="chapter"></div>
+
+  <div class="scene">
+    <div class="stage" id="stage"></div>
+    <div class="dialogue">
+      <div class="speaker" id="speaker"></div>
+      <div class="title" id="title"></div>
+      <div class="text" id="text"></div>
+      <div class="relations" id="relations"></div>
+      <div class="choices" id="choices"></div>
+      <div class="result hidden" id="result"></div>
+      <button class="next hidden" id="next">Devam Et →</button>
+    </div>
+  </div>
+
+  <div class="mem">
+    <h3>Hayat İzleri</h3>
+    <div id="memories">Henüz kalıcı bir karar vermedin.</div>
+  </div>
+</div>
+
+<script>
+const clamp=n=>Math.max(0,Math.min(100,n));
+
+const initialState=()=>({
+  age:18,
+  stats:{h:75,m:68,p:35,r:72},
+  rel:{Deniz:70,Ela:0,Selim:0,Arda:0},
+  flags:{},
+  memories:[],
+  scene:"intro"
+});
+
+let state=initialState();
+let pendingNext=null;
+
+const characters={
+  Deniz:{class:"deniz",side:"left"},
+  Ela:{class:"ela",side:"right"},
+  Selim:{class:"selim",side:"left"},
+  Arda:{class:"arda",side:"right"}
+};
+
+function personHTML(name,active){
+  const c=characters[name];
+
+  const palettes={
+    Deniz:{skin:"#c98f72",skin2:"#ad735c",hair:"#211915",hair2:"#3a2a22",shirt:"#32465e",shirt2:"#223142",eye:"#2c241f",brow:"#251b17"},
+    Ela:{skin:"#e0ac90",skin2:"#c88e76",hair:"#5b3529",hair2:"#2f201d",shirt:"#684753",shirt2:"#44303a",eye:"#392b25",brow:"#533126"},
+    Selim:{skin:"#bd8d73",skin2:"#9e705c",hair:"#b6b2ab",hair2:"#77736e",shirt:"#484d55",shirt2:"#30343a",eye:"#322a26",brow:"#77716a"},
+    Arda:{skin:"#d1a084",skin2:"#b57e67",hair:"#151316",hair2:"#2d272d",shirt:"#3d4654",shirt2:"#272e38",eye:"#232025",brow:"#19171b"}
+  };
+  const p=palettes[name];
+
+  return `<div class="person ${c.class} ${c.side} ${active?"active":""}">
+    <svg class="portrait" viewBox="0 0 190 300" aria-label="${name} 2D karakteri">
+      <defs>
+        <linearGradient id="skin-${name}" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="${p.skin}"/><stop offset="1" stop-color="${p.skin2}"/>
+        </linearGradient>
+        <linearGradient id="shirt-${name}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="${p.shirt}"/><stop offset="1" stop-color="${p.shirt2}"/>
+        </linearGradient>
+        <radialGradient id="faceLight-${name}" cx=".38" cy=".25" r=".75">
+          <stop offset="0" stop-color="#ffffff" stop-opacity=".15"/><stop offset=".65" stop-color="#ffffff" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <ellipse cx="95" cy="294" rx="74" ry="10" fill="#000" opacity=".28"/>
+      <path d="M45 292 C47 222 55 183 78 169 L112 169 C137 185 145 226 148 292 Z" fill="url(#shirt-${name})"/>
+      <path d="M76 170 L95 193 L114 170" fill="none" stroke="#ffffff" stroke-opacity=".14" stroke-width="3"/>
+      <path d="M85 146 L105 146 L109 178 Q95 188 81 178 Z" fill="url(#skin-${name})"/>
+
+      <path d="M58 76 Q60 29 96 22 Q137 27 135 80 L129 124 Q119 154 95 159 Q69 153 59 123 Z" fill="url(#skin-${name})"/>
+      <path d="M60 86 Q46 89 53 107 Q57 116 64 111" fill="${p.skin2}"/>
+      <path d="M130 86 Q144 89 137 107 Q133 116 126 111" fill="${p.skin2}"/>
+
+      ${name==="Ela"
+        ? `<path d="M52 79 Q47 26 92 15 Q139 16 143 71 Q141 117 136 145 Q132 108 130 73 Q115 54 90 49 Q69 53 59 82 Q57 122 51 147 Q45 112 52 79Z" fill="${p.hair}"/>
+           <path d="M56 63 Q75 28 111 37 Q132 42 139 69 Q123 55 104 54 Q78 50 58 76Z" fill="${p.hair2}" opacity=".9"/>`
+        : name==="Selim"
+        ? `<path d="M60 67 Q68 28 97 25 Q126 28 134 66 Q118 52 96 51 Q76 51 60 67Z" fill="${p.hair}"/>
+           <path d="M63 58 Q80 31 101 31 Q120 34 131 60" fill="none" stroke="${p.hair2}" stroke-width="6" opacity=".7"/>`
+        : name==="Arda"
+        ? `<path d="M58 72 Q59 27 96 19 Q129 22 137 62 Q119 51 104 48 Q83 45 61 70Z" fill="${p.hair}"/>
+           <path d="M61 53 Q84 30 111 33 Q126 37 134 56" fill="none" stroke="${p.hair2}" stroke-width="7"/>`
+        : `<path d="M57 73 Q58 29 95 18 Q131 23 137 66 Q119 52 104 49 Q80 45 59 72Z" fill="${p.hair}"/>
+           <path d="M64 52 Q83 30 112 34 Q125 37 134 57" fill="none" stroke="${p.hair2}" stroke-width="7"/>`
+      }
+
+      <path d="M68 88 Q77 82 87 86" fill="none" stroke="${p.brow}" stroke-width="3.2" stroke-linecap="round"/>
+      <path d="M104 86 Q114 82 123 88" fill="none" stroke="${p.brow}" stroke-width="3.2" stroke-linecap="round"/>
+      <ellipse cx="79" cy="96" rx="7" ry="4.6" fill="#f5f1ec"/>
+      <ellipse cx="113" cy="96" rx="7" ry="4.6" fill="#f5f1ec"/>
+      <circle cx="80" cy="96" r="2.8" fill="${p.eye}"/>
+      <circle cx="112" cy="96" r="2.8" fill="${p.eye}"/>
+      <circle cx="79.2" cy="95.2" r=".7" fill="#fff"/>
+      <circle cx="111.2" cy="95.2" r=".7" fill="#fff"/>
+
+      <path d="M96 98 Q91 113 96 116 Q101 115 103 113" fill="none" stroke="${p.skin2}" stroke-width="2.1" stroke-linecap="round"/>
+      <path d="M84 130 Q95 136 107 129" fill="none" stroke="#744b47" stroke-width="2.2" stroke-linecap="round"/>
+      ${name==="Selim" ? `<path d="M78 123 Q95 151 113 123 Q110 150 95 158 Q80 150 78 123Z" fill="#b1aaa3" opacity=".8"/>` : ""}
+      ${name==="Arda" ? `<path d="M75 119 Q95 127 116 118" fill="none" stroke="#2b2524" stroke-width="1.6" opacity=".65"/>` : ""}
+      <path d="M60 77 Q66 41 96 34 Q126 40 133 72" fill="none" stroke="#ffffff" stroke-opacity=".07" stroke-width="5"/>
+      <path d="M58 76 Q60 29 96 22 Q137 27 135 80 L129 124 Q119 154 95 159 Q69 153 59 123 Z" fill="url(#faceLight-${name})"/>
+
+      <path d="M45 292 Q48 219 72 182" fill="none" stroke="#ffffff" stroke-opacity=".06" stroke-width="4"/>
+      <path d="M145 292 Q142 219 118 182" fill="none" stroke="#000000" stroke-opacity=".12" stroke-width="4"/>
+    </svg>
+    <div class="nameplate">${name}</div>
+  </div>`;
+}
+
+const scenes={
+intro:{
+  age:18,chapter:"BÖLÜM I · BAŞLANGIÇ",speaker:"ANLATICI",title:"Babanın Mektubu",
+  text:"18. yaş gününde odandaki eski çekmeceyi açıyorsun. İçeride babanın yıllar önce bıraktığı bir mektup var. Üzerinde sadece: “Doğru zamanda aç.” yazıyor.",
+  people:[],
+  choices:[
+    {label:"Mektubu şimdi aç",d:{m:-2,r:3},flag:["letter",true],mem:"18 yaşında babanın gizemli mektubunu açtın.",result:"Mektubun içinde tek cümle var: “Bir gün yükselirsen, yanında kimlerin eksildiğine bak.” Altında bir isim: Selim Kara.",next:"denizCafe"},
+    {label:"Mektubu sakla",d:{m:2},flag:["keptLetter",true],mem:"Babanın mektubunu açmadan sakladın.",result:"Mektubu kapatıp cebine koyuyorsun. İçinde açıklayamadığın bir huzursuzluk kalıyor.",next:"denizCafe"}
+  ]
+},
+denizCafe:{
+  age:19,chapter:"BÖLÜM I · İLK KARAR",speaker:"DENİZ",title:"Bir Fikrim Var",
+  text:"“Sana çılgınca gelecek ama dinle. İki yıl boyunca bütün gücümüzü verirsek kendi işimizi kurabiliriz. Paramız az, tecrübemiz yok... ama ben sana güveniyorum.”",
+  people:["Deniz"],active:"Deniz",
+  choices:[
+    {label:"Seninleyim. Başlayalım.",d:{p:-12,m:10,r:8,h:-3},rel:["Deniz",14],flag:["startup",true],mem:"Deniz ile ilk girişimini kurdun.",result:"Deniz gülümsüyor. “O zaman bugün hayatımızın ilk günü.” İkiniz küçük bir odada çalışmaya başlıyorsunuz.",next:"crisis22"},
+    {label:"Ben güvenli bir iş istiyorum.",d:{p:17,m:-4,r:-8},rel:["Deniz",-18],flag:["job",true],mem:"Deniz yerine güvenli kariyeri seçtin.",result:"Deniz bir süre sessiz kalıyor. “Anladım.” diyor. Sonra projeyi tek başına yapacağını söylüyor.",next:"crisis22"}
+  ]
+},
+crisis22:{
+  age:22,chapter:"BÖLÜM II · ÜÇ YIL SONRA",speaker:"DENİZ",title:"İlk Büyük Kırılma",
+  text:()=>state.flags.startup
+   ? "“Kasada iki aylık paramız kaldı. Ya bütün paramızı ürüne yatıracağız ya da burada duracağız. Ben devam etmek istiyorum.”"
+   : "Üç yıl sonra Deniz seni arıyor. “Proje büyüdü ama batmak üzereyim. Bana ortak olur musun?”",
+  people:["Deniz"],active:"Deniz",
+  choices:()=>state.flags.startup?[
+    {label:"Sonuna kadar devam et.",d:{p:-14,m:5,h:-5},rel:["Deniz",12],flag:["allIn",true],mem:"Şirket batma noktasındayken vazgeçmedin.",result:"Son paranızı da yatırıyorsunuz. Haftalar sonra ürün beklenmedik şekilde yayılmaya başlıyor.",next:"arda"},
+    {label:"Burada duralım.",d:{p:5,m:-12,r:-10},rel:["Deniz",-20],flag:["quit",true],mem:"İlk girişiminden vazgeçtin.",result:"Deniz senden ayrılıyor. “Belki de gerçekten aynı şeyi istemiyormuşuz.” Bu söz yıllarca aklında kalıyor.",next:"arda"}
+  ]:[
+    {label:"Deniz'e ortak ol.",d:{p:-15,m:9,r:10},rel:["Deniz",15],flag:["lateStartup",true],mem:"Yıllar sonra Deniz'in girişimine ortak oldun.",result:"Deniz elini uzatıyor: “Geç kaldın ama hâlâ yerin var.”",next:"arda"},
+    {label:"Hayır, kariyerime devam edeceğim.",d:{p:12,m:-5,r:-8},rel:["Deniz",-15],flag:["careerOnly",true],mem:"Deniz'i ikinci kez geri çevirdin.",result:"Telefon kapanıyor. Sonraki yıllarda konuşmalarınız seyrekleşiyor.",next:"arda"}
+  ]
+},
+arda:{
+  age:25,chapter:"BÖLÜM II · YÜKSELİŞ",speaker:"ARDA",title:"Büyük Teklif",
+  text:()=>state.flags.startup||state.flags.lateStartup
+   ? "“Şirketinize yatırım yapmak istiyorum. Size büyümek için gereken her şeyi veririm. Karşılığında %45 ortaklık.”"
+   : "“Seni yönetim ekibine almak istiyorum. Maaşın iki katına çıkacak. Ama hayatının büyük kısmı bu işe ait olacak.”",
+  people:["Deniz","Arda"],active:"Arda",
+  choices:()=>state.flags.startup||state.flags.lateStartup?[
+    {label:"Arda'nın yatırımını kabul et.",d:{p:28,m:5,r:-5},rel:["Arda",25],rel2:["Deniz",-15],flag:["ardaDeal",true],mem:"Arda'yı şirketine ortak ettin.",result:"Arda elini sıkıyor. Deniz ise odadan çıkarken sana bakmıyor.",next:"ela"},
+    {label:"Bağımsız kal.",d:{p:-8,m:6,r:7},rel:["Deniz",14],flag:["independent",true],mem:"Büyük yatırımı reddettin.",result:"Arda gülümsüyor: “Bir gün fikrini değiştireceksin.” Deniz ise ilk kez rahatlıyor.",next:"ela"}
+  ]:[
+    {label:"Teklifi kabul et.",d:{p:25,m:-7,h:-10},rel:["Arda",20],flag:["ardaCareer",true],mem:"Arda'nın kariyer teklifini kabul ettin.",result:"Ünvanın büyüyor. Günlerin ise ofis, toplantı ve uykudan ibaret hale geliyor.",next:"ela"},
+    {label:"Reddet. Hayatım işten ibaret değil.",d:{m:8,h:5,p:-4},flag:["balanced",true],mem:"Daha fazla para yerine zamanını seçtin.",result:"Arda şaşırıyor. “Bu fırsat bir daha gelmeyebilir.” Sen yine de kapıdan çıkıyorsun.",next:"ela"}
+  ]
+},
+ela:{
+  age:27,chapter:"BÖLÜM III · HAYATA GİREN BİRİ",speaker:"ELA",title:"Bir Kahve Daha?",
+  text:"“Sen sürekli yarını düşünüyorsun. Başarı, para, gelecek... Peki bugün? Bugün gerçekten mutlu musun?” Ela'nın sorusu seni hazırlıksız yakalıyor.",
+  people:["Ela"],active:"Ela",
+  choices:[
+    {label:"Ela'ya hayatımda yer aç.",d:{m:15,r:18,p:-4},rel:["Ela",28],flag:["ela",true],mem:"Ela ile bir ilişkiye başladın.",result:"Ela gülümsüyor. “O zaman bir kahve daha.” O gece saatlerce konuşuyorsunuz.",next:"age33"},
+    {label:"Şu an ilişkiye zamanım yok.",d:{p:8,m:-8,r:-10},flag:["noEla",true],mem:"Ela'yı kariyerin için hayatından çıkardın.",result:"Ela başını sallıyor. “Belki başka bir hayatta.” Ardından kalkıp gidiyor.",next:"age33"}
+  ]
+},
+age33:{
+  age:33,chapter:"BÖLÜM IV · BEDELLER",speaker:"DENİZ",title:"Eski Dostlar",
+  text:()=> {
+    if(state.rel.Deniz>=75) return "“Ne kadar büyürsek büyüyelim, ilk günümüzü hatırlıyor musun? İki sandalye, eski bir laptop ve saçma derecede büyük hayaller...”";
+    if(state.rel.Deniz<=40) return "Deniz yıllar sonra karşında. “Sana kızgın değilim artık. Sadece bir zamanlar aynı hayatı yaşayacağımızı düşünmüştüm.”";
+    return "Deniz seni arıyor. “Uzun zamandır gerçekten konuşmadık. İşlerden değil, hayattan bahsediyorum.”";
+  },
+  people:["Deniz"],active:"Deniz",
+  choices:[
+    {label:"Her şeyi bırakıp Deniz'le konuş.",d:{m:10,r:12,p:-5},rel:["Deniz",20],flag:["friendship",true],mem:"Yıllar sonra dostluğuna yeniden zaman ayırdın.",result:"Saatlerce konuşuyorsunuz. Başarılar değil, kaybettikleriniz konuşuluyor.",next:"selim"},
+    {label:"Şimdi zamanım yok.",d:{p:10,m:-8,r:-12},rel:["Deniz",-20],flag:["ignoredDeniz",true],mem:"Deniz'i yine erteledin.",result:"Deniz yalnızca “Tamam.” diyor. Bu kez sesi eskisinden farklı.",next:"selim"}
+  ]
+},
+selim:{
+  age:38,chapter:"BÖLÜM V · GEÇMİŞ",speaker:"SELİM",title:"Babanı Tanıyordum",
+  text:()=>state.flags.letter
+   ? "“Mektuptaki isim bendim. Babanla yıllar önce bir şirket kurduk. Çok başarılı olduk. Sonra başarı bizi birbirimizden kopardı. O, senin aynı hatayı yapmanı istemedi.”"
+   : "“Babanın sana bıraktığı bir mektup vardı. Hâlâ sende mi? Çünkü artık onu açmanın zamanı geldi.”",
+  people:["Selim"],active:"Selim",
+  choices:[
+    {label:"Her şeyi anlat.",d:{m:15,r:10},rel:["Selim",30],flag:["truth",true],mem:"Babanın geçmişiyle yüzleştin.",result:"Selim sana yıllarca saklanan hikâyeyi anlatıyor. Baban büyük bir başarı kurmuş ama sonunda en yakın dostlarını kaybetmiş.",next:"final"},
+    {label:"Geçmiş geçmişte kaldı.",d:{p:5,m:-12,r:-8},flag:["ignorePast",true],mem:"Babanın geçmişini öğrenmek istemedin.",result:"Selim kapıya yöneliyor. Çıkarken duruyor: “Baban da tam olarak bunu söylemişti.”",next:"final"}
+  ]
+},
+final:{
+  age:42,chapter:"FİNAL · ŞİMDİLİK",speaker:"ANLATICI",title:"Nasıl Bir Hayat Kurdun?",
+  text:()=>endingText(),
+  people:()=>state.flags.ela?["Ela"]:state.rel.Deniz>=60?["Deniz"]:[],
+  active:()=>state.flags.ela?"Ela":state.rel.Deniz>=60?"Deniz":null,
+  choices:[
+    {label:"Hayatı yeniden yaşa",restart:true}
+  ]
+}
+};
+
+function endingText(){
+  const s=state.stats;
+  if(state.flags.truth && s.r>=65 && s.m>=60)
+    return "İnsanlar seni yalnızca kazandıklarınla değil, yanında kaldığın insanlarla hatırlıyor. Başarı geldi ama seni tamamen değiştirmedi. SON: İyi Yaşanmış Bir Hayat.";
+  if(s.p>=75 && s.r<50)
+    return "İstediğin güce ve paraya ulaştın. Fakat yıllar sonra telefonu açıp arayabileceğin insanların sayısı çok az. SON: Zirvedeki Sessizlik.";
+  if(state.flags.ela && state.rel.Ela>=25)
+    return "Hayatında başarı vardı ama eve döndüğünde seni bekleyen biri de vardı. Bazı günler hiçbir şey başarmadın; sadece yaşadın. SON: Birlikte Yaşanan Hayat.";
+  if(state.rel.Deniz>=80)
+    return "Çocuklukta başlayan dostluk onlarca yıl ayakta kaldı. Para geldi, gitti; projeler battı, büyüdü. Ama Deniz kaldı. SON: Eski Dostlar.";
+  return "Ne tamamen kazandın ne tamamen kaybettin. Verdiğin her karar seni başka birine dönüştürdü. Belki de hayatın gerçek sonucu buydu. SON: Gölge Hayat.";
+}
+
+function getScene(){
+  const s=scenes[state.scene];
+  const val=k=>typeof s[k]==="function"?s[k]():s[k];
+  return {
+    age:s.age,chapter:s.chapter,speaker:s.speaker,title:s.title,
+    text:val("text"),people:val("people")||[],active:val("active"),
+    choices:val("choices")
+  };
+}
+
+function applyChoice(c){
+  if(c.restart){state=initialState();pendingNext=null;render();return;}
+  if(c.d){
+    for(const k of Object.keys(c.d)) state.stats[k]=clamp(state.stats[k]+c.d[k]);
+  }
+  if(c.rel) state.rel[c.rel[0]]=clamp(state.rel[c.rel[0]]+c.rel[1]);
+  if(c.rel2) state.rel[c.rel2[0]]=clamp(state.rel[c.rel2[0]]+c.rel2[1]);
+  if(c.flag) state.flags[c.flag[0]]=c.flag[1];
+  if(c.mem) state.memories.push(c.mem);
+
+  document.getElementById("choices").innerHTML="";
+  const r=document.getElementById("result");
+  r.textContent=c.result||"";
+  if(c.result) r.classList.remove("hidden");
+  pendingNext=c.next;
+  document.getElementById("next").classList.remove("hidden");
+  updateStats();
+}
+
+function updateStats(){
+  for(const k of ["h","m","p","r"]){
+    document.getElementById(k).textContent=state.stats[k];
+    document.getElementById(k+"b").style.width=state.stats[k]+"%";
+  }
+}
+
+function render(){
+  const s=getScene();
+  state.age=s.age;
+  document.getElementById("ageLabel").textContent=s.age+" Yaş";
+  document.getElementById("lifeBar").style.width=Math.min(100,s.age)+"%";
+  document.getElementById("chapter").textContent=s.chapter;
+  document.getElementById("speaker").textContent=s.speaker;
+  document.getElementById("title").textContent=s.title;
+  document.getElementById("text").textContent=s.text;
+
+  document.getElementById("stage").innerHTML=s.people.map(n=>personHTML(n,n===s.active)).join("");
+
+  const relBox=document.getElementById("relations");
+  relBox.innerHTML=s.people.map(n=>`<span class="badge">${n} · ${state.rel[n]||0}</span>`).join("");
+
+  const ch=document.getElementById("choices");
+  ch.innerHTML="";
+  s.choices.forEach(c=>{
+    const b=document.createElement("button");
+    b.className="choice";b.type="button";b.textContent=c.label;
+    b.addEventListener("click",()=>applyChoice(c));
+    ch.appendChild(b);
+  });
+
+  document.getElementById("result").classList.add("hidden");
+  document.getElementById("next").classList.add("hidden");
+
+  document.getElementById("memories").innerHTML=state.memories.length
+    ? state.memories.slice(-5).reverse().map(x=>"• "+x).join("<br>")
+    : "Henüz kalıcı bir karar vermedin.";
+
+  updateStats();
+}
+
+document.getElementById("next").addEventListener("click",()=>{
+  if(pendingNext){state.scene=pendingNext;pendingNext=null;render();}
+});
+document.getElementById("reset").addEventListener("click",()=>{
+  state=initialState();pendingNext=null;render();
+});
+render();
+</script>
+</body>
+</html>
