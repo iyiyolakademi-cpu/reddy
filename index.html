@@ -3,443 +3,1833 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gölge Hayat</title>
+
+<title>5. Sınıf Karma Test | Matematik & Fen Bilimleri</title>
+
 <style>
-*{box-sizing:border-box}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
 :root{
-  --bg:#0b0e13;
-  --panel:#151a22;
-  --panel2:#1b222d;
-  --line:#2a3442;
-  --text:#f3f0ea;
-  --muted:#9da7b4;
-  --accent:#c69b5e;
-  --accent2:#8ea2ba;
-  --danger:#b96363;
+    --bg:#f4f6f9;
+    --card:#ffffff;
+    --text:#17191c;
+    --muted:#717780;
+    --border:#e4e7ec;
+    --primary:#111827;
+    --primary-soft:#f2f4f7;
+    --green:#16a34a;
+    --green-bg:#ecfdf3;
+    --red:#dc2626;
+    --red-bg:#fef2f2;
+    --blue:#2563eb;
+    --shadow:0 8px 30px rgba(17,24,39,.06);
 }
+
 body{
-  margin:0;
-  min-height:100vh;
-  color:var(--text);
-  font-family:Inter,Arial,Helvetica,sans-serif;
-  background:
-    radial-gradient(circle at 50% -12%,#223042 0,#111720 42%,#090c11 78%,#07090d 100%);
+    background:var(--bg);
+    color:var(--text);
+    font-family:
+    Inter,
+    "Segoe UI",
+    Arial,
+    sans-serif;
+    min-height:100vh;
 }
-body:before{
-  content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;
-  background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px);
-  background-size:42px 42px;
+
+/* HEADER */
+
+.topbar{
+    background:#fff;
+    border-bottom:1px solid var(--border);
+    position:sticky;
+    top:0;
+    z-index:100;
 }
-.game{max-width:440px;margin:auto;min-height:100vh;padding:20px 14px 36px;position:relative}
-.top{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.logo h1{margin:0;font-family:Georgia,serif;font-style:italic;font-size:30px;letter-spacing:.01em}
-.logo p{margin:4px 0 0;color:var(--muted);font-size:12px}
-.reset{
-  border:1px solid #364353;background:#151b23;color:#d8c7a8;border-radius:12px;
-  width:42px;height:42px;font-size:19px;cursor:pointer
+
+.topbar-inner{
+    max-width:1200px;
+    margin:auto;
+    padding:17px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
 }
-.life{margin:17px 0 13px}
-.row{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
-.track{height:6px;background:#ffffff0c;border-radius:999px;overflow:hidden;margin-top:6px;border:1px solid #ffffff08}
-.fill{height:100%;background:linear-gradient(90deg,#7d93aa,#c69b5e);transition:.35s ease}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:13px;
+}
+
+.logo{
+    width:42px;
+    height:42px;
+    border-radius:12px;
+    background:#111827;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    font-weight:800;
+}
+
+.brand-text h1{
+    font-size:17px;
+    font-weight:750;
+}
+
+.brand-text p{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:2px;
+}
+
+.top-score{
+    font-size:14px;
+    font-weight:700;
+    padding:10px 15px;
+    background:#f7f8fa;
+    border:1px solid var(--border);
+    border-radius:10px;
+}
+
+/* PAGE */
+
+.page{
+    max-width:1200px;
+    margin:auto;
+    padding:30px 20px 70px;
+}
+
+.intro{
+    margin-bottom:24px;
+}
+
+.intro h2{
+    font-size:30px;
+    margin-bottom:8px;
+    letter-spacing:-.5px;
+}
+
+.intro p{
+    color:var(--muted);
+    line-height:1.7;
+    max-width:800px;
+}
+
+/* PROGRESS */
+
+.progress-area{
+    background:#fff;
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+    border-radius:16px;
+    padding:18px 20px;
+    margin-bottom:25px;
+}
+
+.progress-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:11px;
+    font-size:13px;
+}
+
+.progress-title{
+    font-weight:700;
+}
+
+.progress-count{
+    color:var(--muted);
+}
+
+.progress-track{
+    height:8px;
+    background:#eceff3;
+    border-radius:30px;
+    overflow:hidden;
+}
+
+.progress-fill{
+    height:100%;
+    width:0%;
+    background:#111827;
+    border-radius:30px;
+    transition:.35s ease;
+}
+
+/* LAYOUT */
+
+.quiz-layout{
+    display:grid;
+    grid-template-columns:1fr 285px;
+    gap:25px;
+    align-items:start;
+}
+
+/* QUESTION */
+
+.question-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+    border-radius:20px;
+    padding:32px;
+}
+
+.question-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    margin-bottom:27px;
+}
+
+.question-number{
+    font-size:13px;
+    color:var(--muted);
+    font-weight:650;
+}
+
+.category{
+    display:inline-flex;
+    align-items:center;
+    padding:7px 11px;
+    border-radius:20px;
+    background:#f2f4f7;
+    font-size:12px;
+    font-weight:700;
+}
+
+.question-title{
+    font-size:22px;
+    line-height:1.55;
+    margin-bottom:28px;
+    font-weight:700;
+}
+
+.options{
+    display:grid;
+    gap:13px;
+}
+
+.option{
+    position:relative;
+    width:100%;
+    border:1.5px solid var(--border);
+    background:#fff;
+    border-radius:14px;
+    padding:16px 17px;
+    cursor:pointer;
+    transition:.18s ease;
+    display:flex;
+    align-items:center;
+    gap:13px;
+    text-align:left;
+    color:var(--text);
+    font-size:15px;
+}
+
+.option:hover:not(:disabled){
+    border-color:#b7bdc7;
+    background:#fafbfc;
+    transform:translateY(-1px);
+}
+
+.option-letter{
+    min-width:32px;
+    width:32px;
+    height:32px;
+    border-radius:9px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#f3f4f6;
+    font-size:13px;
+    font-weight:800;
+    transition:.2s;
+}
+
+.option.correct{
+    border-color:#22c55e;
+    background:var(--green-bg);
+}
+
+.option.correct .option-letter{
+    background:#22c55e;
+    color:white;
+}
+
+.option.wrong{
+    border-color:#ef4444;
+    background:var(--red-bg);
+}
+
+.option.wrong .option-letter{
+    background:#ef4444;
+    color:white;
+}
+
+.option:disabled{
+    cursor:default;
+}
+
+/* FEEDBACK */
+
+.feedback{
+    display:none;
+    margin-top:22px;
+    border-radius:13px;
+    padding:16px 18px;
+    line-height:1.65;
+    font-size:14px;
+}
+
+.feedback.show{
+    display:block;
+}
+
+.feedback.correct-feedback{
+    background:var(--green-bg);
+    border:1px solid #bbf7d0;
+    color:#166534;
+}
+
+.feedback.wrong-feedback{
+    background:var(--red-bg);
+    border:1px solid #fecaca;
+    color:#991b1b;
+}
+
+.feedback strong{
+    display:block;
+    margin-bottom:4px;
+}
+
+/* CONTROLS */
+
+.controls{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    margin-top:28px;
+    border-top:1px solid var(--border);
+    padding-top:22px;
+}
+
+.btn{
+    border:0;
+    border-radius:11px;
+    padding:12px 18px;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.btn-secondary{
+    background:#f3f4f6;
+    color:#111827;
+}
+
+.btn-secondary:hover{
+    background:#e5e7eb;
+}
+
+.btn-primary{
+    background:#111827;
+    color:white;
+}
+
+.btn-primary:hover{
+    background:#272f3e;
+}
+
+.btn:disabled{
+    opacity:.4;
+    cursor:not-allowed;
+}
+
+/* SIDE */
+
+.sidebar{
+    position:sticky;
+    top:100px;
+}
+
+.side-card{
+    background:#fff;
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+    border-radius:18px;
+    padding:20px;
+    margin-bottom:17px;
+}
+
+.side-card h3{
+    font-size:14px;
+    margin-bottom:16px;
+}
+
 .stats{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:7px;
-  background:#111720cc;border:1px solid var(--line);border-radius:17px;padding:11px;
-  backdrop-filter:blur(8px)
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:7px;
 }
-.stat{min-width:0}
-.statname{font-size:9px;color:#aab3bf;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.statnum{font-weight:700;font-size:13px;margin:5px 0;color:#f2eee7}
-.stat .track{height:5px;margin:0}
-.stat .fill{background:linear-gradient(90deg,#7690aa,#c7a36f)}
-.chapter{margin-top:16px;font-size:10px;letter-spacing:.14em;color:#c6a476;font-weight:800}
-.scene{
-  margin-top:8px;background:linear-gradient(180deg,#19212b,#131922);
-  border:1px solid #303a48;border-radius:20px;overflow:hidden;
-  box-shadow:0 20px 50px #0008
+
+.stat{
+    border:1px solid var(--border);
+    border-radius:11px;
+    padding:11px 5px;
+    text-align:center;
 }
-.stage{
-  height:310px;position:relative;overflow:hidden;
-  background:
-    linear-gradient(180deg,rgba(6,9,13,.12),rgba(7,10,14,.7)),
-    radial-gradient(circle at 63% 24%,rgba(211,175,115,.18),transparent 28%),
-    linear-gradient(135deg,#1d2936 0,#111820 47%,#17191c 100%);
+
+.stat strong{
+    font-size:17px;
+    display:block;
 }
-.stage:before{
-  content:"";position:absolute;inset:0;
-  background:
-    linear-gradient(90deg,transparent 0 66%,rgba(222,184,118,.08) 66% 67%,transparent 67%),
-    linear-gradient(180deg,transparent 0 67%,rgba(255,255,255,.035) 67% 68%,transparent 68%);
-  opacity:.65
+
+.stat span{
+    color:var(--muted);
+    font-size:10px;
+    display:block;
+    margin-top:3px;
 }
-.stage:after{
-  content:"";position:absolute;left:0;right:0;bottom:0;height:88px;
-  background:linear-gradient(transparent,#10151c 88%);
-  z-index:10
+
+/* NAVIGATION */
+
+.question-grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:7px;
 }
-.person{
-  position:absolute;bottom:2px;width:185px;height:292px;
-  transition:.35s ease;filter:brightness(.45) saturate(.75);opacity:.6;
-  transform-origin:bottom center;z-index:3
+
+.qnav{
+    aspect-ratio:1;
+    border-radius:8px;
+    border:1px solid var(--border);
+    background:#fff;
+    cursor:pointer;
+    font-size:11px;
+    font-weight:700;
+    transition:.15s;
 }
-.person.active{filter:brightness(1) saturate(1);opacity:1;transform:scale(1.04);z-index:6}
-.person.left{left:-4px}.person.right{right:-4px}
-.portrait{width:100%;height:100%;overflow:visible}
-.nameplate{
-  position:absolute;bottom:11px;left:50%;transform:translateX(-50%);
-  z-index:12;background:#0a0d12df;border:1px solid #3b4654;border-radius:999px;
-  padding:6px 11px;font-size:11px;white-space:nowrap;color:#ebe4d9
+
+.qnav:hover{
+    border-color:#111827;
 }
-.dialogue{padding:18px 18px 20px;background:linear-gradient(180deg,#171e27,#111720)}
-.speaker{font-size:10px;font-weight:800;letter-spacing:.12em;color:#c9a66f}
-.title{font-family:Georgia,serif;font-size:21px;margin:8px 0 10px;line-height:1.3}
-.text{font-size:14px;line-height:1.6;color:#e2e5e9;min-height:74px}
-.choices{display:grid;gap:9px;margin-top:17px}
-.choice{
-  width:100%;text-align:left;padding:14px 14px;border-radius:13px;
-  border:1px solid #34404d;background:#1a222c;color:#f3f0ea;
-  cursor:pointer;font-size:14px;font-weight:700;transition:.2s ease
+
+.qnav.current{
+    background:#111827;
+    color:white;
+    border-color:#111827;
 }
-.choice:hover{background:#222d39;border-color:#566576;transform:translateY(-1px)}
-.result{
-  margin-top:14px;padding:14px;border-radius:13px;
-  background:#b78c5517;border:1px solid #b78c5552;font-size:13.5px;line-height:1.55
+
+.qnav.correct{
+    background:#dcfce7;
+    color:#15803d;
+    border-color:#bbf7d0;
 }
-.next{
-  margin-top:12px;width:100%;padding:13px;border:0;border-radius:12px;
-  background:linear-gradient(135deg,#d2ad76,#b98b4d);color:#15110c;font-weight:800;cursor:pointer
+
+.qnav.wrong{
+    background:#fee2e2;
+    color:#b91c1c;
+    border-color:#fecaca;
 }
-.hidden{display:none}
-.relations{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
-.badge{
-  padding:6px 9px;border-radius:999px;background:#0d1218;border:1px solid #303a47;
-  font-size:11px;color:#b8c0ca
+
+/* RESULT */
+
+.result-page{
+    display:none;
 }
-.mem{
-  margin-top:15px;background:#0f141bcc;border:1px solid #252e39;border-radius:15px;padding:13px
+
+.result-card{
+    max-width:760px;
+    margin:0 auto;
+    background:#fff;
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+    border-radius:24px;
+    padding:42px;
+    text-align:center;
 }
-.mem h3{font-size:12px;margin:0 0 8px;color:#d8c7aa}
-.mem div{font-size:11.5px;color:#929daa;line-height:1.55}
-@media(max-width:370px){
-  .stage{height:278px}
-  .person{width:168px;height:272px}
-  .person.left{left:-13px}.person.right{right:-13px}
+
+.result-icon{
+    width:70px;
+    height:70px;
+    margin:0 auto 18px;
+    background:#111827;
+    color:white;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    font-weight:800;
 }
+
+.result-card h2{
+    font-size:29px;
+    margin-bottom:7px;
+}
+
+.result-card > p{
+    color:var(--muted);
+}
+
+.big-score{
+    margin:30px auto;
+}
+
+.score-number{
+    font-size:55px;
+    font-weight:800;
+    letter-spacing:-2px;
+}
+
+.score-label{
+    color:var(--muted);
+    font-size:13px;
+}
+
+.result-stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin:25px 0;
+}
+
+.result-stat{
+    background:#f7f8fa;
+    border-radius:13px;
+    padding:18px 10px;
+}
+
+.result-stat strong{
+    font-size:23px;
+    display:block;
+}
+
+.result-stat span{
+    font-size:12px;
+    color:var(--muted);
+    margin-top:4px;
+    display:block;
+}
+
+.performance{
+    padding:18px;
+    background:#f7f8fa;
+    border-radius:14px;
+    line-height:1.6;
+    margin-bottom:25px;
+}
+
+.restart{
+    background:#111827;
+    color:white;
+    border:none;
+    border-radius:11px;
+    padding:14px 22px;
+    font-weight:700;
+    cursor:pointer;
+    font-size:14px;
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+    .quiz-layout{
+        grid-template-columns:1fr;
+    }
+
+    .sidebar{
+        position:static;
+    }
+
+    .sidebar .side-card:last-child{
+        display:none;
+    }
+
+}
+
+@media(max-width:600px){
+
+    .page{
+        padding:20px 12px 50px;
+    }
+
+    .topbar-inner{
+        padding:13px 14px;
+    }
+
+    .brand-text p{
+        display:none;
+    }
+
+    .question-card{
+        padding:21px 17px;
+        border-radius:16px;
+    }
+
+    .question-title{
+        font-size:18px;
+    }
+
+    .option{
+        padding:13px;
+        font-size:14px;
+    }
+
+    .intro h2{
+        font-size:24px;
+    }
+
+    .result-card{
+        padding:28px 18px;
+    }
+
+    .result-stats{
+        gap:7px;
+    }
+
+    .result-stat{
+        padding:14px 5px;
+    }
+
+    .controls{
+        gap:7px;
+    }
+
+    .btn{
+        flex:1;
+        padding:12px 8px;
+    }
+
+}
+
 </style>
 </head>
+
 <body>
-<div class="game">
-  <div class="top">
-    <div class="logo"><h1>Gölge Hayat</h1><p>Seçimlerin seni yıllarca takip eder.</p></div>
-    <button class="reset" id="reset">↻</button>
-  </div>
 
-  <div class="life">
-    <div class="row"><span id="ageLabel">18 Yaş</span><span>Hayat</span></div>
-    <div class="track"><div class="fill" id="lifeBar" style="width:18%"></div></div>
-  </div>
+<header class="topbar">
 
-  <div class="stats">
-    <div class="stat"><div class="statname">❤️ Sağlık</div><div class="statnum" id="h">75</div><div class="track"><div class="fill" id="hb"></div></div></div>
-    <div class="stat"><div class="statname">🙂 Mutluluk</div><div class="statnum" id="m">68</div><div class="track"><div class="fill" id="mb"></div></div></div>
-    <div class="stat"><div class="statname">💰 Para</div><div class="statnum" id="p">35</div><div class="track"><div class="fill" id="pb"></div></div></div>
-    <div class="stat"><div class="statname">🤝 İlişki</div><div class="statnum" id="r">72</div><div class="track"><div class="fill" id="rb"></div></div></div>
-  </div>
+<div class="topbar-inner">
 
-  <div class="chapter" id="chapter"></div>
+    <div class="brand">
 
-  <div class="scene">
-    <div class="stage" id="stage"></div>
-    <div class="dialogue">
-      <div class="speaker" id="speaker"></div>
-      <div class="title" id="title"></div>
-      <div class="text" id="text"></div>
-      <div class="relations" id="relations"></div>
-      <div class="choices" id="choices"></div>
-      <div class="result hidden" id="result"></div>
-      <button class="next hidden" id="next">Devam Et →</button>
+        <div class="logo">5</div>
+
+        <div class="brand-text">
+            <h1>5. Sınıf Karma Test</h1>
+            <p>Matematik & Fen Bilimleri</p>
+        </div>
+
     </div>
-  </div>
 
-  <div class="mem">
-    <h3>Hayat İzleri</h3>
-    <div id="memories">Henüz kalıcı bir karar vermedin.</div>
-  </div>
+    <div class="top-score" id="topScore">
+        0 / 50
+    </div>
+
 </div>
 
+</header>
+
+
+<main class="page" id="quizPage">
+
+<section class="intro">
+
+<h2>Bilgini Test Et</h2>
+
+<p>
+Açıları ölçme, doğrular, kuvvet, kütle ve ağırlık ilişkisi ile sürtünme
+kuvveti konularından hazırlanmış 50 soruluk karma test.
+</p>
+
+</section>
+
+
+<section class="progress-area">
+
+<div class="progress-top">
+
+<span class="progress-title">Test ilerlemesi</span>
+
+<span class="progress-count" id="progressText">
+0 / 50 cevaplandı
+</span>
+
+</div>
+
+<div class="progress-track">
+<div class="progress-fill" id="progressFill"></div>
+</div>
+
+</section>
+
+
+<div class="quiz-layout">
+
+<div>
+
+<div class="question-card" id="questionCard">
+
+    <div class="question-head">
+
+        <div class="question-number" id="questionNumber">
+        Soru 1 / 50
+        </div>
+
+        <div class="category" id="category"></div>
+
+    </div>
+
+    <div class="question-title" id="questionTitle"></div>
+
+    <div class="options" id="options"></div>
+
+    <div class="feedback" id="feedback"></div>
+
+    <div class="controls">
+
+        <button
+        class="btn btn-secondary"
+        id="prevBtn"
+        onclick="previousQuestion()">
+        ← Önceki
+        </button>
+
+        <button
+        class="btn btn-primary"
+        id="nextBtn"
+        onclick="nextQuestion()">
+        Sonraki →
+        </button>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<aside class="sidebar">
+
+<div class="side-card">
+
+<h3>Test Durumu</h3>
+
+<div class="stats">
+
+<div class="stat">
+<strong id="correctStat">0</strong>
+<span>DOĞRU</span>
+</div>
+
+<div class="stat">
+<strong id="wrongStat">0</strong>
+<span>YANLIŞ</span>
+</div>
+
+<div class="stat">
+<strong id="emptyStat">50</strong>
+<span>BOŞ</span>
+</div>
+
+</div>
+
+</div>
+
+
+<div class="side-card">
+
+<h3>Sorular</h3>
+
+<div class="question-grid" id="questionGrid"></div>
+
+</div>
+
+</aside>
+
+</div>
+
+</main>
+
+
+<main class="page result-page" id="resultPage">
+
+<div class="result-card">
+
+<div class="result-icon">✓</div>
+
+<h2>Test Tamamlandı</h2>
+
+<p>50 soruluk karma testi tamamladın.</p>
+
+<div class="big-score">
+
+<div class="score-number" id="percentageScore">
+0
+</div>
+
+<div class="score-label">
+100 üzerinden puanın
+</div>
+
+</div>
+
+
+<div class="result-stats">
+
+<div class="result-stat">
+<strong id="finalCorrect">0</strong>
+<span>Doğru</span>
+</div>
+
+<div class="result-stat">
+<strong id="finalWrong">0</strong>
+<span>Yanlış</span>
+</div>
+
+<div class="result-stat">
+<strong id="finalPercent">%0</strong>
+<span>Başarı</span>
+</div>
+
+</div>
+
+
+<div class="performance" id="performanceText"></div>
+
+<button class="restart" onclick="restartQuiz()">
+Testi Yeniden Çöz
+</button>
+
+</div>
+
+</main>
+
+
 <script>
-const clamp=n=>Math.max(0,Math.min(100,n));
 
-const initialState=()=>({
-  age:18,
-  stats:{h:75,m:68,p:35,r:72},
-  rel:{Deniz:70,Ela:0,Selim:0,Arda:0},
-  flags:{},
-  memories:[],
-  scene:"intro"
-});
+/* ==========================================================
+   50 SORULUK SORU HAVUZU
+========================================================== */
 
-let state=initialState();
-let pendingNext=null;
+const questions = [
 
-const characters={
-  Deniz:{class:"deniz",side:"left"},
-  Ela:{class:"ela",side:"right"},
-  Selim:{class:"selim",side:"left"},
-  Arda:{class:"arda",side:"right"}
-};
+{
+category:"Kuvvet ve Kuvvetin Ölçülmesi",
+question:"Kuvveti ölçmek için kullanılan araç aşağıdakilerden hangisidir?",
+options:["Dinamometre","Termometre","Barometre","Eşit kollu terazi"],
+answer:0,
+explanation:"Kuvvet dinamometre adı verilen araçla ölçülür."
+},
 
-function personHTML(name,active){
-  const c=characters[name];
+{
+category:"Açıları Ölçme",
+question:"Ölçüsü 90° olan açıya ne ad verilir?",
+options:["Dar açı","Geniş açı","Dik açı","Doğru açı"],
+answer:2,
+explanation:"Ölçüsü tam 90 derece olan açılara dik açı denir."
+},
 
-  const palettes={
-    Deniz:{skin:"#c98f72",skin2:"#ad735c",hair:"#211915",hair2:"#3a2a22",shirt:"#32465e",shirt2:"#223142",eye:"#2c241f",brow:"#251b17"},
-    Ela:{skin:"#e0ac90",skin2:"#c88e76",hair:"#5b3529",hair2:"#2f201d",shirt:"#684753",shirt2:"#44303a",eye:"#392b25",brow:"#533126"},
-    Selim:{skin:"#bd8d73",skin2:"#9e705c",hair:"#b6b2ab",hair2:"#77736e",shirt:"#484d55",shirt2:"#30343a",eye:"#322a26",brow:"#77716a"},
-    Arda:{skin:"#d1a084",skin2:"#b57e67",hair:"#151316",hair2:"#2d272d",shirt:"#3d4654",shirt2:"#272e38",eye:"#232025",brow:"#19171b"}
-  };
-  const p=palettes[name];
+{
+category:"Sürtünme Kuvveti",
+question:"Sürtünme kuvveti hareket eden bir cisme genellikle hangi yönde etki eder?",
+options:["Hareket yönünde","Hareket yönünün tersinde","Yukarı yönde","Aşağı yönde"],
+answer:1,
+explanation:"Sürtünme kuvveti genellikle cismin hareket yönüne ters yönde etki eder."
+},
 
-  return `<div class="person ${c.class} ${c.side} ${active?"active":""}">
-    <svg class="portrait" viewBox="0 0 190 300" aria-label="${name} 2D karakteri">
-      <defs>
-        <linearGradient id="skin-${name}" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="${p.skin}"/><stop offset="1" stop-color="${p.skin2}"/>
-        </linearGradient>
-        <linearGradient id="shirt-${name}" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="${p.shirt}"/><stop offset="1" stop-color="${p.shirt2}"/>
-        </linearGradient>
-        <radialGradient id="faceLight-${name}" cx=".38" cy=".25" r=".75">
-          <stop offset="0" stop-color="#ffffff" stop-opacity=".15"/><stop offset=".65" stop-color="#ffffff" stop-opacity="0"/>
-        </radialGradient>
-      </defs>
+{
+category:"Kütle ve Ağırlık",
+question:"Kütlenin birimi aşağıdakilerden hangisidir?",
+options:["Newton","Kilogram","Metre","Litre"],
+answer:1,
+explanation:"Kütlenin yaygın kullanılan ölçü birimi kilogramdır."
+},
 
-      <ellipse cx="95" cy="294" rx="74" ry="10" fill="#000" opacity=".28"/>
-      <path d="M45 292 C47 222 55 183 78 169 L112 169 C137 185 145 226 148 292 Z" fill="url(#shirt-${name})"/>
-      <path d="M76 170 L95 193 L114 170" fill="none" stroke="#ffffff" stroke-opacity=".14" stroke-width="3"/>
-      <path d="M85 146 L105 146 L109 178 Q95 188 81 178 Z" fill="url(#skin-${name})"/>
+{
+category:"Doğruların Yolculuğu",
+question:"Birbirini hiçbir zaman kesmeyen ve aralarındaki uzaklık değişmeyen doğrulara ne denir?",
+options:["Dik doğrular","Kesişen doğrular","Paralel doğrular","Işınlar"],
+answer:2,
+explanation:"Birbirini kesmeyen ve aralarındaki uzaklık değişmeyen doğrular paralel doğrulardır."
+},
 
-      <path d="M58 76 Q60 29 96 22 Q137 27 135 80 L129 124 Q119 154 95 159 Q69 153 59 123 Z" fill="url(#skin-${name})"/>
-      <path d="M60 86 Q46 89 53 107 Q57 116 64 111" fill="${p.skin2}"/>
-      <path d="M130 86 Q144 89 137 107 Q133 116 126 111" fill="${p.skin2}"/>
+{
+category:"Açıları Ölçme",
+question:"Aşağıdakilerden hangisi dar açıya örnektir?",
+options:["35°","90°","120°","180°"],
+answer:0,
+explanation:"0° ile 90° arasındaki açılara dar açı denir. 35° dar açıdır."
+},
 
-      ${name==="Ela"
-        ? `<path d="M52 79 Q47 26 92 15 Q139 16 143 71 Q141 117 136 145 Q132 108 130 73 Q115 54 90 49 Q69 53 59 82 Q57 122 51 147 Q45 112 52 79Z" fill="${p.hair}"/>
-           <path d="M56 63 Q75 28 111 37 Q132 42 139 69 Q123 55 104 54 Q78 50 58 76Z" fill="${p.hair2}" opacity=".9"/>`
-        : name==="Selim"
-        ? `<path d="M60 67 Q68 28 97 25 Q126 28 134 66 Q118 52 96 51 Q76 51 60 67Z" fill="${p.hair}"/>
-           <path d="M63 58 Q80 31 101 31 Q120 34 131 60" fill="none" stroke="${p.hair2}" stroke-width="6" opacity=".7"/>`
-        : name==="Arda"
-        ? `<path d="M58 72 Q59 27 96 19 Q129 22 137 62 Q119 51 104 48 Q83 45 61 70Z" fill="${p.hair}"/>
-           <path d="M61 53 Q84 30 111 33 Q126 37 134 56" fill="none" stroke="${p.hair2}" stroke-width="7"/>`
-        : `<path d="M57 73 Q58 29 95 18 Q131 23 137 66 Q119 52 104 49 Q80 45 59 72Z" fill="${p.hair}"/>
-           <path d="M64 52 Q83 30 112 34 Q125 37 134 57" fill="none" stroke="${p.hair2}" stroke-width="7"/>`
-      }
+{
+category:"Kuvvet ve Kuvvetin Ölçülmesi",
+question:"Kuvvetin birimi aşağıdakilerden hangisidir?",
+options:["Kilogram","Newton","Santimetre","Derece"],
+answer:1,
+explanation:"Kuvvetin birimi Newton'dur ve N harfi ile gösterilir."
+},
 
-      <path d="M68 88 Q77 82 87 86" fill="none" stroke="${p.brow}" stroke-width="3.2" stroke-linecap="round"/>
-      <path d="M104 86 Q114 82 123 88" fill="none" stroke="${p.brow}" stroke-width="3.2" stroke-linecap="round"/>
-      <ellipse cx="79" cy="96" rx="7" ry="4.6" fill="#f5f1ec"/>
-      <ellipse cx="113" cy="96" rx="7" ry="4.6" fill="#f5f1ec"/>
-      <circle cx="80" cy="96" r="2.8" fill="${p.eye}"/>
-      <circle cx="112" cy="96" r="2.8" fill="${p.eye}"/>
-      <circle cx="79.2" cy="95.2" r=".7" fill="#fff"/>
-      <circle cx="111.2" cy="95.2" r=".7" fill="#fff"/>
+{
+category:"Kütle ve Ağırlık",
+question:"Bir cismin kütlesi Dünya'dan Ay'a götürülürse ne olur?",
+options:["Artar","Azalır","Değişmez","Sıfırlanır"],
+answer:2,
+explanation:"Kütle madde miktarıdır ve cismin bulunduğu yere göre değişmez."
+},
 
-      <path d="M96 98 Q91 113 96 116 Q101 115 103 113" fill="none" stroke="${p.skin2}" stroke-width="2.1" stroke-linecap="round"/>
-      <path d="M84 130 Q95 136 107 129" fill="none" stroke="#744b47" stroke-width="2.2" stroke-linecap="round"/>
-      ${name==="Selim" ? `<path d="M78 123 Q95 151 113 123 Q110 150 95 158 Q80 150 78 123Z" fill="#b1aaa3" opacity=".8"/>` : ""}
-      ${name==="Arda" ? `<path d="M75 119 Q95 127 116 118" fill="none" stroke="#2b2524" stroke-width="1.6" opacity=".65"/>` : ""}
-      <path d="M60 77 Q66 41 96 34 Q126 40 133 72" fill="none" stroke="#ffffff" stroke-opacity=".07" stroke-width="5"/>
-      <path d="M58 76 Q60 29 96 22 Q137 27 135 80 L129 124 Q119 154 95 159 Q69 153 59 123 Z" fill="url(#faceLight-${name})"/>
+{
+category:"Sürtünme Kuvveti",
+question:"Aşağıdaki yüzeylerden hangisinde sürtünme kuvveti daha fazladır?",
+options:["Buz","Halı","Islak mermer","Düz cam"],
+answer:1,
+explanation:"Pürüzlü yüzeylerde sürtünme kuvveti daha fazladır. Halı pürüzlü bir yüzeydir."
+},
 
-      <path d="M45 292 Q48 219 72 182" fill="none" stroke="#ffffff" stroke-opacity=".06" stroke-width="4"/>
-      <path d="M145 292 Q142 219 118 182" fill="none" stroke="#000000" stroke-opacity=".12" stroke-width="4"/>
-    </svg>
-    <div class="nameplate">${name}</div>
-  </div>`;
+{
+category:"Doğruların Yolculuğu",
+question:"Bir başlangıç noktası bulunan ve bir yönde sonsuza kadar uzayan geometrik şekle ne denir?",
+options:["Doğru parçası","Işın","Doğru","Açı"],
+answer:1,
+explanation:"Bir başlangıç noktası olup tek yönde sonsuza uzanan şekle ışın denir."
+},
+
+{
+category:"Açıları Ölçme",
+question:"120° ölçüsündeki bir açı hangi tür açıdır?",
+options:["Dar açı","Dik açı","Geniş açı","Doğru açı"],
+answer:2,
+explanation:"90°'den büyük ve 180°'den küçük açılar geniş açıdır."
+},
+
+{
+category:"Kütle ve Ağırlık",
+question:"Bir cismin ağırlığı hangi araçla ölçülür?",
+options:["Eşit kollu terazi","Dinamometre","Cetvel","Dereceli silindir"],
+answer:1,
+explanation:"Ağırlık bir kuvvet olduğu için dinamometre ile ölçülür."
+},
+
+{
+category:"Sürtünme Kuvveti",
+question:"Araba lastiklerinde desen bulunmasının temel amacı nedir?",
+options:[
+"Lastikleri ağırlaştırmak",
+"Sürtünmeyi artırmak",
+"Arabanın hızını her zaman artırmak",
+"Yakıt deposunu büyütmek"
+],
+answer:1,
+explanation:"Lastik desenleri yol ile lastik arasındaki sürtünmeyi artırarak kaymayı azaltır."
+},
+
+{
+category:"Kuvvet ve Kuvvetin Ölçülmesi",
+question:"Aşağıdakilerden hangisi kuvvetin etkilerinden biri değildir?",
+options:[
+"Cismin hızını değiştirmek",
+"Cismin yönünü değiştirmek",
+"Cismin şeklini değiştirmek",
+"Cismin madde miktarını artırmak"
+],
+answer:3,
+explanation:"Kuvvet hareketi veya şekli değiştirebilir ancak cismin madde miktarını artırmaz."
+},
+
+{
+category:"Doğruların Yolculuğu",
+question:"İki noktası belli olan ve bu noktalar arasında kalan geometrik şekil hangisidir?",
+options:["Doğru","Işın","Doğru parçası","Düzlem"],
+answer:2,
+explanation:"Başlangıç ve bitiş noktası belli olan geometrik şekle doğru parçası denir."
+},
+
+{
+category:"Açıları Ölçme",
+question:"Bir açının ölçüsünü belirlemek için hangi araç kullanılır?",
+options:["Pergel","İletki","Metre","Dinamometre"],
+answer:1,
+explanation:"Açı ölçmek için iletki kullanılır."
+},
+
+{
+category:"Kütle ve Ağırlık",
+question:"Bir cismin Dünya'daki ağırlığı ile Ay'daki ağırlığı karşılaştırıldığında hangisi doğrudur?",
+options:[
+"Ay'da daha fazladır",
+"Dünya'da daha fazladır",
+"İkisinde de aynıdır",
+"İkisinde de sıfırdır"
+],
+answer:1,
+explanation:"Ay'ın çekim kuvveti Dünya'nınkinden daha azdır. Bu nedenle cismin Dünya'daki ağırlığı daha büyüktür."
+},
+
+{
+category:"Sürtünme Kuvveti",
+question:"Aşağıdakilerden hangisi sürtünmenin yararlı etkilerinden biridir?",
+options:[
+"Makine parçalarının aşınması",
+"Lastiklerin zamanla yıpranması",
+"Yürürken kaymamamız",
+"Ayakkabı tabanlarının aşınması"
+],
+answer:2,
+explanation:"Ayakkabımız ile zemin arasındaki sürtünme sayesinde kaymadan yürüyebiliriz."
+},
+
+{
+category:"Doğruların Yolculuğu",
+question:"Birbirini 90° açıyla kesen iki doğruya ne denir?",
+options:["Paralel","Dik","Eğri","Işın"],
+answer:1,
+explanation:"Birbirini 90 derecelik açıyla kesen doğrular dik doğrulardır."
+},
+
+{
+category:"Kuvvet ve Kuvvetin Ölçülmesi",
+question:"Dinamometrenin yapısında aşağıdakilerden hangisi bulunur?",
+options:["Yay","Termometre","Pusula","Pil"],
+answer:0,
+explanation:"Dinamometrelerde kuvvet uygulandığında uzayan esnek yay kullanılır."
+},
+
+{
+category:"Açıları Ölçme",
+question:"180° ölçüsündeki açıya ne ad verilir?",
+options:["Dar açı","Dik açı","Geniş açı","Doğru açı"],
+answer:3,
+explanation:"180 derece ölçüsündeki açı doğru açıdır."
+},
+
+{
+category:"Sürtünme Kuvveti",
+question:"Buzlu bir yolda yürümek neden daha zordur?",
+options:[
+"Sürtünme çok fazla olduğu için",
+"Sürtünme az olduğu için",
+"Yer çekimi olmadığı için",
+"Kütlemiz azaldığı için"
+],
+answer:1,
+explanation:"Buzlu yüzeylerde sürtünme azdır. Bu nedenle kayma ihtimali artar."
+},
+
+{
+category:"Kütle ve Ağırlık",
+question:"Ağırlığın birimi aşağıdakilerden hangisidir?",
+options:["kg","N","m","L"],
+answer:1,
+explanation:"Ağırlık bir kuvvettir ve Newton (N) ile ölçülür."
+},
+
+{
+category:"Doğruların Yolculuğu",
+question:"Her iki yönde de sonsuza kadar devam eden geometrik şekil hangisidir?",
+options:["Doğru","Doğru parçası","Işın","Açı"],
+answer:0,
+explanation:"Doğrunun başlangıç ve bitiş noktası yoktur; iki yönde sonsuza kadar uzar."
+},
+
+{
+category:"Kuvvet ve Kuvvetin Ölçülmesi",
+question:"Duran bir topa vurulduğunda topun hareket etmeye başlaması kuvvetin hangi etkisine örnektir?",
+options:[
+"Hareket ettirme",
+"Renk değiştirme",
+"Kütleyi değiştirme",
+"Sıcaklığı değiştirme"
+],
+answer:0,
+explanation:"Uygulanan kuvvet duran bir cismin hareket etmesini sağlayabilir."
+},
+
+{
+category:"Açıları Ölçme",
+question:"89° ölçüsündeki bir açı aşağıdakilerden hangisidir?",
+options:["Dar açı","Dik açı","Geniş açı","Doğru açı"],
+answer:0,
+explanation:"89°, 90°'den küçük olduğu için dar açıdır."
+},
+
+{
+category:"Sürtünme Kuvveti",
+question:"Makine parçalarının arasına yağ sürülmesinin amacı nedir?",
+options:[
+"Sürtünmeyi artırmak",
+"Sürtünmeyi azaltmak",
+Kuvveti tamamen yok etmek",
+"Kütleyi artırmak"
+],
+answer:1,
+explanation:"Yağlama, yüzeyler arasındaki sürtünmeyi azaltarak parçaların daha kolay hareket etmesini sağlar."
+},
+
+{
+category:"Kütle ve Ağırlık",
+question:"Aşağıdakilerden hangisi bulunduğu yere göre değişebilir?",
+options:["Kütle","Madde miktarı","Ağırlık","Cismin yapıldığı madde"],
+answer:2,
+explanation:"Ağırlık yer çekimine bağlı olduğu için bulunduğu yere göre değişebilir."
+},
+
+{
+category:"Doğruların Yolculuğu",
+question:"Tren rayları geometrik olarak en çok hangi doğru ilişkisine örnek gösterilebilir?",
+options:["Dik doğrular","Paralel doğrular","Kesişen doğrular","Işınlar"],
+answer:1,
+explanation:"Tren rayları birbirine paralel doğrulara günlük hayattan iyi bir örnektir."
+},
+
+{
+category:"Kuvvet ve Kuvvetin Ölçülmesi",
+question:"Bir futbolcunun gelen topa vurup topun yönünü değiştirmesi kuvvetin hangi etkisini gösterir?",
+options:[
+"Yön değiştirme",
+"Kütle artırma",
+"Renk değiştirme",
+"Madde miktarını değiştirme"
+],
+answer:0,
+explanation:"Uygulanan kuvvet hareket eden bir cismin yönünü değiştirebilir."
+},
+
+{
+category:"Açıları Ölçme",
+question:"Aşağıdaki açılardan hangisi dik açıdır?",
+options:["30°","75°","90°","110°"],
+answer:2,
+explanation:"Dik açının ölçüsü 90 derecedir."
+},
+
+{
+category:"Sürtünme Kuvveti",
+question:"Bisiklet frenine basıldığında bisikletin yavaşlamasında hangi kuvvet etkilidir?",
+options:[
+"Manyetik kuvvet",
+"Sürtünme kuvveti",
+Elektrik kuvveti",
+"Kaldırma kuvveti"
+],
+answer:1,
+explanation:"Fren sistemi sürtünme kuvvetinden yararlanarak bisikletin yavaşlamasını sağlar."
+},
+
+{
+category:"Kütle ve Ağırlık",
+question:"Bir cismin içerdiği madde miktarına ne denir?",
+options:["Ağırlık","Kütle","Kuvvet","Hacim"],
+answer:1,
+explanation:"Cismin içerdiği madde miktarı kütle olarak adlandırılır."
+},
+
+{
+category:"Doğruların Yolculuğu",
+question:"Bir doğru ile bir doğru parçası arasındaki temel fark hangisidir?",
+options:[
+"Doğrunun iki yönde sonsuza uzaması",
+"Doğru parçasının hiç noktası olmaması",
+"Doğrunun eğri olması",
+"Doğru parçasının tek yönde sonsuza uzaması"
+],
+answer:0,
+explanation:"Doğru iki yönde sonsuza uzarken doğru parçasının iki uç noktası vardır."
+},
+
+{
+category:"Kuvvet ve Kuvvetin Ölçülmesi",
+question:"Bir süngeri elimizle sıktığımızda kuvvetin hangi etkisini gözlemleriz?",
+options:[
+"Şekil değiştirme",
+"Kütle artırma",
+"Renk değiştirme",
+"Yer çekimini azaltma"
+],
+answer:0,
+explanation:"Kuvvet cisimlerin şeklini değiştirebilir."
+},
+
+{
+category:"Açıları Ölçme",
+question:"100° ölçüsündeki bir açı hangi açı türüdür?",
+options:["Dar açı","Dik açı","Geniş açı","Doğru açı"],
+answer:2,
+explanation:"100°, 90°'den büyük ve 180°'den küçük olduğu için geniş açıdır."
+},
+
+{
+category:"Sürtünme Kuvveti",
+question:"Futbolcuların kramponlarının altında çıkıntılar bulunmasının nedeni nedir?",
+options:[
+"Sürtünmeyi azaltmak",
+"Sürtünmeyi artırmak",
+Ayakkabıyı hafifletmek",
+"Kütleyi azaltmak"
+],
+answer:1,
+explanation:"Kramponların altındaki çıkıntılar zeminle sürtünmeyi artırarak kaymayı azaltır."
+},
+
+{
+category:"Kütle ve Ağırlık",
+question:"Ağırlığın oluşmasının temel nedeni aşağıdakilerden hangisidir?",
+options:[
+"Yer çekimi",
+"Sürtünme",
+"Elektrik",
+"Ses"
+],
+answer:0,
+explanation:"Ağırlık, gök cisminin uyguladığı çekim kuvvetinin sonucudur."
+},
+
+{
+category:"Doğruların Yolculuğu",
+question:"Birbirini bir noktada kesen iki doğruya genel olarak ne ad verilir?",
+options:[
+"Paralel doğrular",
+"Kesişen doğrular",
+"Işınlar",
+"Doğru parçaları"
+],
+answer:1,
+explanation:"Ortak bir noktada buluşan doğrular kesişen doğrulardır."
+},
+
+{
+category:"Kuvvet ve Kuvvetin Ölçülmesi",
+question:"Bir dinamometrede ölçülebilecek en büyük kuvvetin aşılması neye yol açabilir?",
+options:[
+"Yayın zarar görmesine",
+"Kütlenin azalmasına",
+"Cismin renginin değişmesine",
+"Yer çekiminin artmasına"
+],
+answer:0,
+explanation:"Dinamometrenin ölçüm sınırı aşılırsa içindeki yay kalıcı olarak zarar görebilir."
+},
+
+{
+category:"Açıları Ölçme",
+question:"Aşağıdaki açılardan hangisi en büyüktür?",
+options:["25°","60°","90°","150°"],
+answer:3,
+explanation:"Verilen açılar arasında en büyük ölçü 150 derecedir."
+},
+
+{
+category:"Sürtünme Kuvveti",
+question:"Paraşütün havada yavaş düşmesini sağlayan temel etken aşağıdakilerden hangisidir?",
+options:[
+"Hava direnci",
+"Kütlenin yok olması",
+"Yer çekiminin durması",
+"Manyetik kuvvet"
+],
+answer:0,
+explanation:"Hava direnci bir sürtünme kuvvetidir ve paraşütün düşüşünü yavaşlatır."
+},
+
+{
+category:"Kütle ve Ağırlık",
+question:"Kütlesi 5 kg olan bir cismin başka bir gezegene götürülmesiyle ilgili hangisi doğrudur?",
+options:[
+"Kütlesi kesinlikle artar",
+"Kütlesi kesinlikle azalır",
+"Kütlesi 5 kg olarak kalır",
+"Kütlesi sıfır olur"
+],
+answer:2,
+explanation:"Kütle bulunduğu yere göre değişmediği için 5 kg olarak kalır."
+},
+
+{
+category:"Doğruların Yolculuğu",
+question:"Bir ışın için aşağıdaki ifadelerden hangisi doğrudur?",
+options:[
+"İki uç noktası vardır",
+"Başlangıç noktası yoktur",
+"Bir başlangıç noktası vardır",
+"Her iki yönde sonsuza uzanır"
+],
+answer:2,
+explanation:"Işının bir başlangıç noktası vardır ve bir yönde sonsuza uzanır."
+},
+
+{
+category:"Kuvvet ve Kuvvetin Ölçülmesi",
+question:"Bir alışveriş arabasını itmek aşağıdakilerden hangisine örnektir?",
+options:[
+"İtme kuvveti",
+"Çekme kuvveti",
+"Sürtünmenin tamamen yok olması",
+"Ağırlığın değişmesi"
+],
+answer:0,
+explanation:"Alışveriş arabasını hareket ettirmek için uyguladığımız kuvvet itme kuvvetidir."
+},
+
+{
+category:"Açıları Ölçme",
+question:"Bir açının ölçüsü 70° ise 90°'ye ulaşması için kaç derece daha gerekir?",
+options:["10°","20°","30°","40°"],
+answer:1,
+explanation:"90 - 70 = 20 olduğundan 20 derece daha gerekir."
+},
+
+{
+category:"Sürtünme Kuvveti",
+question:"Aşağıdaki durumlardan hangisinde sürtünme kuvvetinin azaltılması amaçlanır?",
+options:[
+"Kış lastiği kullanılması",
+"Merdivenlere kaydırmaz bant takılması",
+"Kapı menteşesinin yağlanması",
+"Futbol ayakkabısına diş yapılması"
+],
+answer:2,
+explanation:"Kapı menteşesini yağlamak sürtünmeyi azaltarak daha rahat hareket etmesini sağlar."
+},
+
+{
+category:"Kütle ve Ağırlık",
+question:"Kütle ölçmek için aşağıdaki araçlardan hangisi kullanılabilir?",
+options:[
+"Eşit kollu terazi",
+"Dinamometre",
+"İletki",
+"Termometre"
+],
+answer:0,
+explanation:"Kütle ölçmek için eşit kollu terazi kullanılabilir."
+},
+
+{
+category:"Doğruların Yolculuğu",
+question:"Bir defterin karşılıklı iki kenarı genellikle hangi doğru ilişkisine örnektir?",
+options:[
+"Paralel",
+"Dik olmayan kesişen",
+"Işın",
+"Çember"
+],
+answer:0,
+explanation:"Dikdörtgen şeklindeki bir defterin karşılıklı kenarları birbirine paraleldir."
+},
+
+{
+category:"Kuvvet ve Kuvvetin Ölçülmesi",
+question:"Yerde duran bir kutuyu kendimize doğru hareket ettirdiğimizde hangi tür kuvvet uygularız?",
+options:[
+"Çekme",
+"İtme",
+"Sürtünmeyi yok etme",
+"Yer çekimini artırma"
+],
+answer:0,
+explanation:"Bir cismi kendimize doğru hareket ettirdiğimizde çekme kuvveti uygularız."
+},
+
+{
+category:"Açıları Ölçme",
+question:"Aşağıdaki sıralamalardan hangisi açıların küçükten büyüğe doğru sıralanışıdır?",
+options:[
+"120° < 90° < 45°",
+"45° < 90° < 120°",
+"90° < 45° < 120°",
+"120° < 45° < 90°"
+],
+answer:1,
+explanation:"45 derece, 90 dereceden; 90 derece de 120 dereceden küçüktür."
 }
 
-const scenes={
-intro:{
-  age:18,chapter:"BÖLÜM I · BAŞLANGIÇ",speaker:"ANLATICI",title:"Babanın Mektubu",
-  text:"18. yaş gününde odandaki eski çekmeceyi açıyorsun. İçeride babanın yıllar önce bıraktığı bir mektup var. Üzerinde sadece: “Doğru zamanda aç.” yazıyor.",
-  people:[],
-  choices:[
-    {label:"Mektubu şimdi aç",d:{m:-2,r:3},flag:["letter",true],mem:"18 yaşında babanın gizemli mektubunu açtın.",result:"Mektubun içinde tek cümle var: “Bir gün yükselirsen, yanında kimlerin eksildiğine bak.” Altında bir isim: Selim Kara.",next:"denizCafe"},
-    {label:"Mektubu sakla",d:{m:2},flag:["keptLetter",true],mem:"Babanın mektubunu açmadan sakladın.",result:"Mektubu kapatıp cebine koyuyorsun. İçinde açıklayamadığın bir huzursuzluk kalıyor.",next:"denizCafe"}
-  ]
-},
-denizCafe:{
-  age:19,chapter:"BÖLÜM I · İLK KARAR",speaker:"DENİZ",title:"Bir Fikrim Var",
-  text:"“Sana çılgınca gelecek ama dinle. İki yıl boyunca bütün gücümüzü verirsek kendi işimizi kurabiliriz. Paramız az, tecrübemiz yok... ama ben sana güveniyorum.”",
-  people:["Deniz"],active:"Deniz",
-  choices:[
-    {label:"Seninleyim. Başlayalım.",d:{p:-12,m:10,r:8,h:-3},rel:["Deniz",14],flag:["startup",true],mem:"Deniz ile ilk girişimini kurdun.",result:"Deniz gülümsüyor. “O zaman bugün hayatımızın ilk günü.” İkiniz küçük bir odada çalışmaya başlıyorsunuz.",next:"crisis22"},
-    {label:"Ben güvenli bir iş istiyorum.",d:{p:17,m:-4,r:-8},rel:["Deniz",-18],flag:["job",true],mem:"Deniz yerine güvenli kariyeri seçtin.",result:"Deniz bir süre sessiz kalıyor. “Anladım.” diyor. Sonra projeyi tek başına yapacağını söylüyor.",next:"crisis22"}
-  ]
-},
-crisis22:{
-  age:22,chapter:"BÖLÜM II · ÜÇ YIL SONRA",speaker:"DENİZ",title:"İlk Büyük Kırılma",
-  text:()=>state.flags.startup
-   ? "“Kasada iki aylık paramız kaldı. Ya bütün paramızı ürüne yatıracağız ya da burada duracağız. Ben devam etmek istiyorum.”"
-   : "Üç yıl sonra Deniz seni arıyor. “Proje büyüdü ama batmak üzereyim. Bana ortak olur musun?”",
-  people:["Deniz"],active:"Deniz",
-  choices:()=>state.flags.startup?[
-    {label:"Sonuna kadar devam et.",d:{p:-14,m:5,h:-5},rel:["Deniz",12],flag:["allIn",true],mem:"Şirket batma noktasındayken vazgeçmedin.",result:"Son paranızı da yatırıyorsunuz. Haftalar sonra ürün beklenmedik şekilde yayılmaya başlıyor.",next:"arda"},
-    {label:"Burada duralım.",d:{p:5,m:-12,r:-10},rel:["Deniz",-20],flag:["quit",true],mem:"İlk girişiminden vazgeçtin.",result:"Deniz senden ayrılıyor. “Belki de gerçekten aynı şeyi istemiyormuşuz.” Bu söz yıllarca aklında kalıyor.",next:"arda"}
-  ]:[
-    {label:"Deniz'e ortak ol.",d:{p:-15,m:9,r:10},rel:["Deniz",15],flag:["lateStartup",true],mem:"Yıllar sonra Deniz'in girişimine ortak oldun.",result:"Deniz elini uzatıyor: “Geç kaldın ama hâlâ yerin var.”",next:"arda"},
-    {label:"Hayır, kariyerime devam edeceğim.",d:{p:12,m:-5,r:-8},rel:["Deniz",-15],flag:["careerOnly",true],mem:"Deniz'i ikinci kez geri çevirdin.",result:"Telefon kapanıyor. Sonraki yıllarda konuşmalarınız seyrekleşiyor.",next:"arda"}
-  ]
-},
-arda:{
-  age:25,chapter:"BÖLÜM II · YÜKSELİŞ",speaker:"ARDA",title:"Büyük Teklif",
-  text:()=>state.flags.startup||state.flags.lateStartup
-   ? "“Şirketinize yatırım yapmak istiyorum. Size büyümek için gereken her şeyi veririm. Karşılığında %45 ortaklık.”"
-   : "“Seni yönetim ekibine almak istiyorum. Maaşın iki katına çıkacak. Ama hayatının büyük kısmı bu işe ait olacak.”",
-  people:["Deniz","Arda"],active:"Arda",
-  choices:()=>state.flags.startup||state.flags.lateStartup?[
-    {label:"Arda'nın yatırımını kabul et.",d:{p:28,m:5,r:-5},rel:["Arda",25],rel2:["Deniz",-15],flag:["ardaDeal",true],mem:"Arda'yı şirketine ortak ettin.",result:"Arda elini sıkıyor. Deniz ise odadan çıkarken sana bakmıyor.",next:"ela"},
-    {label:"Bağımsız kal.",d:{p:-8,m:6,r:7},rel:["Deniz",14],flag:["independent",true],mem:"Büyük yatırımı reddettin.",result:"Arda gülümsüyor: “Bir gün fikrini değiştireceksin.” Deniz ise ilk kez rahatlıyor.",next:"ela"}
-  ]:[
-    {label:"Teklifi kabul et.",d:{p:25,m:-7,h:-10},rel:["Arda",20],flag:["ardaCareer",true],mem:"Arda'nın kariyer teklifini kabul ettin.",result:"Ünvanın büyüyor. Günlerin ise ofis, toplantı ve uykudan ibaret hale geliyor.",next:"ela"},
-    {label:"Reddet. Hayatım işten ibaret değil.",d:{m:8,h:5,p:-4},flag:["balanced",true],mem:"Daha fazla para yerine zamanını seçtin.",result:"Arda şaşırıyor. “Bu fırsat bir daha gelmeyebilir.” Sen yine de kapıdan çıkıyorsun.",next:"ela"}
-  ]
-},
-ela:{
-  age:27,chapter:"BÖLÜM III · HAYATA GİREN BİRİ",speaker:"ELA",title:"Bir Kahve Daha?",
-  text:"“Sen sürekli yarını düşünüyorsun. Başarı, para, gelecek... Peki bugün? Bugün gerçekten mutlu musun?” Ela'nın sorusu seni hazırlıksız yakalıyor.",
-  people:["Ela"],active:"Ela",
-  choices:[
-    {label:"Ela'ya hayatımda yer aç.",d:{m:15,r:18,p:-4},rel:["Ela",28],flag:["ela",true],mem:"Ela ile bir ilişkiye başladın.",result:"Ela gülümsüyor. “O zaman bir kahve daha.” O gece saatlerce konuşuyorsunuz.",next:"age33"},
-    {label:"Şu an ilişkiye zamanım yok.",d:{p:8,m:-8,r:-10},flag:["noEla",true],mem:"Ela'yı kariyerin için hayatından çıkardın.",result:"Ela başını sallıyor. “Belki başka bir hayatta.” Ardından kalkıp gidiyor.",next:"age33"}
-  ]
-},
-age33:{
-  age:33,chapter:"BÖLÜM IV · BEDELLER",speaker:"DENİZ",title:"Eski Dostlar",
-  text:()=> {
-    if(state.rel.Deniz>=75) return "“Ne kadar büyürsek büyüyelim, ilk günümüzü hatırlıyor musun? İki sandalye, eski bir laptop ve saçma derecede büyük hayaller...”";
-    if(state.rel.Deniz<=40) return "Deniz yıllar sonra karşında. “Sana kızgın değilim artık. Sadece bir zamanlar aynı hayatı yaşayacağımızı düşünmüştüm.”";
-    return "Deniz seni arıyor. “Uzun zamandır gerçekten konuşmadık. İşlerden değil, hayattan bahsediyorum.”";
-  },
-  people:["Deniz"],active:"Deniz",
-  choices:[
-    {label:"Her şeyi bırakıp Deniz'le konuş.",d:{m:10,r:12,p:-5},rel:["Deniz",20],flag:["friendship",true],mem:"Yıllar sonra dostluğuna yeniden zaman ayırdın.",result:"Saatlerce konuşuyorsunuz. Başarılar değil, kaybettikleriniz konuşuluyor.",next:"selim"},
-    {label:"Şimdi zamanım yok.",d:{p:10,m:-8,r:-12},rel:["Deniz",-20],flag:["ignoredDeniz",true],mem:"Deniz'i yine erteledin.",result:"Deniz yalnızca “Tamam.” diyor. Bu kez sesi eskisinden farklı.",next:"selim"}
-  ]
-},
-selim:{
-  age:38,chapter:"BÖLÜM V · GEÇMİŞ",speaker:"SELİM",title:"Babanı Tanıyordum",
-  text:()=>state.flags.letter
-   ? "“Mektuptaki isim bendim. Babanla yıllar önce bir şirket kurduk. Çok başarılı olduk. Sonra başarı bizi birbirimizden kopardı. O, senin aynı hatayı yapmanı istemedi.”"
-   : "“Babanın sana bıraktığı bir mektup vardı. Hâlâ sende mi? Çünkü artık onu açmanın zamanı geldi.”",
-  people:["Selim"],active:"Selim",
-  choices:[
-    {label:"Her şeyi anlat.",d:{m:15,r:10},rel:["Selim",30],flag:["truth",true],mem:"Babanın geçmişiyle yüzleştin.",result:"Selim sana yıllarca saklanan hikâyeyi anlatıyor. Baban büyük bir başarı kurmuş ama sonunda en yakın dostlarını kaybetmiş.",next:"final"},
-    {label:"Geçmiş geçmişte kaldı.",d:{p:5,m:-12,r:-8},flag:["ignorePast",true],mem:"Babanın geçmişini öğrenmek istemedin.",result:"Selim kapıya yöneliyor. Çıkarken duruyor: “Baban da tam olarak bunu söylemişti.”",next:"final"}
-  ]
-},
-final:{
-  age:42,chapter:"FİNAL · ŞİMDİLİK",speaker:"ANLATICI",title:"Nasıl Bir Hayat Kurdun?",
-  text:()=>endingText(),
-  people:()=>state.flags.ela?["Ela"]:state.rel.Deniz>=60?["Deniz"]:[],
-  active:()=>state.flags.ela?"Ela":state.rel.Deniz>=60?"Deniz":null,
-  choices:[
-    {label:"Hayatı yeniden yaşa",restart:true}
-  ]
-}
-};
+];
 
-function endingText(){
-  const s=state.stats;
-  if(state.flags.truth && s.r>=65 && s.m>=60)
-    return "İnsanlar seni yalnızca kazandıklarınla değil, yanında kaldığın insanlarla hatırlıyor. Başarı geldi ama seni tamamen değiştirmedi. SON: İyi Yaşanmış Bir Hayat.";
-  if(s.p>=75 && s.r<50)
-    return "İstediğin güce ve paraya ulaştın. Fakat yıllar sonra telefonu açıp arayabileceğin insanların sayısı çok az. SON: Zirvedeki Sessizlik.";
-  if(state.flags.ela && state.rel.Ela>=25)
-    return "Hayatında başarı vardı ama eve döndüğünde seni bekleyen biri de vardı. Bazı günler hiçbir şey başarmadın; sadece yaşadın. SON: Birlikte Yaşanan Hayat.";
-  if(state.rel.Deniz>=80)
-    return "Çocuklukta başlayan dostluk onlarca yıl ayakta kaldı. Para geldi, gitti; projeler battı, büyüdü. Ama Deniz kaldı. SON: Eski Dostlar.";
-  return "Ne tamamen kazandın ne tamamen kaybettin. Verdiğin her karar seni başka birine dönüştürdü. Belki de hayatın gerçek sonucu buydu. SON: Gölge Hayat.";
+
+/* ==========================================================
+   TEST DEĞİŞKENLERİ
+========================================================== */
+
+let currentQuestion = 0;
+let answers = new Array(questions.length).fill(null);
+
+
+/* ==========================================================
+   SAYFA YÜKLENDİĞİNDE
+========================================================== */
+
+function initQuiz(){
+
+    createQuestionNavigation();
+    renderQuestion();
+    updateStats();
+
 }
 
-function getScene(){
-  const s=scenes[state.scene];
-  const val=k=>typeof s[k]==="function"?s[k]():s[k];
-  return {
-    age:s.age,chapter:s.chapter,speaker:s.speaker,title:s.title,
-    text:val("text"),people:val("people")||[],active:val("active"),
-    choices:val("choices")
-  };
+
+/* ==========================================================
+   SORUYU EKRANA GETİR
+========================================================== */
+
+function renderQuestion(){
+
+    const q = questions[currentQuestion];
+
+    document.getElementById("questionNumber").textContent =
+    `Soru ${currentQuestion + 1} / ${questions.length}`;
+
+    document.getElementById("category").textContent =
+    q.category;
+
+    document.getElementById("questionTitle").textContent =
+    q.question;
+
+    const optionsElement =
+    document.getElementById("options");
+
+    optionsElement.innerHTML = "";
+
+    const letters = ["A","B","C","D"];
+
+    q.options.forEach((option,index)=>{
+
+        const button = document.createElement("button");
+
+        button.className = "option";
+
+        button.innerHTML = `
+        <span class="option-letter">${letters[index]}</span>
+        <span>${option}</span>
+        `;
+
+        button.onclick = () =>
+        selectAnswer(index);
+
+        if(answers[currentQuestion] !== null){
+
+            button.disabled = true;
+
+            if(index === q.answer){
+                button.classList.add("correct");
+            }
+
+            if(
+                index === answers[currentQuestion] &&
+                index !== q.answer
+            ){
+                button.classList.add("wrong");
+            }
+
+        }
+
+        optionsElement.appendChild(button);
+
+    });
+
+    renderFeedback();
+
+    document.getElementById("prevBtn").disabled =
+    currentQuestion === 0;
+
+    document.getElementById("nextBtn").textContent =
+    currentQuestion === questions.length - 1
+    ? "Sonucu Gör"
+    : "Sonraki →";
+
+    updateNavigation();
+
 }
 
-function applyChoice(c){
-  if(c.restart){state=initialState();pendingNext=null;render();return;}
-  if(c.d){
-    for(const k of Object.keys(c.d)) state.stats[k]=clamp(state.stats[k]+c.d[k]);
-  }
-  if(c.rel) state.rel[c.rel[0]]=clamp(state.rel[c.rel[0]]+c.rel[1]);
-  if(c.rel2) state.rel[c.rel2[0]]=clamp(state.rel[c.rel2[0]]+c.rel2[1]);
-  if(c.flag) state.flags[c.flag[0]]=c.flag[1];
-  if(c.mem) state.memories.push(c.mem);
 
-  document.getElementById("choices").innerHTML="";
-  const r=document.getElementById("result");
-  r.textContent=c.result||"";
-  if(c.result) r.classList.remove("hidden");
-  pendingNext=c.next;
-  document.getElementById("next").classList.remove("hidden");
-  updateStats();
+/* ==========================================================
+   CEVAP SEÇ
+========================================================== */
+
+function selectAnswer(index){
+
+    if(answers[currentQuestion] !== null)
+    return;
+
+    answers[currentQuestion] = index;
+
+    renderQuestion();
+    updateStats();
+
 }
+
+
+/* ==========================================================
+   AÇIKLAMA
+========================================================== */
+
+function renderFeedback(){
+
+    const feedback =
+    document.getElementById("feedback");
+
+    const selected =
+    answers[currentQuestion];
+
+    const q =
+    questions[currentQuestion];
+
+    if(selected === null){
+
+        feedback.className = "feedback";
+        feedback.innerHTML = "";
+        return;
+
+    }
+
+    if(selected === q.answer){
+
+        feedback.className =
+        "feedback show correct-feedback";
+
+        feedback.innerHTML = `
+        <strong>Doğru cevap</strong>
+        ${q.explanation}
+        `;
+
+    }else{
+
+        const letters = ["A","B","C","D"];
+
+        feedback.className =
+        "feedback show wrong-feedback";
+
+        feedback.innerHTML = `
+        <strong>
+        Yanlış cevap — Doğru seçenek:
+        ${letters[q.answer]}
+        </strong>
+        ${q.explanation}
+        `;
+
+    }
+
+}
+
+
+/* ==========================================================
+   İLERİ / GERİ
+========================================================== */
+
+function nextQuestion(){
+
+    if(currentQuestion < questions.length - 1){
+
+        currentQuestion++;
+        renderQuestion();
+
+        window.scrollTo({
+            top:0,
+            behavior:"smooth"
+        });
+
+    }else{
+
+        showResults();
+
+    }
+
+}
+
+
+function previousQuestion(){
+
+    if(currentQuestion > 0){
+
+        currentQuestion--;
+        renderQuestion();
+
+        window.scrollTo({
+            top:0,
+            behavior:"smooth"
+        });
+
+    }
+
+}
+
+
+/* ==========================================================
+   SORU NUMARALARI
+========================================================== */
+
+function createQuestionNavigation(){
+
+    const grid =
+    document.getElementById("questionGrid");
+
+    grid.innerHTML = "";
+
+    questions.forEach((_,index)=>{
+
+        const button =
+        document.createElement("button");
+
+        button.className = "qnav";
+
+        button.textContent =
+        index + 1;
+
+        button.onclick = ()=>{
+
+            currentQuestion = index;
+
+            renderQuestion();
+
+            window.scrollTo({
+                top:0,
+                behavior:"smooth"
+            });
+
+        };
+
+        grid.appendChild(button);
+
+    });
+
+}
+
+
+function updateNavigation(){
+
+    const navButtons =
+    document.querySelectorAll(".qnav");
+
+    navButtons.forEach((button,index)=>{
+
+        button.className = "qnav";
+
+        if(answers[index] !== null){
+
+            if(
+                answers[index] ===
+                questions[index].answer
+            ){
+                button.classList.add("correct");
+            }else{
+                button.classList.add("wrong");
+            }
+
+        }
+
+        if(index === currentQuestion){
+            button.classList.add("current");
+        }
+
+    });
+
+}
+
+
+/* ==========================================================
+   İSTATİSTİK
+========================================================== */
 
 function updateStats(){
-  for(const k of ["h","m","p","r"]){
-    document.getElementById(k).textContent=state.stats[k];
-    document.getElementById(k+"b").style.width=state.stats[k]+"%";
-  }
+
+    let correct = 0;
+    let wrong = 0;
+    let answered = 0;
+
+    answers.forEach((answer,index)=>{
+
+        if(answer !== null){
+
+            answered++;
+
+            if(answer === questions[index].answer){
+                correct++;
+            }else{
+                wrong++;
+            }
+
+        }
+
+    });
+
+    const empty =
+    questions.length - answered;
+
+    document.getElementById("correctStat")
+    .textContent = correct;
+
+    document.getElementById("wrongStat")
+    .textContent = wrong;
+
+    document.getElementById("emptyStat")
+    .textContent = empty;
+
+    document.getElementById("topScore")
+    .textContent =
+    `${correct} / ${questions.length}`;
+
+    document.getElementById("progressText")
+    .textContent =
+    `${answered} / ${questions.length} cevaplandı`;
+
+    const percentage =
+    answered / questions.length * 100;
+
+    document.getElementById("progressFill")
+    .style.width =
+    percentage + "%";
+
 }
 
-function render(){
-  const s=getScene();
-  state.age=s.age;
-  document.getElementById("ageLabel").textContent=s.age+" Yaş";
-  document.getElementById("lifeBar").style.width=Math.min(100,s.age)+"%";
-  document.getElementById("chapter").textContent=s.chapter;
-  document.getElementById("speaker").textContent=s.speaker;
-  document.getElementById("title").textContent=s.title;
-  document.getElementById("text").textContent=s.text;
 
-  document.getElementById("stage").innerHTML=s.people.map(n=>personHTML(n,n===s.active)).join("");
+/* ==========================================================
+   SONUÇ
+========================================================== */
 
-  const relBox=document.getElementById("relations");
-  relBox.innerHTML=s.people.map(n=>`<span class="badge">${n} · ${state.rel[n]||0}</span>`).join("");
+function showResults(){
 
-  const ch=document.getElementById("choices");
-  ch.innerHTML="";
-  s.choices.forEach(c=>{
-    const b=document.createElement("button");
-    b.className="choice";b.type="button";b.textContent=c.label;
-    b.addEventListener("click",()=>applyChoice(c));
-    ch.appendChild(b);
-  });
+    let correct = 0;
+    let wrong = 0;
 
-  document.getElementById("result").classList.add("hidden");
-  document.getElementById("next").classList.add("hidden");
+    answers.forEach((answer,index)=>{
 
-  document.getElementById("memories").innerHTML=state.memories.length
-    ? state.memories.slice(-5).reverse().map(x=>"• "+x).join("<br>")
-    : "Henüz kalıcı bir karar vermedin.";
+        if(answer !== null){
 
-  updateStats();
+            if(answer === questions[index].answer)
+                correct++;
+            else
+                wrong++;
+
+        }
+
+    });
+
+    const percent =
+    Math.round(
+        correct /
+        questions.length *
+        100
+    );
+
+    document.getElementById("quizPage")
+    .style.display = "none";
+
+    document.getElementById("resultPage")
+    .style.display = "block";
+
+    document.getElementById("percentageScore")
+    .textContent = percent;
+
+    document.getElementById("finalCorrect")
+    .textContent = correct;
+
+    document.getElementById("finalWrong")
+    .textContent = wrong;
+
+    document.getElementById("finalPercent")
+    .textContent = "%" + percent;
+
+
+    let message = "";
+
+    if(percent === 100){
+
+        message =
+        "Mükemmel sonuç! 50 sorunun tamamını doğru cevapladın.";
+
+    }
+
+    else if(percent >= 90){
+
+        message =
+        "Harika bir sonuç. Konulara çok iyi hâkimsin.";
+
+    }
+
+    else if(percent >= 80){
+
+        message =
+        "Çok iyi gidiyorsun. Birkaç küçük tekrar ile mükemmel seviyeye ulaşabilirsin.";
+
+    }
+
+    else if(percent >= 70){
+
+        message =
+        "İyi bir sonuç. Yanlış yaptığın soruların açıklamalarını tekrar incele.";
+
+    }
+
+    else if(percent >= 50){
+
+        message =
+        "Temel bilgilerin iyi ancak bazı konuları yeniden çalışman faydalı olacaktır.";
+
+    }
+
+    else{
+
+        message =
+        "Konuları biraz daha tekrar ettikten sonra testi yeniden çözmeni öneriyoruz.";
+
+    }
+
+    document.getElementById("performanceText")
+    .textContent = message;
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
 }
 
-document.getElementById("next").addEventListener("click",()=>{
-  if(pendingNext){state.scene=pendingNext;pendingNext=null;render();}
-});
-document.getElementById("reset").addEventListener("click",()=>{
-  state=initialState();pendingNext=null;render();
-});
-render();
+
+/* ==========================================================
+   YENİDEN BAŞLAT
+========================================================== */
+
+function restartQuiz(){
+
+    answers =
+    new Array(questions.length).fill(null);
+
+    currentQuestion = 0;
+
+    document.getElementById("resultPage")
+    .style.display = "none";
+
+    document.getElementById("quizPage")
+    .style.display = "block";
+
+    renderQuestion();
+    updateStats();
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+initQuiz();
+
 </script>
+
 </body>
 </html>
