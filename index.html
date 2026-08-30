@@ -3,839 +3,436 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>5. Sınıf Karma Test | Matematik & Fen Bilimleri</title>
+<title>5. Sınıf Karma Test</title>
 
 <style>
-
 *{
     box-sizing:border-box;
-    margin:0;
-    padding:0;
 }
 
-:root{
-    --bg:#f4f6f9;
-    --card:#ffffff;
-    --text:#17191c;
-    --muted:#717780;
-    --border:#e4e7ec;
-    --primary:#111827;
-    --primary-soft:#f2f4f7;
-    --green:#16a34a;
-    --green-bg:#ecfdf3;
-    --red:#dc2626;
-    --red-bg:#fef2f2;
-    --blue:#2563eb;
-    --shadow:0 8px 30px rgba(17,24,39,.06);
+html,body{
+    margin:0;
+    padding:0;
+    background:#000;
+    color:#fff;
+    font-family:Arial, Helvetica, sans-serif;
+    min-height:100%;
 }
 
 body{
-    background:var(--bg);
-    color:var(--text);
-    font-family:
-    Inter,
-    "Segoe UI",
-    Arial,
-    sans-serif;
     min-height:100vh;
 }
 
-/* HEADER */
-
-.topbar{
-    background:#fff;
-    border-bottom:1px solid var(--border);
-    position:sticky;
-    top:0;
-    z-index:100;
+.container{
+    width:100%;
+    max-width:700px;
+    margin:0 auto;
+    padding:22px 16px 50px;
 }
 
-.topbar-inner{
-    max-width:1200px;
-    margin:auto;
-    padding:17px 20px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:20px;
+.top{
+    margin-bottom:28px;
 }
 
-.brand{
-    display:flex;
-    align-items:center;
-    gap:13px;
+.top h1{
+    font-size:22px;
+    margin:0 0 8px;
+    font-weight:700;
 }
 
-.logo{
-    width:42px;
-    height:42px;
-    border-radius:12px;
-    background:#111827;
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:18px;
-    font-weight:800;
-}
-
-.brand-text h1{
-    font-size:17px;
-    font-weight:750;
-}
-
-.brand-text p{
-    color:var(--muted);
-    font-size:12px;
-    margin-top:2px;
-}
-
-.top-score{
+.top p{
+    color:#8c8c8c;
     font-size:14px;
-    font-weight:700;
-    padding:10px 15px;
-    background:#f7f8fa;
-    border:1px solid var(--border);
-    border-radius:10px;
+    margin:0;
 }
 
-/* PAGE */
-
-.page{
-    max-width:1200px;
-    margin:auto;
-    padding:30px 20px 70px;
-}
-
-.intro{
-    margin-bottom:24px;
-}
-
-.intro h2{
-    font-size:30px;
-    margin-bottom:8px;
-    letter-spacing:-.5px;
-}
-
-.intro p{
-    color:var(--muted);
-    line-height:1.7;
-    max-width:800px;
-}
-
-/* PROGRESS */
-
-.progress-area{
-    background:#fff;
-    border:1px solid var(--border);
-    box-shadow:var(--shadow);
-    border-radius:16px;
-    padding:18px 20px;
-    margin-bottom:25px;
-}
-
-.progress-top{
+.progress-info{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:11px;
+    margin-top:22px;
+    margin-bottom:9px;
     font-size:13px;
+    color:#aaa;
 }
 
-.progress-title{
-    font-weight:700;
-}
-
-.progress-count{
-    color:var(--muted);
-}
-
-.progress-track{
-    height:8px;
-    background:#eceff3;
-    border-radius:30px;
+.progress{
+    width:100%;
+    height:6px;
+    background:#202020;
+    border-radius:20px;
     overflow:hidden;
 }
 
 .progress-fill{
-    height:100%;
     width:0%;
-    background:#111827;
-    border-radius:30px;
-    transition:.35s ease;
-}
-
-/* LAYOUT */
-
-.quiz-layout{
-    display:grid;
-    grid-template-columns:1fr 285px;
-    gap:25px;
-    align-items:start;
-}
-
-/* QUESTION */
-
-.question-card{
-    background:var(--card);
-    border:1px solid var(--border);
-    box-shadow:var(--shadow);
+    height:100%;
+    background:#fff;
     border-radius:20px;
-    padding:32px;
+    transition:.3s;
 }
 
-.question-head{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:12px;
-    margin-bottom:27px;
-}
-
-.question-number{
-    font-size:13px;
-    color:var(--muted);
-    font-weight:650;
+.card{
+    background:#0c0c0c;
+    border:1px solid #1d1d1d;
+    border-radius:18px;
+    padding:23px 18px;
 }
 
 .category{
-    display:inline-flex;
-    align-items:center;
-    padding:7px 11px;
-    border-radius:20px;
-    background:#f2f4f7;
-    font-size:12px;
-    font-weight:700;
+    display:inline-block;
+    font-size:11px;
+    color:#8e8e8e;
+    background:#171717;
+    padding:6px 9px;
+    border-radius:7px;
+    margin-bottom:17px;
 }
 
-.question-title{
-    font-size:22px;
-    line-height:1.55;
-    margin-bottom:28px;
-    font-weight:700;
+.question{
+    font-size:20px;
+    line-height:1.5;
+    font-weight:600;
+    margin-bottom:23px;
 }
 
 .options{
-    display:grid;
-    gap:13px;
+    display:flex;
+    flex-direction:column;
+    gap:11px;
 }
 
 .option{
-    position:relative;
     width:100%;
-    border:1.5px solid var(--border);
-    background:#fff;
-    border-radius:14px;
-    padding:16px 17px;
+    background:#111;
+    color:#fff;
+    border:1px solid #292929;
+    border-radius:13px;
+    padding:15px 14px;
+    font-size:15px;
+    text-align:left;
     cursor:pointer;
-    transition:.18s ease;
+    transition:.15s;
     display:flex;
     align-items:center;
-    gap:13px;
-    text-align:left;
-    color:var(--text);
-    font-size:15px;
+    gap:12px;
 }
 
 .option:hover:not(:disabled){
-    border-color:#b7bdc7;
-    background:#fafbfc;
-    transform:translateY(-1px);
+    background:#181818;
 }
 
 .option-letter{
-    min-width:32px;
-    width:32px;
-    height:32px;
-    border-radius:9px;
+    width:30px;
+    min-width:30px;
+    height:30px;
+    border-radius:8px;
     display:flex;
     align-items:center;
     justify-content:center;
-    background:#f3f4f6;
+    background:#222;
     font-size:13px;
-    font-weight:800;
-    transition:.2s;
+    font-weight:bold;
 }
 
 .option.correct{
-    border-color:#22c55e;
-    background:var(--green-bg);
+    border-color:#20c763;
+    background:#07150d;
 }
 
 .option.correct .option-letter{
-    background:#22c55e;
-    color:white;
+    background:#20c763;
+    color:#000;
 }
 
 .option.wrong{
-    border-color:#ef4444;
-    background:var(--red-bg);
+    border-color:#ff4040;
+    background:#190707;
 }
 
 .option.wrong .option-letter{
-    background:#ef4444;
-    color:white;
+    background:#ff4040;
+    color:#fff;
 }
 
 .option:disabled{
     cursor:default;
 }
 
-/* FEEDBACK */
-
 .feedback{
     display:none;
-    margin-top:22px;
-    border-radius:13px;
-    padding:16px 18px;
-    line-height:1.65;
+    margin-top:18px;
+    padding:15px;
+    border-radius:12px;
     font-size:14px;
+    line-height:1.6;
 }
 
 .feedback.show{
     display:block;
 }
 
-.feedback.correct-feedback{
-    background:var(--green-bg);
-    border:1px solid #bbf7d0;
-    color:#166534;
+.feedback.good{
+    background:#07150d;
+    color:#38df78;
+    border:1px solid #164f2a;
 }
 
-.feedback.wrong-feedback{
-    background:var(--red-bg);
-    border:1px solid #fecaca;
-    color:#991b1b;
+.feedback.bad{
+    background:#160707;
+    color:#ff7373;
+    border:1px solid #542020;
 }
 
-.feedback strong{
-    display:block;
-    margin-bottom:4px;
-}
-
-/* CONTROLS */
-
-.controls{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:12px;
-    margin-top:28px;
-    border-top:1px solid var(--border);
-    padding-top:22px;
-}
-
-.btn{
-    border:0;
-    border-radius:11px;
-    padding:12px 18px;
-    font-size:14px;
+.feedback-title{
     font-weight:700;
-    cursor:pointer;
-    transition:.2s;
+    font-size:16px;
+    margin-bottom:6px;
 }
 
-.btn-secondary{
-    background:#f3f4f6;
-    color:#111827;
+.explanation{
+    margin-top:8px;
+    color:#ddd;
 }
 
-.btn-secondary:hover{
-    background:#e5e7eb;
-}
-
-.btn-primary{
-    background:#111827;
-    color:white;
-}
-
-.btn-primary:hover{
-    background:#272f3e;
-}
-
-.btn:disabled{
-    opacity:.4;
-    cursor:not-allowed;
-}
-
-/* SIDE */
-
-.sidebar{
-    position:sticky;
-    top:100px;
-}
-
-.side-card{
+.next-btn{
+    width:100%;
+    margin-top:20px;
     background:#fff;
-    border:1px solid var(--border);
-    box-shadow:var(--shadow);
-    border-radius:18px;
-    padding:20px;
-    margin-bottom:17px;
-}
-
-.side-card h3{
-    font-size:14px;
-    margin-bottom:16px;
-}
-
-.stats{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:7px;
-}
-
-.stat{
-    border:1px solid var(--border);
-    border-radius:11px;
-    padding:11px 5px;
-    text-align:center;
-}
-
-.stat strong{
-    font-size:17px;
-    display:block;
-}
-
-.stat span{
-    color:var(--muted);
-    font-size:10px;
-    display:block;
-    margin-top:3px;
-}
-
-/* NAVIGATION */
-
-.question-grid{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:7px;
-}
-
-.qnav{
-    aspect-ratio:1;
-    border-radius:8px;
-    border:1px solid var(--border);
-    background:#fff;
+    color:#000;
+    border:none;
+    border-radius:12px;
+    padding:15px;
+    font-size:15px;
+    font-weight:bold;
     cursor:pointer;
-    font-size:11px;
-    font-weight:700;
-    transition:.15s;
-}
-
-.qnav:hover{
-    border-color:#111827;
-}
-
-.qnav.current{
-    background:#111827;
-    color:white;
-    border-color:#111827;
-}
-
-.qnav.correct{
-    background:#dcfce7;
-    color:#15803d;
-    border-color:#bbf7d0;
-}
-
-.qnav.wrong{
-    background:#fee2e2;
-    color:#b91c1c;
-    border-color:#fecaca;
-}
-
-/* RESULT */
-
-.result-page{
     display:none;
 }
 
-.result-card{
-    max-width:760px;
-    margin:0 auto;
-    background:#fff;
-    border:1px solid var(--border);
-    box-shadow:var(--shadow);
-    border-radius:24px;
-    padding:42px;
+.next-btn.show{
+    display:block;
+}
+
+.result{
+    display:none;
     text-align:center;
+    padding:70px 10px;
 }
 
-.result-icon{
-    width:70px;
-    height:70px;
-    margin:0 auto 18px;
-    background:#111827;
-    color:white;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:28px;
-    font-weight:800;
+.result h2{
+    font-size:30px;
+    margin:0 0 10px;
 }
 
-.result-card h2{
-    font-size:29px;
-    margin-bottom:7px;
+.result .name{
+    font-size:25px;
+    font-weight:700;
+    margin-bottom:35px;
 }
 
-.result-card > p{
-    color:var(--muted);
-}
-
-.big-score{
-    margin:30px auto;
-}
-
-.score-number{
+.score{
     font-size:55px;
     font-weight:800;
-    letter-spacing:-2px;
+    margin-bottom:8px;
 }
 
-.score-label{
-    color:var(--muted);
-    font-size:13px;
+.score-text{
+    color:#888;
+    margin-bottom:30px;
 }
 
 .result-stats{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:12px;
-    margin:25px 0;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:28px;
 }
 
-.result-stat{
-    background:#f7f8fa;
+.stat{
+    background:#0c0c0c;
+    border:1px solid #1d1d1d;
     border-radius:13px;
     padding:18px 10px;
 }
 
-.result-stat strong{
-    font-size:23px;
+.stat strong{
     display:block;
+    font-size:25px;
+    margin-bottom:4px;
 }
 
-.result-stat span{
+.stat span{
     font-size:12px;
-    color:var(--muted);
-    margin-top:4px;
-    display:block;
-}
-
-.performance{
-    padding:18px;
-    background:#f7f8fa;
-    border-radius:14px;
-    line-height:1.6;
-    margin-bottom:25px;
+    color:#8f8f8f;
 }
 
 .restart{
-    background:#111827;
-    color:white;
-    border:none;
-    border-radius:11px;
-    padding:14px 22px;
-    font-weight:700;
+    width:100%;
+    background:#fff;
+    color:#000;
+    border:0;
+    border-radius:12px;
+    padding:15px;
+    font-weight:bold;
+    font-size:15px;
     cursor:pointer;
-    font-size:14px;
 }
 
-/* MOBILE */
+@media(max-width:500px){
 
-@media(max-width:900px){
-
-    .quiz-layout{
-        grid-template-columns:1fr;
+    .container{
+        padding:18px 13px 40px;
     }
 
-    .sidebar{
-        position:static;
+    .top h1{
+        font-size:20px;
     }
 
-    .sidebar .side-card:last-child{
-        display:none;
-    }
-
-}
-
-@media(max-width:600px){
-
-    .page{
-        padding:20px 12px 50px;
-    }
-
-    .topbar-inner{
-        padding:13px 14px;
-    }
-
-    .brand-text p{
-        display:none;
-    }
-
-    .question-card{
-        padding:21px 17px;
+    .card{
+        padding:20px 14px;
         border-radius:16px;
     }
 
-    .question-title{
+    .question{
         font-size:18px;
     }
 
     .option{
-        padding:13px;
         font-size:14px;
+        padding:13px 12px;
     }
 
-    .intro h2{
-        font-size:24px;
+    .result h2{
+        font-size:25px;
     }
 
-    .result-card{
-        padding:28px 18px;
+    .result .name{
+        font-size:22px;
     }
-
-    .result-stats{
-        gap:7px;
-    }
-
-    .result-stat{
-        padding:14px 5px;
-    }
-
-    .controls{
-        gap:7px;
-    }
-
-    .btn{
-        flex:1;
-        padding:12px 8px;
-    }
-
 }
-
 </style>
 </head>
 
 <body>
 
-<header class="topbar">
+<div class="container">
 
-<div class="topbar-inner">
+    <div id="quizArea">
 
-    <div class="brand">
-
-        <div class="logo">5</div>
-
-        <div class="brand-text">
+        <div class="top">
             <h1>5. Sınıf Karma Test</h1>
-            <p>Matematik & Fen Bilimleri</p>
+            <p>Matematik ve Fen Bilimleri • 50 Soru</p>
+
+            <div class="progress-info">
+                <span id="questionNumber">Soru 1 / 50</span>
+                <span id="scoreInfo">0 doğru</span>
+            </div>
+
+            <div class="progress">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="card">
+
+            <div class="category" id="category"></div>
+
+            <div class="question" id="question"></div>
+
+            <div class="options" id="options"></div>
+
+            <div class="feedback" id="feedback"></div>
+
+            <button class="next-btn" id="nextBtn" onclick="nextQuestion()">
+                Sonraki Soru
+            </button>
+
         </div>
 
     </div>
 
-    <div class="top-score" id="topScore">
-        0 / 50
-    </div>
 
-</div>
+    <div class="result" id="result">
 
-</header>
+        <h2>Aferin</h2>
 
-
-<main class="page" id="quizPage">
-
-<section class="intro">
-
-<h2>Bilgini Test Et</h2>
-
-<p>
-Açıları ölçme, doğrular, kuvvet, kütle ve ağırlık ilişkisi ile sürtünme
-kuvveti konularından hazırlanmış 50 soruluk karma test.
-</p>
-
-</section>
-
-
-<section class="progress-area">
-
-<div class="progress-top">
-
-<span class="progress-title">Test ilerlemesi</span>
-
-<span class="progress-count" id="progressText">
-0 / 50 cevaplandı
-</span>
-
-</div>
-
-<div class="progress-track">
-<div class="progress-fill" id="progressFill"></div>
-</div>
-
-</section>
-
-
-<div class="quiz-layout">
-
-<div>
-
-<div class="question-card" id="questionCard">
-
-    <div class="question-head">
-
-        <div class="question-number" id="questionNumber">
-        Soru 1 / 50
+        <div class="name">
+            Faik Eren!
         </div>
 
-        <div class="category" id="category"></div>
+        <div class="score" id="finalScore">
+            0/50
+        </div>
 
-    </div>
+        <div class="score-text">
+            Testi tamamladın.
+        </div>
 
-    <div class="question-title" id="questionTitle"></div>
+        <div class="result-stats">
 
-    <div class="options" id="options"></div>
+            <div class="stat">
+                <strong id="finalCorrect">0</strong>
+                <span>DOĞRU</span>
+            </div>
 
-    <div class="feedback" id="feedback"></div>
+            <div class="stat">
+                <strong id="finalWrong">0</strong>
+                <span>YANLIŞ</span>
+            </div>
 
-    <div class="controls">
+        </div>
 
-        <button
-        class="btn btn-secondary"
-        id="prevBtn"
-        onclick="previousQuestion()">
-        ← Önceki
-        </button>
-
-        <button
-        class="btn btn-primary"
-        id="nextBtn"
-        onclick="nextQuestion()">
-        Sonraki →
+        <button class="restart" onclick="restartQuiz()">
+            Testi Tekrar Çöz
         </button>
 
     </div>
 
 </div>
-
-</div>
-
-
-<aside class="sidebar">
-
-<div class="side-card">
-
-<h3>Test Durumu</h3>
-
-<div class="stats">
-
-<div class="stat">
-<strong id="correctStat">0</strong>
-<span>DOĞRU</span>
-</div>
-
-<div class="stat">
-<strong id="wrongStat">0</strong>
-<span>YANLIŞ</span>
-</div>
-
-<div class="stat">
-<strong id="emptyStat">50</strong>
-<span>BOŞ</span>
-</div>
-
-</div>
-
-</div>
-
-
-<div class="side-card">
-
-<h3>Sorular</h3>
-
-<div class="question-grid" id="questionGrid"></div>
-
-</div>
-
-</aside>
-
-</div>
-
-</main>
-
-
-<main class="page result-page" id="resultPage">
-
-<div class="result-card">
-
-<div class="result-icon">✓</div>
-
-<h2>Test Tamamlandı</h2>
-
-<p>50 soruluk karma testi tamamladın.</p>
-
-<div class="big-score">
-
-<div class="score-number" id="percentageScore">
-0
-</div>
-
-<div class="score-label">
-100 üzerinden puanın
-</div>
-
-</div>
-
-
-<div class="result-stats">
-
-<div class="result-stat">
-<strong id="finalCorrect">0</strong>
-<span>Doğru</span>
-</div>
-
-<div class="result-stat">
-<strong id="finalWrong">0</strong>
-<span>Yanlış</span>
-</div>
-
-<div class="result-stat">
-<strong id="finalPercent">%0</strong>
-<span>Başarı</span>
-</div>
-
-</div>
-
-
-<div class="performance" id="performanceText"></div>
-
-<button class="restart" onclick="restartQuiz()">
-Testi Yeniden Çöz
-</button>
-
-</div>
-
-</main>
 
 
 <script>
 
-/* ==========================================================
-   50 SORULUK SORU HAVUZU
-========================================================== */
-
 const questions = [
 
 {
-category:"Kuvvet ve Kuvvetin Ölçülmesi",
-question:"Kuvveti ölçmek için kullanılan araç aşağıdakilerden hangisidir?",
-options:["Dinamometre","Termometre","Barometre","Eşit kollu terazi"],
+category:"Açıları Ölçme",
+question:"Bir açının ölçüsünü belirlemek için hangi araç kullanılır?",
+options:["Cetvel","İletki","Pergel","Metre"],
+answer:1,
+explanation:"Açıların kaç derece olduğunu ölçmek için iletki kullanılır."
+},
+
+{
+category:"Kuvvet",
+question:"Kuvveti ölçmek için kullanılan araç hangisidir?",
+options:["Termometre","Dinamometre","Cetvel","Terazi"],
+answer:1,
+explanation:"Kuvvet dinamometre ile ölçülür. Dinamometrenin içerisinde esnek bir yay bulunur."
+},
+
+{
+category:"Sürtünme Kuvveti",
+question:"Sürtünme kuvveti hareket eden bir cisme genellikle hangi yönde etki eder?",
+options:["Hareket yönünde","Hareketin ters yönünde","Yukarı","Aşağı"],
+answer:1,
+explanation:"Sürtünme kuvveti genellikle cismin hareket yönünün tersine etki ederek cismin yavaşlamasına neden olur."
+},
+
+{
+category:"Kütle ve Ağırlık",
+question:"Kütlenin birimi aşağıdakilerden hangisidir?",
+options:["Newton","Kilogram","Metre","Derece"],
+answer:1,
+explanation:"Kütle, bir cismin sahip olduğu madde miktarıdır ve kilogram ile ifade edilebilir."
+},
+
+{
+category:"Doğruların Yolculuğu",
+question:"Birbirini hiçbir zaman kesmeyen doğrulara ne ad verilir?",
+options:["Paralel doğrular","Dik doğrular","Kesişen doğrular","Işınlar"],
 answer:0,
-explanation:"Kuvvet dinamometre adı verilen araçla ölçülür."
+explanation:"Aynı düzlemde bulunan ve ne kadar uzatılırsa uzatılsın kesişmeyen doğrular paralel doğrulardır."
 },
 
 {
@@ -843,568 +440,477 @@ category:"Açıları Ölçme",
 question:"Ölçüsü 90° olan açıya ne ad verilir?",
 options:["Dar açı","Geniş açı","Dik açı","Doğru açı"],
 answer:2,
-explanation:"Ölçüsü tam 90 derece olan açılara dik açı denir."
+explanation:"Tam 90 derece ölçüsündeki açıya dik açı denir."
 },
 
 {
-category:"Sürtünme Kuvveti",
-question:"Sürtünme kuvveti hareket eden bir cisme genellikle hangi yönde etki eder?",
-options:["Hareket yönünde","Hareket yönünün tersinde","Yukarı yönde","Aşağı yönde"],
+category:"Kuvvet",
+question:"Kuvvetin birimi nedir?",
+options:["Kilogram","Newton","Litre","Metre"],
 answer:1,
-explanation:"Sürtünme kuvveti genellikle cismin hareket yönüne ters yönde etki eder."
-},
-
-{
-category:"Kütle ve Ağırlık",
-question:"Kütlenin birimi aşağıdakilerden hangisidir?",
-options:["Newton","Kilogram","Metre","Litre"],
-answer:1,
-explanation:"Kütlenin yaygın kullanılan ölçü birimi kilogramdır."
-},
-
-{
-category:"Doğruların Yolculuğu",
-question:"Birbirini hiçbir zaman kesmeyen ve aralarındaki uzaklık değişmeyen doğrulara ne denir?",
-options:["Dik doğrular","Kesişen doğrular","Paralel doğrular","Işınlar"],
-answer:2,
-explanation:"Birbirini kesmeyen ve aralarındaki uzaklık değişmeyen doğrular paralel doğrulardır."
-},
-
-{
-category:"Açıları Ölçme",
-question:"Aşağıdakilerden hangisi dar açıya örnektir?",
-options:["35°","90°","120°","180°"],
-answer:0,
-explanation:"0° ile 90° arasındaki açılara dar açı denir. 35° dar açıdır."
-},
-
-{
-category:"Kuvvet ve Kuvvetin Ölçülmesi",
-question:"Kuvvetin birimi aşağıdakilerden hangisidir?",
-options:["Kilogram","Newton","Santimetre","Derece"],
-answer:1,
-explanation:"Kuvvetin birimi Newton'dur ve N harfi ile gösterilir."
+explanation:"Kuvvetin ölçü birimi Newton'dur ve kısaca N harfi ile gösterilir."
 },
 
 {
 category:"Kütle ve Ağırlık",
 question:"Bir cismin kütlesi Dünya'dan Ay'a götürülürse ne olur?",
-options:["Artar","Azalır","Değişmez","Sıfırlanır"],
+options:["Artar","Azalır","Değişmez","Sıfır olur"],
 answer:2,
-explanation:"Kütle madde miktarıdır ve cismin bulunduğu yere göre değişmez."
+explanation:"Kütle cismin madde miktarıdır. Cismin bulunduğu yer değişse bile kütlesi değişmez."
 },
 
 {
 category:"Sürtünme Kuvveti",
-question:"Aşağıdaki yüzeylerden hangisinde sürtünme kuvveti daha fazladır?",
-options:["Buz","Halı","Islak mermer","Düz cam"],
+question:"Aşağıdaki yüzeylerden hangisinde sürtünme daha fazladır?",
+options:["Buz","Halı","Cam","Islak mermer"],
 answer:1,
-explanation:"Pürüzlü yüzeylerde sürtünme kuvveti daha fazladır. Halı pürüzlü bir yüzeydir."
+explanation:"Pürüzlü yüzeylerde sürtünme daha fazladır. Halı diğer seçeneklerden daha pürüzlüdür."
 },
 
 {
 category:"Doğruların Yolculuğu",
-question:"Bir başlangıç noktası bulunan ve bir yönde sonsuza kadar uzayan geometrik şekle ne denir?",
-options:["Doğru parçası","Işın","Doğru","Açı"],
-answer:1,
-explanation:"Bir başlangıç noktası olup tek yönde sonsuza uzanan şekle ışın denir."
+question:"Bir başlangıç noktası olup tek yönde sonsuza uzanan geometrik şekil nedir?",
+options:["Doğru","Doğru parçası","Işın","Açı"],
+answer:2,
+explanation:"Işının bir başlangıç noktası vardır ve yalnızca bir yönde sonsuza kadar devam eder."
 },
 
 {
 category:"Açıları Ölçme",
-question:"120° ölçüsündeki bir açı hangi tür açıdır?",
+question:"45° ölçüsündeki açı hangi tür açıdır?",
 options:["Dar açı","Dik açı","Geniş açı","Doğru açı"],
-answer:2,
-explanation:"90°'den büyük ve 180°'den küçük açılar geniş açıdır."
-},
-
-{
-category:"Kütle ve Ağırlık",
-question:"Bir cismin ağırlığı hangi araçla ölçülür?",
-options:["Eşit kollu terazi","Dinamometre","Cetvel","Dereceli silindir"],
-answer:1,
-explanation:"Ağırlık bir kuvvet olduğu için dinamometre ile ölçülür."
-},
-
-{
-category:"Sürtünme Kuvveti",
-question:"Araba lastiklerinde desen bulunmasının temel amacı nedir?",
-options:[
-"Lastikleri ağırlaştırmak",
-"Sürtünmeyi artırmak",
-"Arabanın hızını her zaman artırmak",
-"Yakıt deposunu büyütmek"
-],
-answer:1,
-explanation:"Lastik desenleri yol ile lastik arasındaki sürtünmeyi artırarak kaymayı azaltır."
-},
-
-{
-category:"Kuvvet ve Kuvvetin Ölçülmesi",
-question:"Aşağıdakilerden hangisi kuvvetin etkilerinden biri değildir?",
-options:[
-"Cismin hızını değiştirmek",
-"Cismin yönünü değiştirmek",
-"Cismin şeklini değiştirmek",
-"Cismin madde miktarını artırmak"
-],
-answer:3,
-explanation:"Kuvvet hareketi veya şekli değiştirebilir ancak cismin madde miktarını artırmaz."
-},
-
-{
-category:"Doğruların Yolculuğu",
-question:"İki noktası belli olan ve bu noktalar arasında kalan geometrik şekil hangisidir?",
-options:["Doğru","Işın","Doğru parçası","Düzlem"],
-answer:2,
-explanation:"Başlangıç ve bitiş noktası belli olan geometrik şekle doğru parçası denir."
-},
-
-{
-category:"Açıları Ölçme",
-question:"Bir açının ölçüsünü belirlemek için hangi araç kullanılır?",
-options:["Pergel","İletki","Metre","Dinamometre"],
-answer:1,
-explanation:"Açı ölçmek için iletki kullanılır."
-},
-
-{
-category:"Kütle ve Ağırlık",
-question:"Bir cismin Dünya'daki ağırlığı ile Ay'daki ağırlığı karşılaştırıldığında hangisi doğrudur?",
-options:[
-"Ay'da daha fazladır",
-"Dünya'da daha fazladır",
-"İkisinde de aynıdır",
-"İkisinde de sıfırdır"
-],
-answer:1,
-explanation:"Ay'ın çekim kuvveti Dünya'nınkinden daha azdır. Bu nedenle cismin Dünya'daki ağırlığı daha büyüktür."
-},
-
-{
-category:"Sürtünme Kuvveti",
-question:"Aşağıdakilerden hangisi sürtünmenin yararlı etkilerinden biridir?",
-options:[
-"Makine parçalarının aşınması",
-"Lastiklerin zamanla yıpranması",
-"Yürürken kaymamamız",
-"Ayakkabı tabanlarının aşınması"
-],
-answer:2,
-explanation:"Ayakkabımız ile zemin arasındaki sürtünme sayesinde kaymadan yürüyebiliriz."
-},
-
-{
-category:"Doğruların Yolculuğu",
-question:"Birbirini 90° açıyla kesen iki doğruya ne denir?",
-options:["Paralel","Dik","Eğri","Işın"],
-answer:1,
-explanation:"Birbirini 90 derecelik açıyla kesen doğrular dik doğrulardır."
-},
-
-{
-category:"Kuvvet ve Kuvvetin Ölçülmesi",
-question:"Dinamometrenin yapısında aşağıdakilerden hangisi bulunur?",
-options:["Yay","Termometre","Pusula","Pil"],
 answer:0,
-explanation:"Dinamometrelerde kuvvet uygulandığında uzayan esnek yay kullanılır."
-},
-
-{
-category:"Açıları Ölçme",
-question:"180° ölçüsündeki açıya ne ad verilir?",
-options:["Dar açı","Dik açı","Geniş açı","Doğru açı"],
-answer:3,
-explanation:"180 derece ölçüsündeki açı doğru açıdır."
-},
-
-{
-category:"Sürtünme Kuvveti",
-question:"Buzlu bir yolda yürümek neden daha zordur?",
-options:[
-"Sürtünme çok fazla olduğu için",
-"Sürtünme az olduğu için",
-"Yer çekimi olmadığı için",
-"Kütlemiz azaldığı için"
-],
-answer:1,
-explanation:"Buzlu yüzeylerde sürtünme azdır. Bu nedenle kayma ihtimali artar."
+explanation:"90 dereceden küçük açılar dar açıdır. 45 derece de 90 dereceden küçüktür."
 },
 
 {
 category:"Kütle ve Ağırlık",
-question:"Ağırlığın birimi aşağıdakilerden hangisidir?",
+question:"Ağırlığın birimi nedir?",
 options:["kg","N","m","L"],
 answer:1,
-explanation:"Ağırlık bir kuvvettir ve Newton (N) ile ölçülür."
-},
-
-{
-category:"Doğruların Yolculuğu",
-question:"Her iki yönde de sonsuza kadar devam eden geometrik şekil hangisidir?",
-options:["Doğru","Doğru parçası","Işın","Açı"],
-answer:0,
-explanation:"Doğrunun başlangıç ve bitiş noktası yoktur; iki yönde sonsuza kadar uzar."
-},
-
-{
-category:"Kuvvet ve Kuvvetin Ölçülmesi",
-question:"Duran bir topa vurulduğunda topun hareket etmeye başlaması kuvvetin hangi etkisine örnektir?",
-options:[
-"Hareket ettirme",
-"Renk değiştirme",
-"Kütleyi değiştirme",
-"Sıcaklığı değiştirme"
-],
-answer:0,
-explanation:"Uygulanan kuvvet duran bir cismin hareket etmesini sağlayabilir."
-},
-
-{
-category:"Açıları Ölçme",
-question:"89° ölçüsündeki bir açı aşağıdakilerden hangisidir?",
-options:["Dar açı","Dik açı","Geniş açı","Doğru açı"],
-answer:0,
-explanation:"89°, 90°'den küçük olduğu için dar açıdır."
+explanation:"Ağırlık bir kuvvet olduğu için Newton birimiyle ifade edilir."
 },
 
 {
 category:"Sürtünme Kuvveti",
-question:"Makine parçalarının arasına yağ sürülmesinin amacı nedir?",
+question:"Araba lastiklerinin desenli yapılmasının nedeni nedir?",
 options:[
 "Sürtünmeyi artırmak",
 "Sürtünmeyi azaltmak",
-Kuvveti tamamen yok etmek",
-"Kütleyi artırmak"
+"Arabayı ağırlaştırmak",
+"Lastiği büyütmek"
 ],
+answer:0,
+explanation:"Lastik desenleri yol ile lastik arasındaki sürtünmeyi artırır. Böylece aracın kayması zorlaşır."
+},
+
+{
+category:"Kuvvet",
+question:"Bir futbol topuna vurulduğunda kuvvetin hangi etkisi görülebilir?",
+options:[
+"Hareket ettirme",
+"Renk değiştirme",
+"Kütleyi artırma",
+"Maddeyi yok etme"
+],
+answer:0,
+explanation:"Kuvvet duran bir cismi hareket ettirebilir. Topa vurulduğunda topun hareket etmesi bunun örneğidir."
+},
+
+{
+category:"Doğruların Yolculuğu",
+question:"İki uç noktası belli olan geometrik şekle ne denir?",
+options:["Doğru","Işın","Doğru parçası","Açı"],
+answer:2,
+explanation:"Doğru parçasının iki uç noktası vardır ve bu iki nokta arasında uzanır."
+},
+
+{
+category:"Açıları Ölçme",
+question:"120° ölçüsündeki açı hangi tür açıdır?",
+options:["Dar açı","Dik açı","Geniş açı","Doğru açı"],
+answer:2,
+explanation:"90 dereceden büyük, 180 dereceden küçük açılara geniş açı denir."
+},
+
+{
+category:"Kütle ve Ağırlık",
+question:"Ağırlık hangi araçla ölçülür?",
+options:["Dinamometre","Cetvel","İletki","Termometre"],
+answer:0,
+explanation:"Ağırlık bir kuvvet olduğundan dinamometre kullanılarak ölçülür."
+},
+
+{
+category:"Sürtünme Kuvveti",
+question:"Buzlu yolda yürümek neden daha zordur?",
+options:[
+"Sürtünme az olduğu için",
+"Sürtünme fazla olduğu için",
+"Kütlemiz arttığı için",
+"Yer çekimi olmadığı için"
+],
+answer:0,
+explanation:"Buz çok kaygan bir yüzeydir. Ayakkabı ile buz arasındaki sürtünme az olduğu için kaymak daha kolaydır."
+},
+
+{
+category:"Doğruların Yolculuğu",
+question:"Birbirini 90° açıyla kesen doğrulara ne ad verilir?",
+options:["Paralel doğrular","Dik doğrular","Işınlar","Eğri doğrular"],
 answer:1,
-explanation:"Yağlama, yüzeyler arasındaki sürtünmeyi azaltarak parçaların daha kolay hareket etmesini sağlar."
+explanation:"Birbirini dik açı yani 90 derece ile kesen doğrular dik doğrulardır."
+},
+
+{
+category:"Kuvvet",
+question:"Dinamometrenin içinde genellikle ne bulunur?",
+options:["Pil","Yay","Su","Mıknatıs"],
+answer:1,
+explanation:"Dinamometrede esnek bir yay bulunur. Kuvvet uygulandıkça yay uzar ve kuvvetin büyüklüğü ölçülür."
+},
+
+{
+category:"Açıları Ölçme",
+question:"180° ölçüsündeki açıya ne denir?",
+options:["Dar açı","Geniş açı","Dik açı","Doğru açı"],
+answer:3,
+explanation:"Ölçüsü tam 180 derece olan açıya doğru açı denir."
+},
+
+{
+category:"Sürtünme Kuvveti",
+question:"Aşağıdakilerden hangisi sürtünme kuvvetinin yararlı olduğu bir durumdur?",
+options:[
+"Yürürken kaymamamız",
+"Makine parçalarının aşınması",
+"Lastiklerin eskimesi",
+"Ayakkabının aşınması"
+],
+answer:0,
+explanation:"Zemin ile ayakkabımız arasındaki sürtünme sayesinde kaymadan yürüyebiliriz."
+},
+
+{
+category:"Kütle ve Ağırlık",
+question:"Bir cismin ağırlığı Ay'da Dünya'ya göre nasıl olur?",
+options:["Daha fazla","Daha az","Aynı","Sıfır"],
+answer:1,
+explanation:"Ay'ın çekim kuvveti Dünya'nınkinden daha küçüktür. Bu nedenle cismin Ay'daki ağırlığı daha azdır."
+},
+
+{
+category:"Doğruların Yolculuğu",
+question:"Her iki yönde sonsuza kadar devam eden geometrik şekil nedir?",
+options:["Doğru","Doğru parçası","Işın","Açı"],
+answer:0,
+explanation:"Doğrunun başlangıç veya bitiş noktası yoktur. İki yönde de sonsuza uzar."
+},
+
+{
+category:"Kuvvet",
+question:"Bir süngeri sıktığımızda kuvvetin hangi etkisini görürüz?",
+options:[
+"Şekil değiştirme",
+"Kütle değiştirme",
+"Renk değiştirme",
+"Yer çekimini değiştirme"
+],
+answer:0,
+explanation:"Kuvvet bazı cisimlerin şeklini değiştirebilir. Süngeri sıkmak buna iyi bir örnektir."
+},
+
+{
+category:"Açıları Ölçme",
+question:"89° ölçüsündeki açı hangi tür açıdır?",
+options:["Dar açı","Dik açı","Geniş açı","Doğru açı"],
+answer:0,
+explanation:"89 derece, 90 dereceden küçük olduğu için dar açıdır."
+},
+
+{
+category:"Sürtünme Kuvveti",
+question:"Makine parçalarının yağlanmasının amacı nedir?",
+options:[
+"Sürtünmeyi azaltmak",
+"Sürtünmeyi artırmak",
+"Kütleyi artırmak",
+"Ağırlığı artırmak"
+],
+answer:0,
+explanation:"Yağ, hareket eden yüzeyler arasındaki sürtünmeyi azaltır. Böylece parçalar daha rahat hareket eder."
 },
 
 {
 category:"Kütle ve Ağırlık",
 question:"Aşağıdakilerden hangisi bulunduğu yere göre değişebilir?",
-options:["Kütle","Madde miktarı","Ağırlık","Cismin yapıldığı madde"],
-answer:2,
-explanation:"Ağırlık yer çekimine bağlı olduğu için bulunduğu yere göre değişebilir."
+options:["Kütle","Ağırlık","Madde miktarı","Cismin rengi"],
+answer:1,
+explanation:"Ağırlık yer çekimi kuvvetine bağlıdır. Bu nedenle farklı gök cisimlerinde değişebilir."
 },
 
 {
 category:"Doğruların Yolculuğu",
-question:"Tren rayları geometrik olarak en çok hangi doğru ilişkisine örnek gösterilebilir?",
-options:["Dik doğrular","Paralel doğrular","Kesişen doğrular","Işınlar"],
-answer:1,
-explanation:"Tren rayları birbirine paralel doğrulara günlük hayattan iyi bir örnektir."
+question:"Tren rayları hangi doğru türüne örnek verilebilir?",
+options:["Paralel","Dik","Kesişen","Eğri"],
+answer:0,
+explanation:"Tren raylarının iki kenarı birbirine paralel şekilde devam eder."
 },
 
 {
-category:"Kuvvet ve Kuvvetin Ölçülmesi",
-question:"Bir futbolcunun gelen topa vurup topun yönünü değiştirmesi kuvvetin hangi etkisini gösterir?",
+category:"Kuvvet",
+question:"Hareket eden bir topun yönünü değiştirmek kuvvetin hangi etkisidir?",
 options:[
 "Yön değiştirme",
 "Kütle artırma",
 "Renk değiştirme",
-"Madde miktarını değiştirme"
+"Sıcaklık değiştirme"
 ],
 answer:0,
-explanation:"Uygulanan kuvvet hareket eden bir cismin yönünü değiştirebilir."
+explanation:"Bir cisme uygulanan kuvvet onun hareket yönünü değiştirebilir."
 },
 
 {
 category:"Açıları Ölçme",
 question:"Aşağıdaki açılardan hangisi dik açıdır?",
-options:["30°","75°","90°","110°"],
+options:["40°","70°","90°","130°"],
 answer:2,
-explanation:"Dik açının ölçüsü 90 derecedir."
+explanation:"Dik açının ölçüsü her zaman 90 derecedir."
 },
 
 {
 category:"Sürtünme Kuvveti",
-question:"Bisiklet frenine basıldığında bisikletin yavaşlamasında hangi kuvvet etkilidir?",
+question:"Bisiklet frenine basıldığında hangi kuvvet sayesinde bisiklet yavaşlar?",
 options:[
-"Manyetik kuvvet",
 "Sürtünme kuvveti",
-Elektrik kuvveti",
+"Manyetik kuvvet",
+"Elektrik kuvveti",
 "Kaldırma kuvveti"
 ],
-answer:1,
-explanation:"Fren sistemi sürtünme kuvvetinden yararlanarak bisikletin yavaşlamasını sağlar."
+answer:0,
+explanation:"Fren parçaları arasındaki sürtünme hareketi azaltarak bisikletin yavaşlamasını sağlar."
 },
 
 {
 category:"Kütle ve Ağırlık",
-question:"Bir cismin içerdiği madde miktarına ne denir?",
-options:["Ağırlık","Kütle","Kuvvet","Hacim"],
+question:"Bir cismin sahip olduğu madde miktarına ne denir?",
+options:["Ağırlık","Kütle","Kuvvet","Sürtünme"],
 answer:1,
-explanation:"Cismin içerdiği madde miktarı kütle olarak adlandırılır."
+explanation:"Kütle, bir cismin sahip olduğu madde miktarını ifade eder."
 },
 
 {
 category:"Doğruların Yolculuğu",
-question:"Bir doğru ile bir doğru parçası arasındaki temel fark hangisidir?",
+question:"Doğru ile doğru parçası arasındaki fark nedir?",
 options:[
-"Doğrunun iki yönde sonsuza uzaması",
-"Doğru parçasının hiç noktası olmaması",
-"Doğrunun eğri olması",
-"Doğru parçasının tek yönde sonsuza uzaması"
+"Doğru iki yönde sonsuza uzar",
+"Doğrunun iki uç noktası vardır",
+"Doğru parçası sonsuza uzar",
+"Aralarında fark yoktur"
 ],
 answer:0,
-explanation:"Doğru iki yönde sonsuza uzarken doğru parçasının iki uç noktası vardır."
+explanation:"Doğru iki yönde sonsuz olarak devam eder. Doğru parçasının ise iki belirli uç noktası vardır."
 },
 
 {
-category:"Kuvvet ve Kuvvetin Ölçülmesi",
-question:"Bir süngeri elimizle sıktığımızda kuvvetin hangi etkisini gözlemleriz?",
-options:[
-"Şekil değiştirme",
-"Kütle artırma",
-"Renk değiştirme",
-"Yer çekimini azaltma"
-],
+category:"Kuvvet",
+question:"Alışveriş arabasını ileri doğru hareket ettirmek için genellikle hangi kuvvet uygulanır?",
+options:["İtme","Çekme","Manyetik","Elektrik"],
 answer:0,
-explanation:"Kuvvet cisimlerin şeklini değiştirebilir."
+explanation:"Bir cismi kendimizden uzağa doğru hareket ettirdiğimizde itme kuvveti uygularız."
 },
 
 {
 category:"Açıları Ölçme",
-question:"100° ölçüsündeki bir açı hangi açı türüdür?",
+question:"100° ölçüsündeki açı hangi tür açıdır?",
 options:["Dar açı","Dik açı","Geniş açı","Doğru açı"],
 answer:2,
-explanation:"100°, 90°'den büyük ve 180°'den küçük olduğu için geniş açıdır."
+explanation:"100 derece 90 dereceden büyük ve 180 dereceden küçük olduğu için geniş açıdır."
 },
 
 {
 category:"Sürtünme Kuvveti",
-question:"Futbolcuların kramponlarının altında çıkıntılar bulunmasının nedeni nedir?",
+question:"Kramponların altında çıkıntılar bulunmasının amacı nedir?",
 options:[
-"Sürtünmeyi azaltmak",
 "Sürtünmeyi artırmak",
+"Sürtünmeyi azaltmak",
 Ayakkabıyı hafifletmek",
-"Kütleyi azaltmak"
+"Ağırlığı azaltmak"
 ],
-answer:1,
-explanation:"Kramponların altındaki çıkıntılar zeminle sürtünmeyi artırarak kaymayı azaltır."
+answer:0,
+explanation:"Kramponların altındaki çıkıntılar zeminle tutunmayı artırır ve kaymayı azaltır."
 },
 
 {
 category:"Kütle ve Ağırlık",
-question:"Ağırlığın oluşmasının temel nedeni aşağıdakilerden hangisidir?",
-options:[
-"Yer çekimi",
-"Sürtünme",
-"Elektrik",
-"Ses"
-],
+question:"Ağırlığın oluşmasının temel nedeni nedir?",
+options:["Yer çekimi","Sürtünme","Elektrik","Isı"],
 answer:0,
-explanation:"Ağırlık, gök cisminin uyguladığı çekim kuvvetinin sonucudur."
+explanation:"Ağırlık, gök cisimlerinin diğer cisimlere uyguladığı çekim kuvvetinden kaynaklanır."
 },
 
 {
 category:"Doğruların Yolculuğu",
-question:"Birbirini bir noktada kesen iki doğruya genel olarak ne ad verilir?",
-options:[
-"Paralel doğrular",
-"Kesişen doğrular",
-"Işınlar",
-"Doğru parçaları"
-],
-answer:1,
-explanation:"Ortak bir noktada buluşan doğrular kesişen doğrulardır."
+question:"Bir noktada birbirini kesen iki doğruya ne denir?",
+options:["Kesişen doğrular","Paralel doğrular","Işınlar","Doğru parçaları"],
+answer:0,
+explanation:"Ortak bir noktada buluşan iki doğru kesişen doğrular olarak adlandırılır."
 },
 
 {
-category:"Kuvvet ve Kuvvetin Ölçülmesi",
-question:"Bir dinamometrede ölçülebilecek en büyük kuvvetin aşılması neye yol açabilir?",
+category:"Kuvvet",
+question:"Dinamometrenin ölçebileceği değerden daha büyük kuvvet uygulanırsa ne olabilir?",
 options:[
-"Yayın zarar görmesine",
-"Kütlenin azalmasına",
-"Cismin renginin değişmesine",
-"Yer çekiminin artmasına"
+"Yayı zarar görebilir",
+"Kütle kaybolur",
+"Yer çekimi azalır",
+"Hiçbir şey olmaz"
 ],
 answer:0,
-explanation:"Dinamometrenin ölçüm sınırı aşılırsa içindeki yay kalıcı olarak zarar görebilir."
+explanation:"Dinamometrenin ölçüm sınırı aşılırsa içindeki yay zarar görebilir ve doğru ölçüm yapamayabilir."
 },
 
 {
 category:"Açıları Ölçme",
-question:"Aşağıdaki açılardan hangisi en büyüktür?",
-options:["25°","60°","90°","150°"],
+question:"Aşağıdakilerden hangisi en büyük açıdır?",
+options:["30°","60°","90°","150°"],
 answer:3,
-explanation:"Verilen açılar arasında en büyük ölçü 150 derecedir."
+explanation:"Verilen değerleri karşılaştırdığımızda 150 derece en büyük açıdır."
 },
 
 {
 category:"Sürtünme Kuvveti",
-question:"Paraşütün havada yavaş düşmesini sağlayan temel etken aşağıdakilerden hangisidir?",
+question:"Paraşütün yere daha yavaş inmesini sağlayan kuvvet hangisidir?",
 options:[
 "Hava direnci",
-"Kütlenin yok olması",
-"Yer çekiminin durması",
-"Manyetik kuvvet"
+"Manyetik kuvvet",
+"Elektrik kuvveti",
+"Esneklik kuvveti"
 ],
 answer:0,
-explanation:"Hava direnci bir sürtünme kuvvetidir ve paraşütün düşüşünü yavaşlatır."
+explanation:"Hava direnci bir sürtünme kuvvetidir ve paraşütün düşme hızını azaltır."
 },
 
 {
 category:"Kütle ve Ağırlık",
-question:"Kütlesi 5 kg olan bir cismin başka bir gezegene götürülmesiyle ilgili hangisi doğrudur?",
-options:[
-"Kütlesi kesinlikle artar",
-"Kütlesi kesinlikle azalır",
-"Kütlesi 5 kg olarak kalır",
-"Kütlesi sıfır olur"
-],
-answer:2,
-explanation:"Kütle bulunduğu yere göre değişmediği için 5 kg olarak kalır."
+question:"Kütlesi 5 kg olan bir cisim başka bir gezegene götürülürse kütlesi ne olur?",
+options:["5 kg kalır","10 kg olur","Azalır","Sıfır olur"],
+answer:0,
+explanation:"Kütle bulunduğu gezegene göre değişmez. Cisim yine 5 kg kütleye sahiptir."
 },
 
 {
 category:"Doğruların Yolculuğu",
-question:"Bir ışın için aşağıdaki ifadelerden hangisi doğrudur?",
+question:"Işınla ilgili aşağıdakilerden hangisi doğrudur?",
 options:[
-"İki uç noktası vardır",
-"Başlangıç noktası yoktur",
 "Bir başlangıç noktası vardır",
-"Her iki yönde sonsuza uzanır"
-],
-answer:2,
-explanation:"Işının bir başlangıç noktası vardır ve bir yönde sonsuza uzanır."
-},
-
-{
-category:"Kuvvet ve Kuvvetin Ölçülmesi",
-question:"Bir alışveriş arabasını itmek aşağıdakilerden hangisine örnektir?",
-options:[
-"İtme kuvveti",
-"Çekme kuvveti",
-"Sürtünmenin tamamen yok olması",
-"Ağırlığın değişmesi"
+"İki uç noktası vardır",
+"Hiç noktası yoktur",
+"İki yönde sonsuza gider"
 ],
 answer:0,
-explanation:"Alışveriş arabasını hareket ettirmek için uyguladığımız kuvvet itme kuvvetidir."
+explanation:"Işının bir başlangıç noktası vardır ve başlangıç noktasından itibaren tek yönde sonsuza uzar."
 },
 
 {
-category:"Açıları Ölçme",
-question:"Bir açının ölçüsü 70° ise 90°'ye ulaşması için kaç derece daha gerekir?",
-options:["10°","20°","30°","40°"],
-answer:1,
-explanation:"90 - 70 = 20 olduğundan 20 derece daha gerekir."
-},
-
-{
-category:"Sürtünme Kuvveti",
-question:"Aşağıdaki durumlardan hangisinde sürtünme kuvvetinin azaltılması amaçlanır?",
-options:[
-"Kış lastiği kullanılması",
-"Merdivenlere kaydırmaz bant takılması",
-"Kapı menteşesinin yağlanması",
-"Futbol ayakkabısına diş yapılması"
-],
-answer:2,
-explanation:"Kapı menteşesini yağlamak sürtünmeyi azaltarak daha rahat hareket etmesini sağlar."
-},
-
-{
-category:"Kütle ve Ağırlık",
-question:"Kütle ölçmek için aşağıdaki araçlardan hangisi kullanılabilir?",
-options:[
-"Eşit kollu terazi",
-"Dinamometre",
-"İletki",
-"Termometre"
-],
-answer:0,
-explanation:"Kütle ölçmek için eşit kollu terazi kullanılabilir."
-},
-
-{
-category:"Doğruların Yolculuğu",
-question:"Bir defterin karşılıklı iki kenarı genellikle hangi doğru ilişkisine örnektir?",
-options:[
-"Paralel",
-"Dik olmayan kesişen",
-"Işın",
-"Çember"
-],
-answer:0,
-explanation:"Dikdörtgen şeklindeki bir defterin karşılıklı kenarları birbirine paraleldir."
-},
-
-{
-category:"Kuvvet ve Kuvvetin Ölçülmesi",
-question:"Yerde duran bir kutuyu kendimize doğru hareket ettirdiğimizde hangi tür kuvvet uygularız?",
-options:[
-"Çekme",
-"İtme",
-"Sürtünmeyi yok etme",
-"Yer çekimini artırma"
-],
+category:"Kuvvet",
+question:"Bir kutuyu kendimize doğru hareket ettirdiğimizde hangi kuvveti uygularız?",
+options:["Çekme","İtme","Sürtünme","Yer çekimi"],
 answer:0,
 explanation:"Bir cismi kendimize doğru hareket ettirdiğimizde çekme kuvveti uygularız."
 },
 
 {
 category:"Açıları Ölçme",
-question:"Aşağıdaki sıralamalardan hangisi açıların küçükten büyüğe doğru sıralanışıdır?",
-options:[
-"120° < 90° < 45°",
-"45° < 90° < 120°",
-"90° < 45° < 120°",
-"120° < 45° < 90°"
-],
+question:"70° olan bir açının 90° olması için kaç derece daha gerekir?",
+options:["10°","20°","30°","40°"],
 answer:1,
-explanation:"45 derece, 90 dereceden; 90 derece de 120 dereceden küçüktür."
+explanation:"90 - 70 = 20 olduğundan açının 90 derece olması için 20 derece daha gerekir."
+},
+
+{
+category:"Sürtünme Kuvveti",
+question:"Aşağıdakilerden hangisinde sürtünmenin azaltılması amaçlanır?",
+options:[
+"Kapı menteşesini yağlamak",
+"Kış lastiği kullanmak",
+Kaydırmaz taban yapmak",
+"Krampon giymek"
+],
+answer:0,
+explanation:"Kapı menteşesini yağlamak yüzeyler arasındaki sürtünmeyi azaltır ve kapının daha rahat hareket etmesini sağlar."
+},
+
+{
+category:"Kütle ve Ağırlık",
+question:"Kütle ölçmek için hangi araç kullanılabilir?",
+options:[
+"Eşit kollu terazi",
+"Dinamometre",
+"İletki",
+"Kronometre"
+],
+answer:0,
+explanation:"Eşit kollu terazi cisimlerin kütlelerini karşılaştırmak ve ölçmek için kullanılabilir."
+},
+
+{
+category:"Doğruların Yolculuğu",
+question:"Dikdörtgen bir defterin karşılıklı kenarları hangi doğru ilişkisine örnektir?",
+options:["Paralel","Dik","Kesişen","Işın"],
+answer:0,
+explanation:"Dikdörtgenin karşılıklı kenarları birbirine paraleldir."
+},
+
+{
+category:"Kuvvet",
+question:"Aşağıdakilerden hangisi kuvvetin etkilerinden biri değildir?",
+options:[
+"Cismi hızlandırmak",
+"Cismin yönünü değiştirmek",
+"Cismin şeklini değiştirmek",
+"Cismin madde miktarını artırmak"
+],
+answer:3,
+explanation:"Kuvvet cismin hareketini veya şeklini değiştirebilir fakat cismin sahip olduğu madde miktarını artırmaz."
 }
 
 ];
 
+let current = 0;
+let correct = 0;
+let wrong = 0;
+let answered = false;
 
-/* ==========================================================
-   TEST DEĞİŞKENLERİ
-========================================================== */
+const letters = ["A","B","C","D"];
 
-let currentQuestion = 0;
-let answers = new Array(questions.length).fill(null);
+function loadQuestion(){
 
+    answered = false;
 
-/* ==========================================================
-   SAYFA YÜKLENDİĞİNDE
-========================================================== */
-
-function initQuiz(){
-
-    createQuestionNavigation();
-    renderQuestion();
-    updateStats();
-
-}
-
-
-/* ==========================================================
-   SORUYU EKRANA GETİR
-========================================================== */
-
-function renderQuestion(){
-
-    const q = questions[currentQuestion];
+    const q = questions[current];
 
     document.getElementById("questionNumber").textContent =
-    `Soru ${currentQuestion + 1} / ${questions.length}`;
+        `Soru ${current + 1} / ${questions.length}`;
+
+    document.getElementById("scoreInfo").textContent =
+        `${correct} doğru`;
 
     document.getElementById("category").textContent =
-    q.category;
+        q.category;
 
-    document.getElementById("questionTitle").textContent =
-    q.question;
+    document.getElementById("question").textContent =
+        q.question;
 
-    const optionsElement =
-    document.getElementById("options");
+    const progress =
+        ((current) / questions.length) * 100;
 
-    optionsElement.innerHTML = "";
+    document.getElementById("progressFill").style.width =
+        progress + "%";
 
-    const letters = ["A","B","C","D"];
+    const options = document.getElementById("options");
+
+    options.innerHTML = "";
 
     q.options.forEach((option,index)=>{
 
@@ -1413,129 +919,125 @@ function renderQuestion(){
         button.className = "option";
 
         button.innerHTML = `
-        <span class="option-letter">${letters[index]}</span>
-        <span>${option}</span>
+            <span class="option-letter">${letters[index]}</span>
+            <span>${option}</span>
         `;
 
-        button.onclick = () =>
-        selectAnswer(index);
+        button.onclick = ()=>{
+            selectAnswer(index);
+        };
 
-        if(answers[currentQuestion] !== null){
-
-            button.disabled = true;
-
-            if(index === q.answer){
-                button.classList.add("correct");
-            }
-
-            if(
-                index === answers[currentQuestion] &&
-                index !== q.answer
-            ){
-                button.classList.add("wrong");
-            }
-
-        }
-
-        optionsElement.appendChild(button);
+        options.appendChild(button);
 
     });
 
-    renderFeedback();
+    const feedback = document.getElementById("feedback");
 
-    document.getElementById("prevBtn").disabled =
-    currentQuestion === 0;
+    feedback.className = "feedback";
+    feedback.innerHTML = "";
 
-    document.getElementById("nextBtn").textContent =
-    currentQuestion === questions.length - 1
-    ? "Sonucu Gör"
-    : "Sonraki →";
-
-    updateNavigation();
+    document.getElementById("nextBtn").className =
+        "next-btn";
 
 }
 
 
-/* ==========================================================
-   CEVAP SEÇ
-========================================================== */
+function selectAnswer(selected){
 
-function selectAnswer(index){
+    if(answered) return;
 
-    if(answers[currentQuestion] !== null)
-    return;
+    answered = true;
 
-    answers[currentQuestion] = index;
+    const q = questions[current];
 
-    renderQuestion();
-    updateStats();
+    const buttons =
+        document.querySelectorAll(".option");
 
-}
-
-
-/* ==========================================================
-   AÇIKLAMA
-========================================================== */
-
-function renderFeedback(){
+    buttons.forEach(button=>{
+        button.disabled = true;
+    });
 
     const feedback =
-    document.getElementById("feedback");
-
-    const selected =
-    answers[currentQuestion];
-
-    const q =
-    questions[currentQuestion];
-
-    if(selected === null){
-
-        feedback.className = "feedback";
-        feedback.innerHTML = "";
-        return;
-
-    }
+        document.getElementById("feedback");
 
     if(selected === q.answer){
 
+        correct++;
+
+        buttons[selected].classList.add("correct");
+
         feedback.className =
-        "feedback show correct-feedback";
+            "feedback show good";
 
         feedback.innerHTML = `
-        <strong>Doğru cevap</strong>
-        ${q.explanation}
+            <div class="feedback-title">
+                Doğru ✓
+            </div>
         `;
 
     }else{
 
-        const letters = ["A","B","C","D"];
+        wrong++;
+
+        buttons[selected].classList.add("wrong");
+
+        buttons[q.answer].classList.add("correct");
 
         feedback.className =
-        "feedback show wrong-feedback";
+            "feedback show bad";
 
         feedback.innerHTML = `
-        <strong>
-        Yanlış cevap — Doğru seçenek:
-        ${letters[q.answer]}
-        </strong>
-        ${q.explanation}
+            <div class="feedback-title">
+                Yanlış ✕
+            </div>
+
+            <div>
+                Doğru cevap:
+                <strong>
+                ${letters[q.answer]}) ${q.options[q.answer]}
+                </strong>
+            </div>
+
+            <div class="explanation">
+                ${q.explanation}
+            </div>
         `;
+
+    }
+
+    document.getElementById("scoreInfo").textContent =
+        `${correct} doğru`;
+
+    const nextBtn =
+        document.getElementById("nextBtn");
+
+    nextBtn.className =
+        "next-btn show";
+
+    if(current === questions.length - 1){
+
+        nextBtn.textContent =
+            "Testi Bitir";
+
+    }else{
+
+        nextBtn.textContent =
+            "Sonraki Soru";
 
     }
 
 }
 
-
-/* ==========================================================
-   İLERİ / GERİ
-========================================================== */
 
 function nextQuestion(){
 
-    if(currentQuestion < questions.length - 1){
+    if(!answered) return;
 
-        currentQuestion++;
-        renderQuestion();
+    if(current < questions.length - 1){
+
+        current++;
+
+        loadQuestion();
 
         window.scrollTo({
             top:0,
@@ -1544,252 +1046,32 @@ function nextQuestion(){
 
     }else{
 
-        showResults();
+        showResult();
 
     }
 
 }
 
 
-function previousQuestion(){
+function showResult(){
 
-    if(currentQuestion > 0){
+    document.getElementById("quizArea").style.display =
+        "none";
 
-        currentQuestion--;
-        renderQuestion();
+    document.getElementById("result").style.display =
+        "block";
 
-        window.scrollTo({
-            top:0,
-            behavior:"smooth"
-        });
+    document.getElementById("finalScore").textContent =
+        `${correct}/${questions.length}`;
 
-    }
+    document.getElementById("finalCorrect").textContent =
+        correct;
 
-}
+    document.getElementById("finalWrong").textContent =
+        wrong;
 
-
-/* ==========================================================
-   SORU NUMARALARI
-========================================================== */
-
-function createQuestionNavigation(){
-
-    const grid =
-    document.getElementById("questionGrid");
-
-    grid.innerHTML = "";
-
-    questions.forEach((_,index)=>{
-
-        const button =
-        document.createElement("button");
-
-        button.className = "qnav";
-
-        button.textContent =
-        index + 1;
-
-        button.onclick = ()=>{
-
-            currentQuestion = index;
-
-            renderQuestion();
-
-            window.scrollTo({
-                top:0,
-                behavior:"smooth"
-            });
-
-        };
-
-        grid.appendChild(button);
-
-    });
-
-}
-
-
-function updateNavigation(){
-
-    const navButtons =
-    document.querySelectorAll(".qnav");
-
-    navButtons.forEach((button,index)=>{
-
-        button.className = "qnav";
-
-        if(answers[index] !== null){
-
-            if(
-                answers[index] ===
-                questions[index].answer
-            ){
-                button.classList.add("correct");
-            }else{
-                button.classList.add("wrong");
-            }
-
-        }
-
-        if(index === currentQuestion){
-            button.classList.add("current");
-        }
-
-    });
-
-}
-
-
-/* ==========================================================
-   İSTATİSTİK
-========================================================== */
-
-function updateStats(){
-
-    let correct = 0;
-    let wrong = 0;
-    let answered = 0;
-
-    answers.forEach((answer,index)=>{
-
-        if(answer !== null){
-
-            answered++;
-
-            if(answer === questions[index].answer){
-                correct++;
-            }else{
-                wrong++;
-            }
-
-        }
-
-    });
-
-    const empty =
-    questions.length - answered;
-
-    document.getElementById("correctStat")
-    .textContent = correct;
-
-    document.getElementById("wrongStat")
-    .textContent = wrong;
-
-    document.getElementById("emptyStat")
-    .textContent = empty;
-
-    document.getElementById("topScore")
-    .textContent =
-    `${correct} / ${questions.length}`;
-
-    document.getElementById("progressText")
-    .textContent =
-    `${answered} / ${questions.length} cevaplandı`;
-
-    const percentage =
-    answered / questions.length * 100;
-
-    document.getElementById("progressFill")
-    .style.width =
-    percentage + "%";
-
-}
-
-
-/* ==========================================================
-   SONUÇ
-========================================================== */
-
-function showResults(){
-
-    let correct = 0;
-    let wrong = 0;
-
-    answers.forEach((answer,index)=>{
-
-        if(answer !== null){
-
-            if(answer === questions[index].answer)
-                correct++;
-            else
-                wrong++;
-
-        }
-
-    });
-
-    const percent =
-    Math.round(
-        correct /
-        questions.length *
-        100
-    );
-
-    document.getElementById("quizPage")
-    .style.display = "none";
-
-    document.getElementById("resultPage")
-    .style.display = "block";
-
-    document.getElementById("percentageScore")
-    .textContent = percent;
-
-    document.getElementById("finalCorrect")
-    .textContent = correct;
-
-    document.getElementById("finalWrong")
-    .textContent = wrong;
-
-    document.getElementById("finalPercent")
-    .textContent = "%" + percent;
-
-
-    let message = "";
-
-    if(percent === 100){
-
-        message =
-        "Mükemmel sonuç! 50 sorunun tamamını doğru cevapladın.";
-
-    }
-
-    else if(percent >= 90){
-
-        message =
-        "Harika bir sonuç. Konulara çok iyi hâkimsin.";
-
-    }
-
-    else if(percent >= 80){
-
-        message =
-        "Çok iyi gidiyorsun. Birkaç küçük tekrar ile mükemmel seviyeye ulaşabilirsin.";
-
-    }
-
-    else if(percent >= 70){
-
-        message =
-        "İyi bir sonuç. Yanlış yaptığın soruların açıklamalarını tekrar incele.";
-
-    }
-
-    else if(percent >= 50){
-
-        message =
-        "Temel bilgilerin iyi ancak bazı konuları yeniden çalışman faydalı olacaktır.";
-
-    }
-
-    else{
-
-        message =
-        "Konuları biraz daha tekrar ettikten sonra testi yeniden çözmeni öneriyoruz.";
-
-    }
-
-    document.getElementById("performanceText")
-    .textContent = message;
+    document.getElementById("progressFill").style.width =
+        "100%";
 
     window.scrollTo({
         top:0,
@@ -1798,26 +1080,21 @@ function showResults(){
 
 }
 
-
-/* ==========================================================
-   YENİDEN BAŞLAT
-========================================================== */
 
 function restartQuiz(){
 
-    answers =
-    new Array(questions.length).fill(null);
+    current = 0;
+    correct = 0;
+    wrong = 0;
+    answered = false;
 
-    currentQuestion = 0;
+    document.getElementById("result").style.display =
+        "none";
 
-    document.getElementById("resultPage")
-    .style.display = "none";
+    document.getElementById("quizArea").style.display =
+        "block";
 
-    document.getElementById("quizPage")
-    .style.display = "block";
-
-    renderQuestion();
-    updateStats();
+    loadQuestion();
 
     window.scrollTo({
         top:0,
@@ -1827,7 +1104,7 @@ function restartQuiz(){
 }
 
 
-initQuiz();
+loadQuestion();
 
 </script>
 
