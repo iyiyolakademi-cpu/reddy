@@ -33,11 +33,61 @@ table{width:100%;border-collapse:collapse;min-width:590px}th,td{padding:11px 8px
 footer{font-size:12px;color:var(--muted);line-height:1.7;margin-top:22px}
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.layout{grid-template-columns:1fr}}
 @media(max-width:520px){.shell{padding:13px 10px 50px}.logo{font-size:19px}.grid{gap:8px}.card{padding:13px}.metric{font-size:22px}.cols{grid-template-columns:1fr}.chart-wrap{height:260px}.tag{font-size:10px}}
+
+/* Mobile-first refinement */
+html{scroll-behavior:smooth}body{padding-bottom:env(safe-area-inset-bottom)}
+button,input,select,textarea{min-height:44px}input,select,textarea{font-size:16px}
+.mobile-nav{display:none}
+.chart-wrap{min-height:255px}
+#graph{touch-action:pan-y}
+@media(max-width:640px){
+ .shell{padding:14px 12px 95px}
+ .top{align-items:flex-start}.top .tag{display:none}
+ .logo{font-size:19px;line-height:1.5}.sub{line-height:1.5}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .card{padding:14px;border-radius:15px}
+ .metric{font-size:clamp(20px,5.5vw,28px);overflow-wrap:anywhere}
+ .metric-label{font-size:11px}.hint{font-size:11px}
+ .layout{gap:10px;margin-top:10px}
+ .chart-wrap{height:290px;margin:10px -8px 0}
+ .ranges{width:100%;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:3px}
+ .ranges button{padding:9px 2px;font-size:11px;min-width:0}
+ .cols{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .stock{padding:12px 0}
+ .mobile-nav{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;bottom:0;left:0;right:0;z-index:50;background:#fff;border-top:1px solid var(--line);padding:8px 7px calc(8px + env(safe-area-inset-bottom));box-shadow:0 -5px 22px #19253d13}
+ .mobile-nav a{display:flex;flex-direction:column;align-items:center;gap:3px;color:#65738b;text-decoration:none;font-size:10px;font-weight:750;padding:4px 0}
+ .mobile-nav a b{font-size:20px}
+ .mobile-nav a:focus,.mobile-nav a:hover{color:var(--blue)}
+ .scroll{overflow:visible}
+ #recordsTable{min-width:0}
+ #recordsTable thead{display:none}
+ #recordsTable tbody{display:grid;gap:8px}
+ #recordsTable tr{display:grid;grid-template-columns:1fr auto;gap:5px;background:#f7f9fd;border:1px solid var(--line);border-radius:12px;padding:10px}
+ #recordsTable td{border:0;padding:2px 4px}
+ #recordsTable td:nth-child(1){grid-column:1;font-size:11px;color:var(--muted)}
+ #recordsTable td:nth-child(2){grid-column:2;grid-row:1;font-weight:800;text-align:right}
+ #recordsTable td:nth-child(3){grid-column:1;font-weight:650;overflow-wrap:anywhere}
+ #recordsTable td:nth-child(4){grid-column:2;grid-row:2;text-align:right;font-size:15px;font-weight:800}
+ #recordsTable td:nth-child(5){grid-column:1;font-size:11px;color:var(--muted)}
+ #recordsTable td:nth-child(6){grid-column:2;grid-row:3;text-align:right}
+ #recordsTable td:nth-child(6) button{padding:7px 12px;min-height:36px}
+}
+
+.stock[data-sector]{cursor:pointer;border-radius:10px;padding-left:8px;padding-right:8px}
+.stock[data-sector]:hover,.stock[data-sector].selected{background:#f0f5ff}
+.quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.quick-grid button{background:#eff4ff;color:#2d4fb4;text-align:left;min-height:56px;font-size:12px}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin-top:13px}
+.calendar-day{border-radius:8px;min-height:43px;background:#f0f2f6;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2px;font-size:12px}
+.calendar-day.positive{background:#d9f7e9;color:#057650}.calendar-day.negative{background:#ffe2e8;color:#bd3550}
+.calendar-day .delta{font-size:9px;font-weight:700}
+.calendar-weekday{text-align:center;color:#7b89a0;font-size:10px;font-weight:700}
+@media(max-width:640px){.quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.calendar-day{min-height:39px;font-size:11px}}
 </style>
 </head>
 <body><main class="shell">
-<header class="top"><div><div class="logo">◈ HAYAT<span>BORSAM</span> <span style="font-size:13px;color:#7383a1;font-weight:750;letter-spacing:0">| BEKO GÜCÜ</span></div><div class="sub">Kişisel gelişim endeksin • Veriler cihazında saklanır</div></div><div class="tag">● KİŞİSEL PİYASA</div></header>
-<section class="grid">
+<header class="top"><div><div class="logo">◈ HAYAT<span>BORSAM</span> <span style="font-size:13px;color:#7383a1;font-weight:750;letter-spacing:0">| BEKO GÜCÜ</span></div><div class="sub">Kişisel gelişim endeksin • Telefon dostu panel</div></div><div class="tag">● KİŞİSEL PİYASA</div></header>
+<section class="grid" id="overview">
 <div class="card"><div class="metric-label">HBX • Hayat Endeksi</div><div class="metric" id="total">100,00</div><div class="hint" id="baseText">Başlangıç: 100,00</div></div>
 <div class="card"><div class="metric-label">Toplam getiri</div><div class="metric" id="gain">+0,00</div><div class="hint" id="gainPct">%0,00</div></div>
 <div class="card"><div class="metric-label">Bugünkü değişim</div><div class="metric" id="todayGain">+0,00</div><div class="hint" id="todayCount">0 işlem</div></div>
@@ -50,11 +100,15 @@ footer{font-size:12px;color:var(--muted);line-height:1.7;margin-top:22px}
 <div class="chart-wrap"><svg id="graph" viewBox="0 0 800 300" preserveAspectRatio="none" role="img" aria-label="Hayat puanı zaman grafiği"><text x="30" y="150" fill="#74839b">Grafik hazırlanıyor...</text></svg></div>
 <div class="chart-note" id="chartInfo">Başlangıç değeri ve puan değişimlerinden otomatik oluşturulur.</div>
 </section>
-<section class="card section"><div class="head"><h2>Portföyüm • Gelişim Alanları</h2><span class="hint">Kategori bazlı puan performansı</span></div><div id="stocks"></div></section>
-<section class="card section"><div class="head"><h2>İşlem Defteri</h2><span class="hint" id="recordCount"></span></div><div class="scroll"><table><thead><tr><th>Tarih / Saat</th><th>Hisse</th><th>İşlem</th><th>Değişim</th><th>Endeks</th><th></th></tr></thead><tbody id="records"></tbody></table></div></section>
+<section class="card section" id="portfolio"><div class="head"><h2>Portföyüm • Gelişim Alanları</h2><span class="hint">Kategori bazlı puan performansı</span></div><div id="stocks"></div>
+<div class="rule"></div><div class="head"><h3 id="stockChartTitle">Hisse Grafiği</h3><div class="ranges" id="stockRanges"><button class="ghost" data-stock-days="7">1H</button><button class="ghost active" data-stock-days="30">1A</button><button class="ghost" data-stock-days="365">1Y</button><button class="ghost" data-stock-days="0">Tümü</button></div></div>
+<div class="chart-wrap" style="height:215px"><svg id="stockGraph" viewBox="0 0 800 220" preserveAspectRatio="none" aria-label="Seçilen hisse puan grafiği"></svg></div>
+<p class="chart-note">Bir hisseye dokunarak o hissenin performansını incele.</p>
+</section>
+<section class="card section" id="journal"><div class="head"><h2>İşlem Defteri</h2><span class="hint" id="recordCount"></span></div><div class="scroll"><table id="recordsTable"><thead><tr><th>Tarih / Saat</th><th>Hisse</th><th>İşlem</th><th>Değişim</th><th>Endeks</th><th></th></tr></thead><tbody id="records"></tbody></table></div></section>
 </div>
 <div>
-<section class="card"><h2>+ Yeni Hayat İşlemi</h2><form id="tradeForm">
+<section class="card" id="newTrade"><h2>+ Yeni Hayat İşlemi</h2><form id="tradeForm">
 <div class="field"><label for="time">Tarih ve saat</label><input type="datetime-local" id="time" required></div>
 <div class="field"><label for="sector">Gelişim hissesi</label><select id="sector"></select></div>
 <div class="field"><label for="description">Ne yaptın?</label><input id="description" required maxlength="160" placeholder="Örn. 30 dakika yürüdüm"></div>
@@ -69,7 +123,11 @@ footer{font-size:12px;color:var(--muted);line-height:1.7;margin-top:22px}
 <div class="chart-note">Eklediğin hisseler işlem ekranında ve portföyünde görünür. Kayıtlarınla birlikte saklanır.</div>
 <div id="customSectors"></div>
 </section>
+<section class="card section" id="quickActions"><h2>Hızlı İşlemler</h2><p class="chart-note">Tek dokunuşla puan ekle. Her işlem otomatik kaydedilir.</p><div class="quick-grid" id="quickButtons"></div></section>
 <section class="card section"><h2>Piyasa Özeti</h2><div id="insights"></div></section>
+<section class="card section" id="dailyClose"><h2>Günlük Kapanışlar</h2><p class="chart-note">Kapanış değeri gün sonunda, o tarihe kadar kaydedilmiş işlemlerden hesaplanır. Geçmişe işlem eklersen kapanış yeniden hesaplanır.</p><div id="closes"></div></section>
+<section class="card section" id="calendarSection"><h2>Performans Takvimi</h2><div class="head"><button class="ghost" id="prevMonth" type="button">‹ Önceki</button><b id="monthTitle"></b><button class="ghost" id="nextMonth" type="button">Sonraki ›</button></div><div id="calendar" class="calendar-grid"></div><p class="chart-note">Yeşil: puan artışı, kırmızı: düşüş, gri: işlem yok veya sıfır değişim.</p></section>
+<section class="card section" id="weeklyReport"><h2>Haftalık Gelişim Raporu</h2><div id="report"></div></section>
 <section class="card section"><h2>Hedef Endeksi</h2><div class="field"><label for="target">Ulaşmak istediğin puan</label><input id="target" type="number" step=".01" min="0"></div><button class="ghost" id="saveTarget" type="button">Hedefi Kaydet</button><div class="progress"><div id="targetBar"></div></div><div class="hint" id="targetText"></div></section>
 <section class="card section"><h2>Başlangıç & Veri Kasası</h2><div class="field"><label for="initial">Başlangıç puanın</label><input type="number" step=".01" id="initial"></div><button class="ghost" id="saveInitial" type="button">Başlangıcı Güncelle</button><div class="rule"></div>
 <div class="actions"><button type="button" class="ghost" id="backup">JSON Yedeği İndir</button><button type="button" class="ghost" id="csv">CSV İndir</button></div>
@@ -79,7 +137,10 @@ footer{font-size:12px;color:var(--muted);line-height:1.7;margin-top:22px}
 </div>
 </div>
 <footer>Hayat Borsası bir kişisel alışkanlık ve motivasyon aracıdır; puanlar kişisel değerini ölçmez. Kayıtlar bu tarayıcının localStorage alanında tutulur. Başka cihazda otomatik eşitlenmez. Tarayıcı verileri temizlenirse kaybolabileceği için düzenli JSON yedeği al.</footer>
-</main>
+<nav class="mobile-nav" aria-label="Mobil gezinme">
+<a href="#overview"><b>⌂</b>Özet</a><a href="#performance"><b>⌁</b>Grafik</a>
+<a href="#newTrade"><b>＋</b>İşlem</a><a href="#journal"><b>▤</b>Geçmiş</a>
+</nav></main>
 <script>
 "use strict";
 const KEY="hayatborsasi_terminal_v2";
@@ -102,7 +163,15 @@ function valid(d){return d&&Number.isFinite(d.base)&&Number.isFinite(d.target)&&
 if(!valid(data))data=defaultData();
 if(!Array.isArray(data.customSectors))data.customSectors=[];
 function sectorsList(){return [...defaultSectors,...data.customSectors]}
-let days=30;
+let days=30,stockDays=30,selectedSector="work",calendarMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);
+const quickTemplates=[
+{label:"📚 Kitap okudum +5",sector:"learn",delta:5},
+{label:"💪 Spor yaptım +10",sector:"health",delta:10},
+{label:"🚀 Projede çalıştım +15",sector:"work",delta:15},
+{label:"🧠 Profil kontrolü yapmadım +5",sector:"mental",delta:5},
+{label:"✨ Kişisel bakım +5",sector:"style",delta:5},
+{label:"📱 Gereksiz ekran süresi -3",sector:"mental",delta:-3}
+];
 function localInputDate(d=new Date()){let z=x=>String(x).padStart(2,"0");return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}T${z(d.getHours())}:${z(d.getMinutes())}`}
 $("time").value=localInputDate();
 $("sector").innerHTML=sectorsList().map(s=>`<option value="${s.id}">${s.icon} ${s.name} (${s.ticker})</option>`).join("");
@@ -150,8 +219,46 @@ function chart(rows){
    paint("chartInfo",`Seçilen nokta: ${label}`);
  };
  svg.onpointerleave=()=>{let tip=svg.querySelector("#point-tooltip");if(tip)tip.remove()};
+ svg.addEventListener("pointerdown",svg.onpointermove);
  svg.onclick=svg.onpointermove;
  paint("chartInfo",`${days?days+" günlük":"Tüm zamanların"} görünüm • Grafiğe dokunarak puanları incele • Güncel: ${num(currentNow)}`);
+}
+function dateKey(d){let z=n=>String(n).padStart(2,"0");return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`}
+function drawStock(rows){
+ let stock=sectorsList().find(t=>t.id===selectedSector)||sectorsList()[0];selectedSector=stock.id;
+ paint("stockChartTitle",`${stock.icon} ${stock.name} • ${stock.ticker}`);
+ let relevant=rows.filter(t=>t.sector===selectedSector),now=Date.now(),cutoff=stockDays?now-stockDays*86400000:-Infinity;
+ let points=[{x:stockDays?cutoff:(relevant.length?Date.parse(relevant[0].time)-3600000:now-86400000),y:0}],value=0;
+ for(const t of relevant){let x=Date.parse(t.time);if(x>now)continue;value+=t.delta;if(x<cutoff)points[0].y=value;else points.push({x,y:value})}
+ points.push({x:now,y:value});
+ let low=Math.min(...points.map(p=>p.y))-2,high=Math.max(...points.map(p=>p.y))+2;
+ let minX=Math.min(...points.map(p=>p.x)),maxX=Math.max(now,minX+3600000);
+ let X=x=>55+(x-minX)/(maxX-minX)*720,Y=y=>184-(y-low)/(high-low)*155;
+ let path=points.map((p,i)=>(i?"L":"M")+X(p.x).toFixed(1)+" "+Y(p.y).toFixed(1)).join(" ");
+ let color=value>=0?"#00a878":"#e74f6b",svg=$("stockGraph");
+ svg.innerHTML=`<line x1="55" x2="775" y1="${Y(0)}" y2="${Y(0)}" stroke="#e4eaf4" stroke-dasharray="5 5"/><path d="${path}" stroke="${color}" stroke-width="3" fill="none" stroke-linejoin="round"/><circle cx="${X(now)}" cy="${Y(value)}" r="5" fill="${color}"/><text x="55" y="211" fill="#7a879c" font-size="12">${new Date(minX).toLocaleDateString("tr-TR")}</text><text x="775" y="211" text-anchor="end" fill="#7a879c" font-size="12">${num(value)} puan</text>`;
+ svg.onpointermove=e=>{let rect=svg.getBoundingClientRect(),px=(e.clientX-rect.left)/rect.width*800,nearest=points.reduce((a,b)=>Math.abs(X(a.x)-px)<Math.abs(X(b.x)-px)?a:b);paint("stockChartTitle",`${stock.icon} ${stock.name}: ${num(nearest.y)} puan • ${new Date(nearest.x).toLocaleString("tr-TR")}`)};
+}
+function extraSections(rows){
+ drawStock(rows);
+ const daily={};for(const t of rows){let k=dateKey(new Date(t.time));daily[k]=(daily[k]||0)+t.delta}
+ const now=new Date(),recent=[];
+ for(let i=0;i<7;i++){let d=new Date(now.getFullYear(),now.getMonth(),now.getDate()-i),key=dateKey(d),end=new Date(d.getFullYear(),d.getMonth(),d.getDate()+1).getTime(),last=data.base;
+ for(const t of rows){if(Date.parse(t.time)<end)last=t.level}
+ recent.push({date:key,delta:daily[key]||0,close:last})}
+ $("closes").innerHTML=recent.map((d,i)=>`<div class="stock"><div class="stock-main"><div class="stock-name">${i===0?"Bugün (şu ana kadar)":d.date}</div><div class="stock-sub">Kapanış / güncel değer</div></div><div class="stock-value">${num(d.close)}<div class="small ${d.delta>=0?"up":"down"}">${signed(d.delta)}</div></div></div>`).join("");
+ let year=calendarMonth.getFullYear(),month=calendarMonth.getMonth(),first=new Date(year,month,1).getDay(),offset=(first+6)%7,lastDay=new Date(year,month+1,0).getDate();
+ paint("monthTitle",calendarMonth.toLocaleDateString("tr-TR",{month:"long",year:"numeric"}));
+ let cal=["Pt","Sa","Ça","Pe","Cu","Ct","Pa"].map(x=>`<div class="calendar-weekday">${x}</div>`).join("");
+ for(let i=0;i<offset;i++)cal+='<div></div>';
+ for(let d=1;d<=lastDay;d++){let key=dateKey(new Date(year,month,d)),v=daily[key]||0,cls=v>0?"positive":v<0?"negative":"";cal+=`<div class="calendar-day ${cls}" title="${key}: ${signed(v)} puan"><span>${d}</span><span class="delta">${v?signed(v):"·"}</span></div>`}
+ $("calendar").innerHTML=cal;
+ let start=new Date(now.getFullYear(),now.getMonth(),now.getDate()-6),week=rows.filter(t=>new Date(t.time)>=start&&new Date(t.time)<=now);
+ let sum=week.reduce((a,t)=>a+t.delta,0),bestDay=recent.reduce((a,b)=>b.delta>a.delta?b:a);
+ let categories={};for(const t of week)categories[t.sector]=(categories[t.sector]||0)+t.delta;
+ let bestSector=Object.entries(categories).sort((a,b)=>b[1]-a[1])[0],sector=bestSector&&sectorsList().find(s=>s.id===bestSector[0]);
+ $("report").innerHTML=`<div class="stock"><div class="stock-main">Son 7 günün puan değişimi</div><b class="${sum>=0?"up":"down"}">${signed(sum)}</b></div><div class="stock"><div class="stock-main">İşlem sayısı</div><b>${week.length}</b></div><div class="stock"><div class="stock-main">En yüksek günlük artış</div><b>${bestDay.delta>0?`${bestDay.date} (${signed(bestDay.delta)})`:"Henüz yok"}</b></div><div class="stock"><div class="stock-main">En çok gelişen hisse</div><b>${bestSector&&bestSector[1]>0?esc(sector?.name||bestSector[0]):"Henüz yok"}</b></div><p class="chart-note">${sum>0?"Bu hafta pozitif ilerledin. Sürdürebildiğin küçük adımlara devam et.":sum<0?"Zor bir hafta olabilir. Gelecek hafta tek bir kolay alışkanlığa odaklan.":"Bu hafta küçük bir adımla başlamak için iyi bir fırsat."}</p>`;
+ $("quickButtons").innerHTML=quickTemplates.map((t,i)=>`<button type="button" data-quick="${i}">${esc(t.label)}</button>`).join("");
 }
 function render(){
  const rows=timeline(),total=rows.length?rows[rows.length-1].level:data.base,change=total-data.base;
@@ -163,10 +270,10 @@ function render(){
  paint("todayCount",todayRows.length+" işlem bugün");
  paint("peak",num(Math.max(data.base,...rows.map(t=>t.level))));
  paint("streak",new Set(rows.map(t=>t.time.slice(0,10))).size+" aktif gün");
- chart(rows);
+ chart(rows);extraSections(rows);
  let bySector=Object.fromEntries(sectorsList().map(s=>[s.id,{sum:0,count:0}]));
  for(const t of rows)if(bySector[t.sector]){bySector[t.sector].sum+=t.delta;bySector[t.sector].count++}
- $("stocks").innerHTML=sectorsList().map(s=>{let d=bySector[s.id];return `<div class="stock"><div class="stock-icon">${s.icon}</div><div class="stock-main"><div class="stock-name">${s.name}</div><div class="stock-sub">${s.ticker} • ${d.count} işlem</div></div><div class="stock-value ${d.sum>=0?"up":"down"}">${signed(d.sum)}<div class="small">${d.sum>=0?"▲":"▼"} performans</div></div></div>`}).join("");
+ $("stocks").innerHTML=sectorsList().map(s=>{let d=bySector[s.id];return `<div class="stock ${selectedSector===s.id?"selected":""}" data-sector="${esc(s.id)}"><div class="stock-icon">${s.icon}</div><div class="stock-main"><div class="stock-name">${s.name}</div><div class="stock-sub">${s.ticker} • ${d.count} işlem</div></div><div class="stock-value ${d.sum>=0?"up":"down"}">${signed(d.sum)}<div class="small">${d.sum>=0?"▲":"▼"} performans</div></div></div>`}).join("");
  $("records").innerHTML=rows.length?rows.slice().reverse().map(t=>{let s=sectorsList().find(x=>x.id===t.sector);return `<tr><td>${new Date(t.time).toLocaleString("tr-TR")}</td><td>${s?esc(s.ticker):"DGR"}</td><td title="${esc(t.detail||"")}">${esc(t.description)}</td><td class="${t.delta>=0?"up":"down"}">${signed(t.delta)}</td><td>${num(t.level)}</td><td><button class="danger" data-remove="${esc(t.id)}">Sil</button></td></tr>`}).join(""):`<tr><td colspan="6" class="empty">Henüz işlem yok. İlk işlemini eklediğinde grafik hareket edecek.</td></tr>`;
  paint("recordCount",rows.length+" kayıt");
  $("customSectors").innerHTML=data.customSectors.map(t=>`<div class="stock"><div class="stock-main"><b>${esc(t.icon)} ${esc(t.name)}</b><div class="stock-sub">${esc(t.ticker)}</div></div><button type="button" class="danger" data-sector-remove="${esc(t.id)}">Sil</button></div>`).join("");
@@ -179,6 +286,11 @@ function render(){
  paint("targetText",`${num(total)} / ${num(data.target)} puan • ${num(progress)}% tamamlandı`);
  document.querySelectorAll("#ranges button").forEach(b=>b.classList.toggle("active",Number(b.dataset.days)===days));
 }
+$("stocks").addEventListener("click",e=>{let el=e.target.closest("[data-sector]");if(el){selectedSector=el.dataset.sector;render()}});
+$("stockRanges").addEventListener("click",e=>{let b=e.target.closest("[data-stock-days]");if(!b)return;stockDays=Number(b.dataset.stockDays);document.querySelectorAll("[data-stock-days]").forEach(x=>x.classList.toggle("active",x===b));render()});
+$("prevMonth").onclick=()=>{calendarMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth()-1,1);render()};
+$("nextMonth").onclick=()=>{calendarMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth()+1,1);render()};
+$("quickButtons").addEventListener("click",e=>{let b=e.target.closest("[data-quick]");if(!b)return;let t=quickTemplates[Number(b.dataset.quick)];if(!t)return;data.trades.push({id:"quick_"+Date.now()+"_"+Math.random().toString(36).slice(2),time:localInputDate(),sector:t.sector,description:t.label,detail:"Hızlı işlem",delta:t.delta});save()});
 $("addSector").onclick=()=>{
  const name=$("newSector").value.trim(),ticker=$("newTicker").value.trim().toUpperCase(),icon=$("newIcon").value.trim()||"📈";
  if(!name||!ticker){alert("Hisse adı ve kısa kod gir.");return}
