@@ -611,7 +611,7 @@ showLimit();
 </script>
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
-import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged,setPersistence,browserLocalPersistence} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 import {getFirestore,doc,getDoc,setDoc} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 const firebaseConfig={apiKey:'AIzaSyA4LCrNmHpO0JWs4rIYN_SjdC-YvX6bKmY',authDomain:'hayat-borsam.firebaseapp.com',projectId:'hayat-borsam',storageBucket:'hayat-borsam.firebasestorage.app',messagingSenderId:'462672167238',appId:'1:462672167238:web:7ffbe44eb8740df8b32547',measurementId:'G-T4STJQ0HP2'};
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
@@ -641,10 +641,11 @@ if(snap.exists()){
 }
 ready=true;render();cover.hidden=true;setStatus('✓ Bağlandı');
 }catch(e){console.error(e);ready=false;cover.hidden=false;authMessage('Bağlantı hatası: '+e.message+' — Firestore kurallarını ve yetkili alan adını kontrol et.');setStatus('Bağlantı başarısız')}}
-document.getElementById('googleLogin').onclick=async()=>{try{authMessage('Google giriş penceresi açılıyor…');await signInWithPopup(auth,new GoogleAuthProvider())}catch(e){authMessage('Giriş başarısız: '+e.message+' (HTML dosyasını file:// yerine HTTPS üzerinden aç.)')}};
+document.getElementById('googleLogin').onclick=async()=>{try{authMessage('Oturum kalıcı olarak ayarlanıyor…');await setPersistence(auth,browserLocalPersistence);authMessage('Google giriş penceresi açılıyor…');await signInWithPopup(auth,new GoogleAuthProvider())}catch(e){authMessage('Giriş başarısız: '+e.message+' (HTML dosyasını file:// yerine HTTPS üzerinden aç.)')}};
 document.getElementById('signOutBtn').onclick=async()=>{clearTimeout(timer);if(ready)await push();await signOut(auth)};
 document.getElementById('syncNow').onclick=()=>{clearTimeout(timer);push()};
 document.addEventListener('click',e=>{const m=document.getElementById('firebaseMenu');if(m?.open&&!m.contains(e.target))m.open=false});
+setPersistence(auth,browserLocalPersistence).catch(e=>{console.warn('Kalıcı oturum ayarlanamadı:',e);authMessage('Tarayıcı kalıcı oturumu engelliyor olabilir.');});
 onAuthStateChanged(auth,u=>{if(u)loadAccount(u);else{user=null;ready=false;cover.hidden=false;authMessage('Google hesabınla giriş yap.');setStatus('Oturum kapalı')}});
 </script>
 </body></html>
