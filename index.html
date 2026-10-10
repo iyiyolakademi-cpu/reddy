@@ -21,7 +21,7 @@ textarea{min-height:76px;resize:vertical}label{display:block;font-size:12px;font
 h2{font-size:16px;margin:0 0 14px}h3{font-size:14px;margin:0 0 10px}.head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .ranges{display:flex;gap:5px;flex-wrap:wrap}.ranges button{padding:7px 10px;font-size:12px}
 .chart-wrap{height:310px;position:relative;margin-top:15px;background:linear-gradient(#fff,#fcfdff);border-radius:12px}
-#graph{width:100%;height:100%;display:block;overflow:visible}.chart-note{font-size:12px;color:var(--muted);margin-top:10px}
+#graph{width:100%;height:100%;display:block;overflow:visible;touch-action:pan-y}.chart-note{font-size:12px;color:var(--muted);margin-top:10px}
 .cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.field{margin-bottom:11px}
 .section{margin-top:14px}.stock{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.stock:last-child{border:0}
 .stock-icon{height:37px;width:37px;display:grid;place-items:center;border-radius:12px;background:#eff3ff;font-size:19px}
@@ -36,7 +36,7 @@ footer{font-size:12px;color:var(--muted);line-height:1.7;margin-top:22px}
 </style>
 </head>
 <body><main class="shell">
-<header class="top"><div><div class="logo">◈ HAYAT<span>BORSASI</span></div><div class="sub">Kişisel gelişim endeksin • Veriler cihazında saklanır</div></div><div class="tag">● KİŞİSEL PİYASA</div></header>
+<header class="top"><div><div class="logo">◈ HAYAT<span>BORSAM</span> <span style="font-size:13px;color:#7383a1;font-weight:750;letter-spacing:0">| BEKO GÜCÜ</span></div><div class="sub">Kişisel gelişim endeksin • Veriler cihazında saklanır</div></div><div class="tag">● KİŞİSEL PİYASA</div></header>
 <section class="grid">
 <div class="card"><div class="metric-label">HBX • Hayat Endeksi</div><div class="metric" id="total">100,00</div><div class="hint" id="baseText">Başlangıç: 100,00</div></div>
 <div class="card"><div class="metric-label">Toplam getiri</div><div class="metric" id="gain">+0,00</div><div class="hint" id="gainPct">%0,00</div></div>
@@ -62,6 +62,13 @@ footer{font-size:12px;color:var(--muted);line-height:1.7;margin-top:22px}
 <div class="field"><label for="detail">Günlük not (isteğe bağlı)</label><textarea id="detail" placeholder="Bugün kendimi nasıl hissettim?"></textarea></div>
 <button type="submit" style="width:100%">İşlemi Kaydet ve Grafiği Güncelle</button>
 </form><p class="chart-note">Örnek: Spor +5, iş görüşmesi +10, gereksiz sosyal medya -3. Puanları sen belirlersin.</p></section>
+<section class="card section"><h2>Gelişim Hissesi Oluştur</h2>
+<div class="field"><label for="newSector">Hisse adı (ör. İyi Yol Akademi)</label><input id="newSector" maxlength="45" placeholder="Yeni proje veya alışkanlık"></div>
+<div class="cols"><div class="field"><label for="newTicker">Kısa kod</label><input id="newTicker" maxlength="8" placeholder="IYA"></div><div class="field"><label for="newIcon">Simge</label><input id="newIcon" maxlength="4" value="📈"></div></div>
+<button id="addSector" type="button">Yeni Hisse Ekle</button>
+<div class="chart-note">Eklediğin hisseler işlem ekranında ve portföyünde görünür. Kayıtlarınla birlikte saklanır.</div>
+<div id="customSectors"></div>
+</section>
 <section class="card section"><h2>Piyasa Özeti</h2><div id="insights"></div></section>
 <section class="card section"><h2>Hedef Endeksi</h2><div class="field"><label for="target">Ulaşmak istediğin puan</label><input id="target" type="number" step=".01" min="0"></div><button class="ghost" id="saveTarget" type="button">Hedefi Kaydet</button><div class="progress"><div id="targetBar"></div></div><div class="hint" id="targetText"></div></section>
 <section class="card section"><h2>Başlangıç & Veri Kasası</h2><div class="field"><label for="initial">Başlangıç puanın</label><input type="number" step=".01" id="initial"></div><button class="ghost" id="saveInitial" type="button">Başlangıcı Güncelle</button><div class="rule"></div>
@@ -76,7 +83,7 @@ footer{font-size:12px;color:var(--muted);line-height:1.7;margin-top:22px}
 <script>
 "use strict";
 const KEY="hayatborsasi_terminal_v2";
-const sectors=[
+const defaultSectors=[
 {id:"mental",name:"Zihinsel Özgürlük",ticker:"ZHN",icon:"🧠"},
 {id:"work",name:"Girişimcilik",ticker:"GRS",icon:"🚀"},
 {id:"health",name:"Sağlık & Spor",ticker:"SGL",icon:"💪"},
@@ -88,15 +95,17 @@ const $=id=>document.getElementById(id);
 const num=n=>Number(n).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2});
 const signed=n=>(n>=0?"+":"")+num(n);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-function defaultData(){return {base:100,target:250,trades:[]}}
+function defaultData(){return {base:100,target:250,trades:[],customSectors:[]}}
 let data;
 try{data=JSON.parse(localStorage.getItem(KEY))||defaultData()}catch{data=defaultData()}
 function valid(d){return d&&Number.isFinite(d.base)&&Number.isFinite(d.target)&&Array.isArray(d.trades)&&d.trades.every(t=>typeof t.id==="string"&&typeof t.sector==="string"&&typeof t.description==="string"&&typeof t.time==="string"&&Number.isFinite(Date.parse(t.time))&&Number.isFinite(t.delta))}
 if(!valid(data))data=defaultData();
+if(!Array.isArray(data.customSectors))data.customSectors=[];
+function sectorsList(){return [...defaultSectors,...data.customSectors]}
 let days=30;
 function localInputDate(d=new Date()){let z=x=>String(x).padStart(2,"0");return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}T${z(d.getHours())}:${z(d.getMinutes())}`}
 $("time").value=localInputDate();
-$("sector").innerHTML=sectors.map(s=>`<option value="${s.id}">${s.icon} ${s.name} (${s.ticker})</option>`).join("");
+$("sector").innerHTML=sectorsList().map(s=>`<option value="${s.id}">${s.icon} ${s.name} (${s.ticker})</option>`).join("");
 function timeline(){let total=data.base;return [...data.trades].sort((a,b)=>Date.parse(a.time)-Date.parse(b.time)||a.id.localeCompare(b.id)).map(t=>({...t,level:(total+=t.delta)}))}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){alert("Tarayıcıya kaydedilemedi. Depolama alanını kontrol et.");return false}render();return true}
 function paint(id,v){$(id).textContent=v}
@@ -124,7 +133,25 @@ function chart(rows){
  let rising=currentNow>=data.base,col=rising?"#00a878":"#e74f6b",last=pts[pts.length-1];
  let area=path+` L ${X(last.x).toFixed(2)} 250 L ${X(pts[0].x).toFixed(2)} 250 Z`;
  svg.innerHTML=`<defs><linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity=".2"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient></defs>${grid}<path d="${area}" fill="url(#shade)"/><path d="${path}" fill="none" stroke="${col}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${X(last.x)}" cy="${Y(last.y)}" r="5" fill="${col}" stroke="white" stroke-width="2"/><text x="62" y="284" fill="#7a879c" font-size="12">${new Date(minX).toLocaleDateString("tr-TR")}</text><text x="775" y="284" fill="#7a879c" font-size="12" text-anchor="end">${new Date(now).toLocaleDateString("tr-TR")}</text>`;
- paint("chartInfo",`${days?days+" günlük":"Tüm zamanların"} görünüm • ${pts.length-2} kayıtlı grafik noktası • Güncel: ${num(currentNow)}`);
+ // Invisible wide touch targets allow point inspection on phones and desktop.
+ const marks=pts.map((p,i)=>`<circle class="chart-hit" data-index="${i}" cx="${X(p.x)}" cy="${Y(p.y)}" r="14" fill="transparent" stroke="none" style="cursor:crosshair"/>`).join("");
+ svg.insertAdjacentHTML("beforeend",marks);
+ svg.onpointermove=ev=>{
+   const rect=svg.getBoundingClientRect();
+   const px=(ev.clientX-rect.left)/rect.width*800;
+   let nearest=pts[0],dist=Infinity;
+   for(const p of pts){let d=Math.abs(X(p.x)-px);if(d<dist){dist=d;nearest=p}}
+   const x=X(nearest.x),y=Y(nearest.y);
+   const date=new Date(nearest.x).toLocaleString("tr-TR",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
+   const label=`${date} • ${num(nearest.y)} puan`;
+   let tooltip=svg.querySelector("#point-tooltip");if(tooltip)tooltip.remove();
+   const tx=Math.max(90,Math.min(710,x));
+   svg.insertAdjacentHTML("beforeend",`<g id="point-tooltip" pointer-events="none"><line x1="${x}" y1="25" x2="${x}" y2="250" stroke="#8295b6" stroke-dasharray="4 4"/><circle cx="${x}" cy="${y}" r="6" fill="${col}" stroke="white" stroke-width="2"/><rect x="${tx-89}" y="3" width="178" height="28" rx="8" fill="#17213a"/><text x="${tx}" y="22" fill="white" font-size="12" text-anchor="middle">${esc(label)}</text></g>`);
+   paint("chartInfo",`Seçilen nokta: ${label}`);
+ };
+ svg.onpointerleave=()=>{let tip=svg.querySelector("#point-tooltip");if(tip)tip.remove()};
+ svg.onclick=svg.onpointermove;
+ paint("chartInfo",`${days?days+" günlük":"Tüm zamanların"} görünüm • Grafiğe dokunarak puanları incele • Güncel: ${num(currentNow)}`);
 }
 function render(){
  const rows=timeline(),total=rows.length?rows[rows.length-1].level:data.base,change=total-data.base;
@@ -137,11 +164,13 @@ function render(){
  paint("peak",num(Math.max(data.base,...rows.map(t=>t.level))));
  paint("streak",new Set(rows.map(t=>t.time.slice(0,10))).size+" aktif gün");
  chart(rows);
- let bySector=Object.fromEntries(sectors.map(s=>[s.id,{sum:0,count:0}]));
+ let bySector=Object.fromEntries(sectorsList().map(s=>[s.id,{sum:0,count:0}]));
  for(const t of rows)if(bySector[t.sector]){bySector[t.sector].sum+=t.delta;bySector[t.sector].count++}
- $("stocks").innerHTML=sectors.map(s=>{let d=bySector[s.id];return `<div class="stock"><div class="stock-icon">${s.icon}</div><div class="stock-main"><div class="stock-name">${s.name}</div><div class="stock-sub">${s.ticker} • ${d.count} işlem</div></div><div class="stock-value ${d.sum>=0?"up":"down"}">${signed(d.sum)}<div class="small">${d.sum>=0?"▲":"▼"} performans</div></div></div>`}).join("");
- $("records").innerHTML=rows.length?rows.slice().reverse().map(t=>{let s=sectors.find(x=>x.id===t.sector);return `<tr><td>${new Date(t.time).toLocaleString("tr-TR")}</td><td>${s?esc(s.ticker):"DGR"}</td><td title="${esc(t.detail||"")}">${esc(t.description)}</td><td class="${t.delta>=0?"up":"down"}">${signed(t.delta)}</td><td>${num(t.level)}</td><td><button class="danger" data-remove="${esc(t.id)}">Sil</button></td></tr>`}).join(""):`<tr><td colspan="6" class="empty">Henüz işlem yok. İlk işlemini eklediğinde grafik hareket edecek.</td></tr>`;
+ $("stocks").innerHTML=sectorsList().map(s=>{let d=bySector[s.id];return `<div class="stock"><div class="stock-icon">${s.icon}</div><div class="stock-main"><div class="stock-name">${s.name}</div><div class="stock-sub">${s.ticker} • ${d.count} işlem</div></div><div class="stock-value ${d.sum>=0?"up":"down"}">${signed(d.sum)}<div class="small">${d.sum>=0?"▲":"▼"} performans</div></div></div>`}).join("");
+ $("records").innerHTML=rows.length?rows.slice().reverse().map(t=>{let s=sectorsList().find(x=>x.id===t.sector);return `<tr><td>${new Date(t.time).toLocaleString("tr-TR")}</td><td>${s?esc(s.ticker):"DGR"}</td><td title="${esc(t.detail||"")}">${esc(t.description)}</td><td class="${t.delta>=0?"up":"down"}">${signed(t.delta)}</td><td>${num(t.level)}</td><td><button class="danger" data-remove="${esc(t.id)}">Sil</button></td></tr>`}).join(""):`<tr><td colspan="6" class="empty">Henüz işlem yok. İlk işlemini eklediğinde grafik hareket edecek.</td></tr>`;
  paint("recordCount",rows.length+" kayıt");
+ $("customSectors").innerHTML=data.customSectors.map(t=>`<div class="stock"><div class="stock-main"><b>${esc(t.icon)} ${esc(t.name)}</b><div class="stock-sub">${esc(t.ticker)}</div></div><button type="button" class="danger" data-sector-remove="${esc(t.id)}">Sil</button></div>`).join("");
+ $("sector").innerHTML=sectorsList().map(t=>`<option value="${esc(t.id)}">${esc(t.icon)} ${esc(t.name)} (${esc(t.ticker)})</option>`).join("");
  const gains=rows.filter(t=>t.delta>0),losses=rows.filter(t=>t.delta<0),best=rows.length?rows.reduce((a,b)=>a.delta>b.delta?a:b):null;
  $("insights").innerHTML=`<div class="stock"><div class="stock-main">Pozitif işlemler</div><b class="up">${gains.length}</b></div><div class="stock"><div class="stock-main">Negatif işlemler</div><b class="down">${losses.length}</b></div><div class="stock"><div class="stock-main">En yüksek tek artış</div><b>${best&&best.delta>0?signed(best.delta):"—"}</b></div><div class="stock"><div class="stock-main">İşlem başına ortalama</div><b>${rows.length?signed(change/rows.length):"—"}</b></div>`;
  $("initial").value=data.base;$("target").value=data.target;
@@ -150,6 +179,18 @@ function render(){
  paint("targetText",`${num(total)} / ${num(data.target)} puan • ${num(progress)}% tamamlandı`);
  document.querySelectorAll("#ranges button").forEach(b=>b.classList.toggle("active",Number(b.dataset.days)===days));
 }
+$("addSector").onclick=()=>{
+ const name=$("newSector").value.trim(),ticker=$("newTicker").value.trim().toUpperCase(),icon=$("newIcon").value.trim()||"📈";
+ if(!name||!ticker){alert("Hisse adı ve kısa kod gir.");return}
+ if(sectorsList().some(s=>s.ticker.toUpperCase()===ticker)){alert("Bu kısa kod zaten kullanılıyor.");return}
+ data.customSectors.push({id:"custom_"+Date.now()+"_"+Math.random().toString(36).slice(2),name,ticker,icon});
+ if(save()){$("newSector").value="";$("newTicker").value=""}
+};
+$("customSectors").addEventListener("click",e=>{
+ const b=e.target.closest("[data-sector-remove]");if(!b)return;
+ if(data.trades.some(t=>t.sector===b.dataset.sectorRemove)){alert("Bu hissede kayıtlı işlem var. Önce ilgili işlemleri sil.");return}
+ if(confirm("Bu gelişim hissesi silinsin mi?")){data.customSectors=data.customSectors.filter(s=>s.id!==b.dataset.sectorRemove);save()}
+});
 $("tradeForm").addEventListener("submit",e=>{e.preventDefault();let a=Number($("amount").value),date=$("time").value,desc=$("description").value.trim();if(!Number.isFinite(a)||a<=0||!desc||!date||!Number.isFinite(Date.parse(date))){alert("Lütfen geçerli tarih, açıklama ve pozitif miktar gir.");return}
 if(Date.parse(date)>Date.now()+60000&&!confirm("Gelecekteki bir tarih seçtin. Yine de kaydedilsin mi?"))return;
 data.trades.push({id:(crypto.randomUUID?crypto.randomUUID():Date.now()+"_"+Math.random()),time:date,sector:$("sector").value,description:desc,detail:$("detail").value.trim(),delta:a*Number($("side").value)});
