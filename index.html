@@ -1,148 +1,82 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#fff6f8">
-  <title>Sen ve Ben ♡</title>
-  <style>
-    * { box-sizing: border-box; }
-    :root { --wine:#7f1734; --rose:#dc6f91; --soft:#fff2f6; --ink:#3f1d29; }
-    body {
-      margin: 0; min-height: 100vh; overflow-x: hidden;
-      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-      color: var(--ink); background: radial-gradient(circle at 50% -10%, #fff 0 15%, #fff5f7 46%, #f8dce5 100%);
-    }
-    button, input { font: inherit; }
-    .screen { min-height: 100vh; display:grid; place-items:center; padding:24px; transition:.7s ease; }
-    .hidden { display:none !important; }
-    .card { width:min(100%, 480px); background:rgba(255,255,255,.8); border:1px solid rgba(127,23,52,.11); border-radius:30px; padding:34px 24px; text-align:center; box-shadow:0 24px 70px rgba(100,25,50,.14); backdrop-filter:blur(14px); }
-    .mini-heart { width:54px; height:54px; display:grid; place-items:center; margin:0 auto 18px; border-radius:50%; color:white; font-size:25px; background:linear-gradient(145deg,var(--rose),var(--wine)); box-shadow:0 10px 26px #dc6f9160; }
-    h1 { margin:0 0 10px; color:var(--wine); font-family:Georgia,serif; font-size:clamp(2rem,8vw,3rem); font-weight:500; }
-    .sub { margin:0 auto 24px; color:#7a5562; line-height:1.65; }
-    .date-grid { display:grid; grid-template-columns:1fr 1.25fr 1fr; gap:9px; margin:20px 0 12px; }
-    .field label { display:block; margin-bottom:7px; color:#85606d; font-size:.77rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
-    .field input { width:100%; border:1px solid #e7c5d0; border-radius:15px; padding:14px 8px; text-align:center; outline:none; background:#fff; color:var(--wine); font-weight:700; }
-    .field input:focus { border-color:var(--rose); box-shadow:0 0 0 4px #dc6f911a; }
-    .main-btn { width:100%; border:0; border-radius:16px; padding:15px 20px; margin-top:12px; color:white; font-weight:750; cursor:pointer; background:linear-gradient(135deg,var(--rose),var(--wine)); box-shadow:0 12px 28px #7f173437; transition:.2s; }
-    .main-btn:active { transform:scale(.98); }
-    #error { min-height:22px; margin:10px 0 0; color:#b32448; font-size:.9rem; }
-    .content { width:min(100%,760px); margin:auto; padding:48px 20px 70px; text-align:center; }
-    .eyebrow { color:var(--rose); text-transform:uppercase; letter-spacing:.18em; font-size:.75rem; font-weight:800; }
-    .timer { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:28px 0 50px; }
-    .time-box { background:#fff; padding:18px 5px; border-radius:20px; box-shadow:0 10px 28px rgba(80,25,43,.08); }
-    .time-box b { display:block; color:var(--wine); font-size:clamp(1.35rem,6vw,2.2rem); }
-    .time-box span { color:#8b6974; font-size:.75rem; }
-    .section-title { margin:0 0 22px; color:var(--wine); font:500 clamp(1.7rem,7vw,2.5rem) Georgia,serif; }
-    .reasons { display:grid; gap:14px; text-align:left; }
-    .reason { display:grid; grid-template-columns:48px 1fr; gap:15px; align-items:start; padding:20px; background:rgba(255,255,255,.82); border:1px solid #eed5dd; border-radius:22px; box-shadow:0 10px 30px rgba(85,27,46,.07); }
-    .number { width:48px; height:48px; display:grid; place-items:center; border-radius:50%; color:white; font:italic 1.25rem Georgia,serif; background:linear-gradient(145deg,#e98eaa,var(--wine)); }
-    .reason h3 { margin:1px 0 6px; color:var(--wine); font-size:1.02rem; }
-    .reason p { margin:0; color:#71515c; line-height:1.6; }
-    .final-btn { width:min(100%,430px); margin:42px auto 0; padding:18px 22px; border:1px solid #d57995; border-radius:999px; background:#fff; color:var(--wine); font-weight:800; cursor:pointer; box-shadow:0 12px 34px rgba(109,29,54,.13); animation:pulse 2s infinite; }
-    @keyframes pulse { 50% { transform:scale(1.035); box-shadow:0 15px 38px rgba(170,47,85,.22); } }
-    .modal { position:fixed; inset:0; z-index:20; display:grid; place-items:center; padding:25px; background:rgba(62,9,27,.62); backdrop-filter:blur(9px); }
-    .love-box { width:min(100%,520px); padding:42px 25px; border-radius:30px; text-align:center; background:linear-gradient(150deg,#fff,#fff0f5); box-shadow:0 30px 90px rgba(30,0,10,.35); animation:pop .55s cubic-bezier(.2,.9,.25,1.25); }
-    @keyframes pop { from { opacity:0; transform:scale(.7) translateY(30px); } }
-    .love-box .heart { color:#d83c6c; font-size:52px; animation:beat 1s infinite; }
-    @keyframes beat { 50% { transform:scale(1.18); } }
-    .love-box h2 { color:var(--wine); font:500 clamp(2rem,8vw,3.2rem) Georgia,serif; margin:12px 0; }
-    .love-box p { margin:0; color:#68404e; font-size:clamp(1.05rem,4vw,1.3rem); line-height:1.75; }
-    .close { margin-top:25px; border:0; background:transparent; color:#986174; cursor:pointer; text-decoration:underline; }
-    .confetti { position:fixed; z-index:30; top:-30px; pointer-events:none; animation:fall linear forwards; }
-    @keyframes fall { to { transform:translate3d(var(--drift),110vh,0) rotate(720deg); opacity:.8; } }
-    @media(max-width:480px) { .card{padding:30px 17px}.date-grid{gap:6px}.timer{gap:6px}.time-box{padding:15px 2px}.reason{padding:17px 14px;grid-template-columns:42px 1fr}.number{width:42px;height:42px} }
-  </style>
-</head>
-<body>
-  <section id="login" class="screen">
-    <div class="card">
-      <div class="mini-heart">♡</div>
-      <h1>Bizim Evrenimiz</h1>
-      <p class="sub">Bu küçük evrene yalnızca kalbimin sahibi girebilir.<br>Sevgili olduğumuz günü, ayı ve saati yaz.</p>
-      <div class="date-grid">
-        <div class="field"><label for="day">Gün</label><input id="day" inputmode="numeric" maxlength="2" placeholder="GG"></div>
-        <div class="field"><label for="month">Ay</label><input id="month" autocomplete="off" placeholder="Ay"></div>
-        <div class="field"><label for="hour">Saat</label><input id="hour" inputmode="numeric" maxlength="5" placeholder="00.00"></div>
-      </div>
-      <button class="main-btn" onclick="unlock()">Kalbime Gir ♡</button>
-      <p id="error"></p>
-    </div>
-  </section>
-
-  <main id="main" class="hidden">
-    <div class="content">
-      <div class="eyebrow">1 Eylül 2026 • 08.00</div>
-      <h1>Sen, Ben ve Evren</h1>
-      <p class="sub">O güzel günün üzerinden geçen her saniye, seni biraz daha çok sevdim.</p>
-      <div class="timer" aria-label="İlişki süremiz">
-        <div class="time-box"><b id="days">0</b><span>Gün</span></div>
-        <div class="time-box"><b id="hours">0</b><span>Saat</span></div>
-        <div class="time-box"><b id="minutes">0</b><span>Dakika</span></div>
-        <div class="time-box"><b id="seconds">0</b><span>Saniye</span></div>
-      </div>
-
-      <div class="eyebrow">Kalbimin En Güzel Üç Nedeni</div>
-      <h2 class="section-title">Sende sevdiğim 3 şey</h2>
-      <div class="reasons">
-        <article class="reason"><div class="number">1</div><div><h3>O güzel çocukluğun</h3><p>Seninle gezerken sanki yanımda neşesi hiç bitmeyen, dünyalar güzeli bir kız çocuğum varmış gibi hissediyorum.</p></div></article>
-        <article class="reason"><div class="number">2</div><div><h3>Her şeyi zamana bırakman</h3><p>Hiçbir şeyi bir anda istemeden, her anı yavaşça yaşaman ve birlikte geçirdiğimiz zamanın tadını çıkarman.</p></div></article>
-        <article class="reason"><div class="number">3</div><div><h3>Sadece bizim evrenimize odaklanman</h3><p>Dışarıdaki her şeyi bir anlığına susturup yalnızca bize inanman: sen, ben ve bizim evrenimiz.</p></div></article>
-      </div>
-      <button class="final-btn" onclick="showLove()">Son bir şey için kalbime dokun ♡</button>
-    </div>
-  </main>
-
-  <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
-    <div class="love-box">
-      <div class="heart">♥</div>
-      <h2>Seni çok seviyorum kadın</h2>
-      <p>İyi ki benimsin, iyi ki seninim bebeğim.</p>
-      <button class="close" onclick="document.getElementById('modal').classList.add('hidden')">Bir kez daha gülümse ♡</button>
-    </div>
-  </div>
-
-  <script>
-    const startDate = new Date(2026, 8, 1, 8, 0, 0);
-    function normalize(value) { return value.trim().toLocaleLowerCase('tr-TR').replace(/\s/g, ''); }
-    function unlock() {
-      const day = normalize(document.getElementById('day').value).padStart(2,'0');
-      const month = normalize(document.getElementById('month').value);
-      const hour = normalize(document.getElementById('hour').value).replace(':','.');
-      const validMonth = ['eylül','eylul','09','9'].includes(month);
-      const validHour = ['08','08.00','8','8.00'].includes(hour);
-      if (day === '01' && validMonth && validHour) {
-        document.getElementById('login').classList.add('hidden');
-        document.getElementById('main').classList.remove('hidden');
-        updateTimer(); window.scrollTo(0,0);
-      } else {
-        document.getElementById('error').textContent = 'Biraz daha düşün bebeğim… Bizim özel tarihimiz ♡';
-      }
-    }
-    document.addEventListener('keydown', e => { if (e.key === 'Enter' && !document.getElementById('login').classList.contains('hidden')) unlock(); });
-    function updateTimer() {
-      let diff = Math.max(0, Date.now() - startDate.getTime());
-      document.getElementById('days').textContent = Math.floor(diff / 86400000);
-      diff %= 86400000;
-      document.getElementById('hours').textContent = String(Math.floor(diff / 3600000)).padStart(2,'0');
-      diff %= 3600000;
-      document.getElementById('minutes').textContent = String(Math.floor(diff / 60000)).padStart(2,'0');
-      document.getElementById('seconds').textContent = String(Math.floor((diff % 60000) / 1000)).padStart(2,'0');
-    }
-    setInterval(updateTimer, 1000);
-    function showLove() {
-      document.getElementById('modal').classList.remove('hidden');
-      const symbols = ['♥','♡','❤','💕'];
-      for (let i=0; i<85; i++) {
-        const c = document.createElement('span'); c.className='confetti';
-        c.textContent=symbols[Math.floor(Math.random()*symbols.length)];
-        c.style.left=Math.random()*100+'vw'; c.style.fontSize=(12+Math.random()*22)+'px';
-        c.style.color=['#d83c6c','#ff87a9','#8d193b','#ffc1d2'][Math.floor(Math.random()*4)];
-        c.style.setProperty('--drift',(Math.random()*180-90)+'px');
-        c.style.animationDuration=(2.5+Math.random()*3)+'s'; c.style.animationDelay=(Math.random()*.8)+'s';
-        document.body.appendChild(c); setTimeout(()=>c.remove(),6500);
-      }
-    }
-  </script>
-</body>
-</html>
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hayat Borsam</title>
+<style>
+:root{font-family:system-ui,-apple-system,Arial;background:#0b1020;color:#eef2ff;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0}main{max-width:1050px;margin:auto;padding:22px 15px 60px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px}h1{font-size:23px;margin:0}small,.muted{color:#9caac7}
+.card{background:#151e33;border:1px solid #293650;border-radius:18px;padding:19px;margin-top:15px;box-shadow:0 8px 25px #0002}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.value{font-size:32px;font-weight:750;margin:7px 0}
+.positive{color:#38d6a0}.negative{color:#ff7185}
+button,input,select,textarea{font:inherit;border-radius:10px;border:1px solid #34425d;padding:11px;background:#10192c;color:#fff}
+button{cursor:pointer;background:#415dff;border:0;font-weight:650}button.secondary{background:#293650}button.danger{background:#703246}
+label{display:block;font-size:13px;color:#b7c5df;margin:10px 0 5px}
+.row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1;min-width:120px}canvas{width:100%;height:260px;display:block}
+table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:10px 6px;text-align:left;border-bottom:1px solid #293650}th{color:#aab9d4}
+.scroll{overflow:auto}.pill{display:inline-block;padding:5px 9px;background:#263751;border-radius:20px;font-size:12px}
+@media(max-width:650px){.grid{grid-template-columns:1fr 1fr}.grid .card:last-child{grid-column:1/-1}.value{font-size:26px}}
+</style></head><body><main>
+<header><div><h1>📈 Hayat Borsam</h1><small>Kendi gelişiminin endeksi • Veriler bu tarayıcıda saklanır</small></div><span class="pill" id="today"></span></header>
+<div class="grid">
+<section class="card"><small>Güncel hayat puanı</small><div class="value" id="score">—</div><small id="starting"></small></section>
+<section class="card"><small>Toplam değişim</small><div class="value" id="change">—</div><small id="percent"></small></section>
+<section class="card"><small>Bugünkü değişim</small><div class="value" id="daily">—</div><small id="count"></small></section>
+</div>
+<section class="card"><h2>Performans grafiği</h2><div class="row"><button class="secondary" onclick="setRange(1)">1G</button><button class="secondary" onclick="setRange(7)">1H</button><button class="secondary" onclick="setRange(30)">1A</button><button class="secondary" onclick="setRange(365)">1Y</button><button class="secondary" onclick="setRange(0)">Tümü</button></div><canvas id="chart"></canvas><small>Grafik, kaydedilen işlemlerden hesaplanır. Saatlik girişler aynı gün içinde de gösterilir.</small></section>
+<section class="card"><h2>Yeni işlem ekle</h2><form id="form">
+<div class="row"><div><label>Tarih ve saat</label><input type="datetime-local" id="when" required style="width:100%"></div><div><label>Kategori</label><select id="category" style="width:100%"><option>Zihinsel özgürlük</option><option>Sağlık ve spor</option><option>Kişisel bakım</option><option>Girişimcilik</option><option>Sosyal hayat</option><option>Diğer</option></select></div></div>
+<div class="row"><div><label>İşlem açıklaması</label><input id="note" placeholder="Örn: 30 dakika yürüdüm" required style="width:100%"></div><div><label>Puan değişimi (+ / -)</label><input type="number" id="delta" step="0.1" placeholder="Örn: 5 veya -2" required style="width:100%"></div></div>
+<button type="submit">İşlemi kaydet</button></form></section>
+<section class="card"><h2>Analiz</h2><div id="analysis" class="muted"></div></section>
+<section class="card"><h2>İşlem geçmişi</h2><div class="scroll"><table><thead><tr><th>Tarih</th><th>Kategori / Açıklama</th><th>Değişim</th><th></th></tr></thead><tbody id="history"></tbody></table></div></section>
+<section class="card"><h2>Ayarlar ve yedekleme</h2><label>Başlangıç puanın</label><div class="row"><input id="base" type="number" step="0.1" placeholder="Örn: 100"><button onclick="saveBase()">Başlangıç puanını kaydet</button></div>
+<p class="muted">Başlangıç puanını değiştirmek geçmiş işlemleri silmez; tüm puanları yeniden hesaplar.</p>
+<div class="row"><button class="secondary" onclick="exportData()">JSON yedeği indir</button><label style="margin:0"><input type="file" id="import" accept=".json,application/json" style="width:100%"></label><button class="danger" onclick="clearData()">Tüm verileri sil</button></div>
+<p class="muted">Önemli: localStorage yalnızca bu cihazın bu tarayıcısında çalışır. Tarayıcı verileri silinirse kayıtlar kaybolabilir. Düzenli JSON yedeği indir; başka cihazda aynı dosyayı içe aktar.</p></section>
+</main><script>
+const KEY='hayat_borsam_v1';let state;try{state=JSON.parse(localStorage.getItem(KEY))||{base:100,items:[]}}catch{state={base:100,items:[]}}
+if(!Number.isFinite(state.base)||!Array.isArray(state.items))state={base:100,items:[]};
+let range=30;const $=id=>document.getElementById(id);
+function localDateTime(d=new Date()){let z=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}T${z(d.getHours())}:${z(d.getMinutes())}`}
+$('when').value=localDateTime();$('today').textContent=new Date().toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'});
+const fmt=n=>Number(n).toLocaleString('tr-TR',{maximumFractionDigits:2});
+function sorted(){return [...state.items].sort((a,b)=>new Date(a.when)-new Date(b.when)||a.id.localeCompare(b.id))}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){alert('Kayıt yapılamadı: tarayıcı depolaması dolu veya kapalı. JSON yedeği alın.');return}render()}
+function setRange(n){range=n;render()}
+function render(){
+let items=sorted(),total=state.base+items.reduce((s,i)=>s+i.delta,0),change=total-state.base;
+let day=new Date().toDateString(),todayItems=items.filter(i=>new Date(i.when).toDateString()===day);
+let todayDelta=todayItems.reduce((s,i)=>s+i.delta,0);
+$('score').textContent=fmt(total);$('starting').textContent='Başlangıç: '+fmt(state.base);
+$('change').textContent=(change>=0?'+':'')+fmt(change);$('change').className='value '+(change>=0?'positive':'negative');
+$('percent').textContent=state.base===0?'Başlangıç sıfır: yüzde hesaplanamaz':(change>=0?'+':'')+fmt(change/state.base*100)+'%';
+$('daily').textContent=(todayDelta>=0?'+':'')+fmt(todayDelta);$('daily').className='value '+(todayDelta>=0?'positive':'negative');
+$('count').textContent=todayItems.length+' işlem bugün';
+$('base').value=state.base;
+let groups={};for(let i of items)groups[i.category]=(groups[i.category]||0)+i.delta;
+$('analysis').innerHTML='<p>Toplam '+items.length+' işlem • '+new Set(items.map(i=>i.when.slice(0,10))).size+' aktif gün</p>'+Object.entries(groups).map(([k,v])=>`<p>${escapeHtml(k)}: <b class="${v>=0?'positive':'negative'}">${v>=0?'+':''}${fmt(v)}</b></p>`).join('');
+$('history').innerHTML=items.slice().reverse().map(i=>`<tr><td>${new Date(i.when).toLocaleString('tr-TR')}</td><td><b>${escapeHtml(i.category)}</b><br>${escapeHtml(i.note)}</td><td class="${i.delta>=0?'positive':'negative'}">${i.delta>=0?'+':''}${fmt(i.delta)}</td><td><button class="danger" onclick="removeItem('${i.id}')">Sil</button></td></tr>`).join('');
+draw(items)
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+$('form').addEventListener('submit',e=>{e.preventDefault();let d=Number($('delta').value),when=$('when').value;if(!Number.isFinite(d)||!when)return;state.items.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2),when,category:$('category').value,note:$('note').value.trim(),delta:d});$('note').value='';$('delta').value='';$('when').value=localDateTime();save()});
+function removeItem(id){if(confirm('Bu işlemi silmek istiyor musun?')){state.items=state.items.filter(i=>i.id!==id);save()}}
+function saveBase(){let n=Number($('base').value);if(!Number.isFinite(n)){alert('Geçerli bir puan gir.');return}state.base=n;save()}
+function clearData(){if(confirm('Tüm kayıtlar ve başlangıç puanı silinsin mi? Bu işlem geri alınamaz.')){state={base:100,items:[]};save()}}
+function exportData(){let blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='hayat-borsam-yedek.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+$('import').addEventListener('change',async e=>{let f=e.target.files[0];if(!f)return;try{let d=JSON.parse(await f.text());if(!Number.isFinite(d.base)||!Array.isArray(d.items)||!d.items.every(i=>typeof i.id==='string'&&typeof i.note==='string'&&typeof i.category==='string'&&Number.isFinite(i.delta)&&!isNaN(new Date(i.when))))throw Error('Geçersiz yedek');if(confirm('Mevcut veriler yedek dosyasıyla değiştirilsin mi?')){state=d;save()}}catch(err){alert('Yedek okunamadı: '+err.message)}e.target.value=''});
+function draw(items){let c=$('chart'),ctx=c.getContext('2d'),w=c.clientWidth,h=260,ratio=devicePixelRatio||1;c.width=w*ratio;c.height=h*ratio;ctx.scale(ratio,ratio);ctx.clearRect(0,0);
+let now=Date.now(),cutoff=range?now-range*86400000:-Infinity,all=[{x:items.length?new Date(items[0].when).getTime()-1:now,y:state.base}],sum=state.base;
+for(let i of items){sum+=i.delta;all.push({x:new Date(i.when).getTime(),y:sum})}
+let previous=all[0];for(let p of all){if(p.x<cutoff)previous=p}
+let points=all.filter(p=>p.x>=cutoff);if(range&&all.length>1)points.unshift({x:cutoff,y:previous.y});if(!points.length)points=[{x:now,y:sum}];
+let ys=points.map(p=>p.y),lo=Math.min(...ys),hi=Math.max(...ys),pad=Math.max((hi-lo)*.15,1);lo-=pad;hi+=pad;
+let left=52,right=w-12,top=16,bottom=h-32,xmin=Math.min(...points.map(p=>p.x)),xmax=Math.max(now,...points.map(p=>p.x),xmin+1);
+let X=x=>left+(x-xmin)/(xmax-xmin)*(right-left),Y=y=>bottom-(y-lo)/(hi-lo)*(bottom-top);
+ctx.font='11px system-ui';ctx.strokeStyle='#2e3b54';ctx.fillStyle='#aebcce';
+for(let j=0;j<=4;j++){let y=top+(bottom-top)*j/4;ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(right,y);ctx.stroke();ctx.fillText(fmt(hi-(hi-lo)*j/4),3,y+4)}
+ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(X(p.x),Y(p.y)):ctx.moveTo(X(p.x),Y(p.y)));ctx.strokeStyle=points.at(-1).y>=state.base?'#38d6a0':'#ff7185';ctx.lineWidth=3;ctx.stroke();
+let last=points.at(-1);ctx.beginPath();ctx.arc(X(last.x),Y(last.y),4,0,Math.PI*2);ctx.fillStyle=ctx.strokeStyle;ctx.fill();
+ctx.fillStyle='#aebcce';ctx.fillText(new Date(xmin).toLocaleDateString('tr-TR'),left,bottom+18);ctx.textAlign='right';ctx.fillText(new Date(xmax).toLocaleDateString('tr-TR'),right,bottom+18);ctx.textAlign='left'}
+window.addEventListener('resize',()=>draw(sorted()));render();
+</script></body></html>
