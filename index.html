@@ -557,7 +557,13 @@ function showLimit(){
 $("time").addEventListener("change",showLimit);
 $("sector").addEventListener("change",showLimit);
 $("sectorSearch").addEventListener("input",()=>render());
-const expandedMovers={risers:false,fallers:false,neutralMovers:false};
+const moverMoreOpen={risers:false,fallers:false};
+function moverList(items,key,line){
+ const open=moverMoreOpen[key];
+ const shown=open?items:items.slice(0,5);
+ const button=items.length>5?`<button type="button" data-mover-more="${key}" style="display:block;width:100%;margin:10px 0;padding:10px;border:1px solid currentColor;border-radius:10px;background:transparent;color:inherit;cursor:pointer">${open?'▲ Kapat':`▼ Diğerleri (${items.length-5})`}</button>`:'';
+ return shown.map(line).join('')+button;
+}
 function renderMovers(){
  const today=dateKey(new Date());
  const dayTrades=data.trades.filter(t=>{
@@ -572,10 +578,10 @@ function renderMovers(){
  const loss=totals.filter(t=>t.delta<0).sort((a,b)=>a.delta-b.delta);
  const neutral=totals.filter(t=>t.delta===0);
  const line=t=>`<div class="stock mover-click" data-mover-sector="${esc(t.id)}" role="button" tabindex="0" aria-label="${esc(t.name)} hissesini puanla"><div class="stock-main"><b>${esc(t.icon)} ${esc(t.name)}</b><div class="stock-sub">${esc(t.ticker)} · Bugün ${t.count} işlem</div></div><b class="${t.delta>0?'up':t.delta<0?'down':'neutral-delta'}">${signed(t.delta)}</b></div>`;
- $("risers").innerHTML=gain.length?(gain.slice(0,expandedMovers.risers?undefined:5).map(line).join("")+(gain.length>5?`<button type="button" data-expand-movers="risers" style="display:block;width:100%;padding:12px;margin-top:8px;border:1px solid #64748b;border-radius:10px;background:transparent;color:inherit;font:inherit;cursor:pointer">${expandedMovers.risers?'▲ Kapat':'▼ Diğerleri ('+(gain.length-5)+')'}</button>`:'')):'<p class="hint">Bugün henüz yükselen hisse yok.</p>';
- $("fallers").innerHTML=loss.length?(loss.slice(0,expandedMovers.fallers?undefined:5).map(line).join("")+(loss.length>5?`<button type="button" data-expand-movers="fallers" style="display:block;width:100%;padding:12px;margin-top:8px;border:1px solid #64748b;border-radius:10px;background:transparent;color:inherit;font:inherit;cursor:pointer">${expandedMovers.fallers?'▲ Kapat':'▼ Diğerleri ('+(loss.length-5)+')'}</button>`:'')):'<p class="hint">Bugün henüz düşen hisse yok.</p>';
+ $("risers").innerHTML=gain.length?moverList(gain,"risers",line):'<p class="hint">Bugün henüz yükselen hisse yok.</p>';
+ $("fallers").innerHTML=loss.length?moverList(loss,"fallers",line):'<p class="hint">Bugün henüz düşen hisse yok.</p>';
  $("moversDateNote").textContent=`${new Date().toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'})} · Günlük değişimler 00.00’da sıfırlanır; toplam puanlar korunur.`;
- $("neutralMovers").innerHTML=neutral.length?(neutral.slice(0,expandedMovers.neutralMovers?undefined:5).map(line).join("")+(neutral.length>5?`<button type="button" data-expand-movers="neutralMovers" style="display:block;width:100%;padding:12px;margin-top:8px;border:1px solid #64748b;border-radius:10px;background:transparent;color:inherit;font:inherit;cursor:pointer">${expandedMovers.neutralMovers?'▲ Kapat':'▼ Diğerleri ('+(neutral.length-5)+')'}</button>`:'')):'<p class="hint">Bugün tüm hisselerde hareket var.</p>';
+ $("neutralMovers").innerHTML=neutral.length?neutral.map(line).join(""):'<p class="hint">Bugün tüm hisselerde hareket var.</p>';
 }
 // Günlük hareket listelerindeki her hisse, mevcut puanlama formunu açar.
 const marketTradeOriginalParent=$("marketTrade").parentNode;
@@ -612,8 +618,8 @@ function openMoverTrade(id){
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeMoverModal()});
 $("closeMarketTrade").addEventListener("click",closeMoverModal);
 $("movers").addEventListener("click",e=>{
- const btn=e.target.closest("[data-expand-movers]");
- if(btn){const key=btn.dataset.expandMovers;if(Object.prototype.hasOwnProperty.call(expandedMovers,key)){expandedMovers[key]=!expandedMovers[key];renderMovers();}return;}
+ const more=e.target.closest("[data-mover-more]");
+ if(more){const key=more.dataset.moverMore;if(key==='risers'||key==='fallers'){moverMoreOpen[key]=!moverMoreOpen[key];renderMovers();}return;}
  const item=e.target.closest("[data-mover-sector]");
  if(item)openMoverTrade(item.dataset.moverSector);
 });
