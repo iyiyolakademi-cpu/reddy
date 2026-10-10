@@ -108,10 +108,19 @@ body{padding-bottom:88px}
 #stocks .stock{cursor:pointer}
 #stocks .stock:active{transform:scale(.995)}
 @media(max-width:440px){.market-trade .cols{grid-template-columns:1fr}.market-buttons button{padding:12px 5px}}
+ 
+.status-chip{font-weight:800;border-radius:20px;padding:7px 11px;background:#f0f4f8;font-size:12px}
+.weight-line{display:grid;grid-template-columns:minmax(0,1fr) 76px 53px;align-items:center;gap:9px;margin:8px 0;font-size:12px}
+.weight-line input{min-width:0;padding:9px}
+.weight-line span{text-align:right;color:#697990}
+.goal-item{border-bottom:1px solid #e5eaf2;padding:12px 0}
+.goal-item .progress{height:7px;background:#e9eef8;border-radius:8px;overflow:hidden;margin-top:8px}
+.goal-item .progress>div{height:100%;background:#4169ef;border-radius:8px}
 </style>
 </head>
 <body><main class="shell">
 <header class="top"><div><div class="logo">HAYAT<span>BORSAM</span> <span style="font-size:13px;color:#7383a1;font-weight:750;letter-spacing:0">| BEKO GÜCÜ</span></div><div class="sub">Kişisel gelişim endeksin</div></div><div class="tag">● KİŞİSEL PİYASA</div></header>
+<section class="card section" id="marketStatus"><div class="head"><h2>📊 Piyasa Durumu</h2><span id="marketMood" class="status-chip">Yatay Piyasa</span></div><p id="marketMoodText" class="chart-note"></p></section>
 <section class="grid" id="overview">
 <div class="card"><div class="metric-label">HBX • Hayat Endeksi</div><div class="metric" id="total">100,00</div><div class="hint" id="baseText">Başlangıç: 100,00</div></div>
 <div class="card"><div class="metric-label">Toplam getiri</div><div class="metric" id="gain">+0,00</div><div class="hint" id="gainPct">%0,00</div></div>
@@ -158,7 +167,8 @@ body{padding-bottom:88px}
 <div class="chart-note">Eklediğin hisseler işlem ekranında ve portföyünde görünür. Kayıtlarınla birlikte saklanır.</div>
 <div id="customSectors"></div>
 </section>
-<section class="card section" id="funds"><div class="head"><h2>💼 Fon Piyasası</h2><span class="hint">Otomatik hesaplanır</span></div><p class="chart-note">Fonlara ayrı puan girilmez. Her fonun puanı, içindeki hisselerin toplam puan değişimidir. Hisseye verdiğin +5 puan fonuna da +5 yansır; toplam hayat endeksine yalnızca bir kez eklenir.</p><div id="fundCards"></div><div id="fundDetail"></div></section>
+<section class="card section" id="funds"><div class="head"><h2>💼 Fon Piyasası</h2><span class="hint">Otomatik hesaplanır</span></div><p class="chart-note">Fonlara ayrı puan girilmez. Her fonun puanı, içindeki hisselerin toplam puan değişimidir. Hisseye verdiğin +5 puan fonuna da +5 yansır; toplam hayat endeksine yalnızca bir kez eklenir.</p><div id="fundCards"></div><div id="fundDetail"></div><div class="rule"></div><h3>⚖️ Fon Ağırlıkları</h3><p class="chart-note">Varsayılan olarak fon içindeki hisseler eşit ağırlıktadır. Ağırlıkları değiştirdiğinde fon performansı ağırlıklı ortalama ile hesaplanır. Ana hayat endeksi değişmez.</p><div id="weightEditor"></div><button type="button" class="ghost" id="resetWeights">Bu Fonun Ağırlıklarını Eşitle</button></section>
+<section class="card section" id="stockGoals"><div class="head"><h2>🎯 Hisse Hedefleri</h2></div><p class="chart-note">Her hissenin ulaşmasını istediğin toplam puanı belirle. Puanlama yaptıkça hedef ilerlemesi otomatik güncellenir.</p><div class="cols"><div class="field"><label for="goalSector">Hisse</label><select id="goalSector"></select></div><div class="field"><label for="goalAmount">Hedef puan</label><input type="number" id="goalAmount" step="0.01" min="0.01" value="30"></div></div><button id="setStockGoal" type="button">Hisse Hedefini Kaydet</button><div id="goalList"></div></section>
 <section class="card section" id="movers"><h2>🔥 Haftanın Popülerleri</h2><p class="chart-note">Son 7 gündeki puan değişimine göre en çok yükselen ve düşen hisseler.</p><div class="cols"><div><h3 class="up">▲ En Çok Artanlar</h3><div id="risers"></div></div><div><h3 class="down">▼ En Çok Düşenler</h3><div id="fallers"></div></div></div></section>
 <section class="card section" id="quickActions"><h2>Hızlı İşlemler</h2><p class="chart-note">Tek dokunuşla puan ekle. Her işlem otomatik kaydedilir.</p><div class="quick-grid" id="quickButtons"></div></section>
 <section class="card section"><h2>Piyasa Özeti</h2><div id="insights"></div></section>
@@ -287,6 +297,26 @@ function fundSummaries(){
   return {name,ids,total,weekly,daily,count:ids.size};
  });
 }
+function weightFor(s){const v=Number(data.weights?.[s.id]);return Number.isFinite(v)&&v>=0?v:1}
+function weightedFund(fund){
+ const members=sectorsList().filter(s=>(s.group||"Özel")===fund);
+ const denom=members.reduce((a,s)=>a+weightFor(s),0);
+ if(!denom)return 0;
+ return members.reduce((a,s)=>a+(data.trades.filter(t=>t.sector===s.id&&Date.parse(t.time)<=Date.now()).reduce((v,t)=>v+t.delta,0))*weightFor(s),0)/denom;
+}
+function renderWeightEditor(){
+ const members=sectorsList().filter(s=>(s.group||"Özel")===selectedFund);
+ const denom=members.reduce((a,s)=>a+weightFor(s),0);
+ $("weightEditor").innerHTML=members.map(s=>`<div class="weight-line"><label>${esc(s.icon)} ${esc(s.name)}</label><input aria-label="${esc(s.name)} ağırlığı" type="number" min="0" max="100" step="1" data-weight="${esc(s.id)}" value="${weightFor(s)}"><span>${denom?(weightFor(s)/denom*100).toFixed(1):"0"}%</span></div>`).join("");
+}
+$("weightEditor").addEventListener("change",e=>{
+ const el=e.target.closest("[data-weight]");if(!el)return;
+ const n=Number(el.value);if(!Number.isFinite(n)||n<0||n>100){alert("Ağırlık 0-100 arasında olmalı.");renderWeightEditor();return}
+ data.weights??={};data.weights[el.dataset.weight]=n;save();
+});
+$("resetWeights").onclick=()=>{
+ data.weights??={};for(const t of sectorsList().filter(s=>(s.group||"Özel")===selectedFund))delete data.weights[t.id];save()
+};
 function renderFunds(){
  const funds=fundSummaries();
  if(!funds.some(f=>f.name===selectedFund))selectedFund=funds[0]?.name||"";
@@ -297,7 +327,7 @@ function renderFunds(){
  const lines=members.map(s=>{
  const sum=data.trades.filter(t=>t.sector===s.id).reduce((a,t)=>a+t.delta,0);
  return `<div class="stock"><div class="stock-main">${esc(s.icon)} ${esc(s.name)}</div><b class="${sum>=0?"up":"down"}">${signed(sum)}</b></div>`}).join("");
- $("fundDetail").innerHTML=`<div class="fund-detail"><h3>${esc(fund.name)} Fonu</h3><p class="chart-note">Toplam ${signed(fund.total)} · Bugün ${signed(fund.daily)} · Son 7 gün ${signed(fund.weekly)}</p>${lines}</div>`;
+ $("fundDetail").innerHTML=`<div class="fund-detail"><h3>${esc(fund.name)} Fonu</h3><p class="chart-note">Ağırlıklı fon puanı: <b>${signed(weightedFund(fund.name))}</b> · Hisselerin toplamı: ${signed(fund.total)} · Bugün ${signed(fund.daily)} · Son 7 gün ${signed(fund.weekly)}</p>${lines}</div>`;renderWeightEditor();
 }
 $("fundCards").addEventListener("click",e=>{const btn=e.target.closest("[data-fund]");if(btn){selectedFund=btn.dataset.fund;renderFunds()}});
 $("groupFilter").addEventListener("change",()=>render());
@@ -329,13 +359,36 @@ function extraSections(rows){
  $("report").innerHTML=`<div class="stock"><div class="stock-main">Son 7 günün puan değişimi</div><b class="${sum>=0?"up":"down"}">${signed(sum)}</b></div><div class="stock"><div class="stock-main">İşlem sayısı</div><b>${week.length}</b></div><div class="stock"><div class="stock-main">En yüksek günlük artış</div><b>${bestDay.delta>0?`${bestDay.date} (${signed(bestDay.delta)})`:"Henüz yok"}</b></div><div class="stock"><div class="stock-main">En çok gelişen hisse</div><b>${bestSector&&bestSector[1]>0?esc(sector?.name||bestSector[0]):"Henüz yok"}</b></div><p class="chart-note">${sum>0?"Bu hafta pozitif ilerledin. Sürdürebildiğin küçük adımlara devam et.":sum<0?"Zor bir hafta olabilir. Gelecek hafta tek bir kolay alışkanlığa odaklan.":"Bu hafta küçük bir adımla başlamak için iyi bir fırsat."}</p>`;
  $("quickButtons").innerHTML=quickTemplates.map((t,i)=>`<button type="button" data-quick="${i}">${esc(t.label)}</button>`).join("");
 }
+function renderMood(todayDelta){
+ const label=todayDelta>0?"🐂 Boğa Piyasası":todayDelta<0?"🐻 Ayı Piyasası":"➖ Yatay Piyasa";
+ paint("marketMood",label);
+ paint("marketMoodText",todayDelta>0?`Bugün endeksin ${signed(todayDelta)} puan yükseldi.`:todayDelta<0?`Bugün endeksin ${signed(todayDelta)} puan değişti.`:"Bugün henüz net bir puan değişimi yok.");
+ $("marketMood").className="status-chip "+(todayDelta>0?"up":todayDelta<0?"down":"");
+}
+function renderGoals(){
+ data.stockGoals??={};
+ const selected=$("goalSector").value;
+ $("goalSector").innerHTML=sectorsList().map(t=>`<option value="${esc(t.id)}">${esc(t.icon)} ${esc(t.name)}</option>`).join("");
+ if(sectorsList().some(s=>s.id===selected))$("goalSector").value=selected;
+ const entries=Object.entries(data.stockGoals).filter(([id,goal])=>sectorsList().some(s=>s.id===id)&&Number(goal)>0);
+ $("goalList").innerHTML=entries.length?entries.map(([id,goal])=>{
+ const s=sectorsList().find(s=>s.id===id),score=data.trades.filter(t=>t.sector===id&&Date.parse(t.time)<=Date.now()).reduce((n,t)=>n+t.delta,0);
+ const pct=Math.max(0,Math.min(100,score/goal*100));
+ return `<div class="goal-item"><div class="head"><b>${esc(s.icon)} ${esc(s.name)}</b><button class="ghost" type="button" data-goal-remove="${esc(id)}">Sil</button></div><div class="hint">${signed(score)} / ${num(goal)} puan · %${num(pct)}</div><div class="progress"><div style="width:${pct}%"></div></div></div>`}).join(""):'<p class="hint">Henüz hisse hedefi belirlemedin.</p>';
+}
+$("setStockGoal").onclick=()=>{
+ const id=$("goalSector").value,amount=Number($("goalAmount").value);
+ if(!id||!Number.isFinite(amount)||amount<=0){alert("Pozitif hedef puanı gir.");return}
+ data.stockGoals??={};data.stockGoals[id]=amount;save();
+};
+$("goalList").addEventListener("click",e=>{const b=e.target.closest("[data-goal-remove]");if(!b)return;delete data.stockGoals[b.dataset.goalRemove];save()});
 function render(){
  const rows=timeline(),total=rows.length?rows[rows.length-1].level:data.base,change=total-data.base;
  const today=new Date().toDateString(),todayRows=rows.filter(t=>new Date(t.time).toDateString()===today),dayDelta=todayRows.reduce((s,t)=>s+t.delta,0);
  paint("total",num(total));paint("baseText","Başlangıç: "+num(data.base));
  paint("gain",signed(change));colorize("gain",change);
  paint("gainPct",data.base===0?"Başlangıç sıfır: yüzde hesaplanmaz":signed(change/data.base*100)+"%");
- paint("todayGain",signed(dayDelta));colorize("todayGain",dayDelta);
+ renderMood(dayDelta);renderGoals();paint("todayGain",signed(dayDelta));colorize("todayGain",dayDelta);
  paint("todayCount",todayRows.length+" işlem bugün");
  paint("peak",num(Math.max(data.base,...rows.map(t=>t.level))));
  paint("streak",new Set(rows.map(t=>t.time.slice(0,10))).size+" aktif gün");
@@ -371,6 +424,7 @@ $("marketTradeForm").addEventListener("submit",e=>{
  e.preventDefault();const button=e.submitter;const sign=Number(button?.dataset.direction||1);
  const amount=Number($("marketAmount").value),time=$("marketDate").value,description=$("marketDescription").value.trim();
  if(!Number.isFinite(amount)||amount<=0||amount>10||!Number.isFinite(Date.parse(time))){alert("Geçerli bir tarih ve 0-10 arasında puan gir.");return}
+ if(Date.parse(time)>Date.now()+60000){alert("Gelecek tarihe işlem girilemez.");return}
  const requested=amount*sign,allowed=remainingDelta(selectedSector,time.slice(0,10),requested);
  if(Math.abs(allowed-requested)>0.000001){alert("Günlük ±10 sınırı aşılıyor. Kullanılabilir puan: "+signed(allowed));return}
  data.trades.push({id:"market_"+Date.now()+"_"+Math.random().toString(36).slice(2),time,sector:selectedSector,description:description||"Puan işlemi",detail:"Piyasadan hızlı puanlama",delta:requested});
@@ -395,7 +449,7 @@ $("customSectors").addEventListener("click",e=>{
  if(confirm("Bu gelişim hissesi silinsin mi?")){data.customSectors=data.customSectors.filter(s=>s.id!==b.dataset.sectorRemove);save();showLimit()}
 });
 $("tradeForm").addEventListener("submit",e=>{e.preventDefault();let a=Number($("amount").value),date=$("time").value,desc=$("description").value.trim();if(!Number.isFinite(a)||a<=0||!date||!Number.isFinite(Date.parse(date))){alert("Lütfen geçerli tarih ve pozitif puan gir.");return}
-if(Date.parse(date)>Date.now()+60000&&!confirm("Gelecekteki bir tarih seçtin. Yine de kaydedilsin mi?"))return;
+if(Date.parse(date)>Date.now()+60000){alert("Gelecek tarihe işlem girilemez. Bugünü veya geçmiş bir günü seç.");return;}
 const requested=a*Number($("side").value),available=remainingDelta($("sector").value,date.slice(0,10),requested);
 if(Math.abs(available-requested)>0.000001){alert("Bu hissenin günlük tavan/taban sınırı ±10 puandır. Bu işlem limiti aşar. Kalan uygun miktar: "+signed(available));return}
 data.trades.push({id:((typeof crypto!=="undefined"&&crypto.randomUUID)?crypto.randomUUID():Date.now()+"_"+Math.random()),time:date,sector:$("sector").value,description:desc||"Puan işlemi",detail:$("detail").value.trim(),delta:requested});
@@ -420,9 +474,9 @@ function setupScreens(){
  const journal=$("journal"),form=$("newTrade");
  const extra=[...document.querySelectorAll(".card.section")];
  const move=(id,target)=>{let el=$(id);if(el)target.appendChild(el)};
- home.appendChild(metric);
+ home.appendChild(metric);move("marketStatus",home);
  move("dailyClose",home);move("calendarSection",home);move("weeklyReport",home);
- market.appendChild(performance);move("funds",market);market.appendChild(movers);market.appendChild(portfolio);
+ market.appendChild(performance);move("funds",market);move("stockGoals",market);market.appendChild(movers);market.appendChild(portfolio);
  trade.appendChild(form);move("quickActions",trade);
  for(const el of [...document.querySelectorAll(".card.section")]){
    if(!el.closest(".screen-page")&&el.id!=="journal")trade.appendChild(el);
