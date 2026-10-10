@@ -94,6 +94,13 @@ button,input,select,textarea{min-height:44px}input,select,textarea{font-size:16p
 .limit-note{background:#f1f5ff;color:#3657a8;border-radius:10px;padding:10px;font-size:12px;line-height:1.5}
 body{padding-bottom:88px}
 @media(min-width:641px){.mobile-nav{max-width:640px;left:50%;transform:translateX(-50%);border:1px solid var(--line);border-radius:15px 15px 0 0}}
+
+.fund-card{background:#f7f9fd;color:var(--ink);border:1px solid #e3eaf5;display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:13px;min-height:92px}
+.fund-card.chosen{border-color:#4169ef;background:#eff4ff}
+.fund-title{font-size:12px;font-weight:800}.fund-card strong{font-size:19px}
+#fundCards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.fund-detail{margin-top:12px;padding:12px;border:1px solid #e3eaf5;border-radius:12px}
+@media(max-width:390px){#fundCards{grid-template-columns:1fr}}
 </style>
 </head>
 <body><main class="shell">
@@ -106,12 +113,12 @@ body{padding-bottom:88px}
 </section>
 <div class="layout">
 <div>
-<section class="card">
+<section class="card" id="performance">
 <div class="head"><h2>HBX / Performans Grafiği</h2><div class="ranges" id="ranges"><button class="ghost" data-days="1">1G</button><button class="ghost" data-days="7">1H</button><button class="ghost active" data-days="30">1A</button><button class="ghost" data-days="90">3A</button><button class="ghost" data-days="365">1Y</button><button class="ghost" data-days="0">Tümü</button></div></div>
 <div class="chart-wrap"><svg id="graph" viewBox="0 0 800 300" preserveAspectRatio="none" role="img" aria-label="Hayat puanı zaman grafiği"><text x="30" y="150" fill="#74839b">Grafik hazırlanıyor...</text></svg></div>
 <div class="chart-note" id="chartInfo">Başlangıç değeri ve puan değişimlerinden otomatik oluşturulur.</div>
 </section>
-<section class="card section" id="portfolio"><div class="head"><h2>Portföyüm • Gelişim Alanları</h2><span class="hint">Kategori bazlı puan performansı</span></div><div class="field"><label for="sectorSearch">Hisse ara</label><input id="sectorSearch" placeholder="Hisse veya kategori ara..."></div><p class="chart-note" id="stockCount"></p><div id="stocks"></div>
+<section class="card section" id="portfolio"><div class="head"><h2>Portföyüm • Gelişim Alanları</h2><span class="hint">Kategori bazlı puan performansı</span></div><div class="field"><label for="groupFilter">Kategori seç</label><select id="groupFilter"><option value="">Tüm Kategoriler</option></select></div><div class="field"><label for="sectorSearch">Hisse ara</label><input id="sectorSearch" placeholder="Hisse adı veya kodu ara..."></div><p class="chart-note" id="stockCount"></p><div id="stocks"></div>
 <div class="rule"></div><div class="head"><h3 id="stockChartTitle">Hisse Grafiği</h3><div class="ranges" id="stockRanges"><button class="ghost" data-stock-days="7">1H</button><button class="ghost active" data-stock-days="30">1A</button><button class="ghost" data-stock-days="365">1Y</button><button class="ghost" data-stock-days="0">Tümü</button></div></div>
 <div class="chart-wrap" style="height:215px"><svg id="stockGraph" viewBox="0 0 800 220" preserveAspectRatio="none" aria-label="Seçilen hisse puan grafiği"></svg></div>
 <p class="chart-note">Bir hisseye dokunarak o hissenin performansını incele.</p>
@@ -130,11 +137,12 @@ body{padding-bottom:88px}
 </form><p class="chart-note">Örnek: Spor +5, iş görüşmesi +10, gereksiz sosyal medya -3. Puanları sen belirlersin.</p></section>
 <section class="card section"><h2>Gelişim Hissesi Oluştur</h2>
 <div class="field"><label for="newSector">Hisse adı (ör. İyi Yol Akademi)</label><input id="newSector" maxlength="45" placeholder="Yeni proje veya alışkanlık"></div>
-<div class="cols"><div class="field"><label for="newTicker">Kısa kod</label><input id="newTicker" maxlength="8" placeholder="IYA"></div><div class="field"><label for="newIcon">Simge</label><input id="newIcon" maxlength="4" value="📈"></div></div>
+<div class="field"><label for="newGroup">Kategori / Fon</label><select id="newGroup"></select></div><div class="cols"><div class="field"><label for="newTicker">Kısa kod</label><input id="newTicker" maxlength="8" placeholder="IYA"></div><div class="field"><label for="newIcon">Simge</label><input id="newIcon" maxlength="4" value="📈"></div></div>
 <button id="addSector" type="button">Yeni Hisse Ekle</button>
 <div class="chart-note">Eklediğin hisseler işlem ekranında ve portföyünde görünür. Kayıtlarınla birlikte saklanır.</div>
 <div id="customSectors"></div>
 </section>
+<section class="card section" id="funds"><div class="head"><h2>💼 Fon Piyasası</h2><span class="hint">Otomatik hesaplanır</span></div><p class="chart-note">Fonlara ayrı puan girilmez. Her fonun puanı, içindeki hisselerin toplam puan değişimidir. Hisseye verdiğin +5 puan fonuna da +5 yansır; toplam hayat endeksine yalnızca bir kez eklenir.</p><div id="fundCards"></div><div id="fundDetail"></div></section>
 <section class="card section" id="movers"><h2>🔥 Haftanın Popülerleri</h2><p class="chart-note">Son 7 gündeki puan değişimine göre en çok yükselen ve düşen hisseler.</p><div class="cols"><div><h3 class="up">▲ En Çok Artanlar</h3><div id="risers"></div></div><div><h3 class="down">▼ En Çok Düşenler</h3><div id="fallers"></div></div></div></section>
 <section class="card section" id="quickActions"><h2>Hızlı İşlemler</h2><p class="chart-note">Tek dokunuşla puan ekle. Her işlem otomatik kaydedilir.</p><div class="quick-grid" id="quickButtons"></div></section>
 <section class="card section"><h2>Piyasa Özeti</h2><div id="insights"></div></section>
@@ -161,7 +169,7 @@ body{padding-bottom:88px}
 <script>
 "use strict";
 const KEY="hayatborsasi_terminal_v2";
-const defaultSectors=[{"id":"mental","name":"Zihinsel Özgürlük","ticker":"ZHN","icon":"🧠","group":"Zihin"},{"id":"work","name":"Girişimcilik","ticker":"GRS","icon":"🚀","group":"Kariyer"},{"id":"health","name":"Sağlık & Spor","ticker":"SGL","icon":"💪","group":"Sağlık"},{"id":"style","name":"Tarz & Bakım","ticker":"TRZ","icon":"✨","group":"Kişisel"},{"id":"social","name":"Sosyal Hayat","ticker":"SOS","icon":"🤝","group":"Sosyal"},{"id":"learn","name":"Öğrenme","ticker":"OGR","icon":"📚","group":"Eğitim"},{"id":"other","name":"Diğer","ticker":"DGR","icon":"⭐","group":"Diğer"},{"id":"iya","name":"İyi Yol Akademi","ticker":"IYA","icon":"🎓","group":"Projeler"},{"id":"oynabak","name":"OynaBak","ticker":"OYN","icon":"🎮","group":"Projeler"},{"id":"habitopia","name":"Habitopia","ticker":"HBT","icon":"🌱","group":"Projeler"},{"id":"robot","name":"Sen V1 Robot","ticker":"SV1","icon":"🤖","group":"Projeler"},{"id":"familyshop","name":"Aile İşletmesi","ticker":"AIL","icon":"🍔","group":"Projeler"},{"id":"writing","name":"Yazarlık","ticker":"YZR","icon":"✍️","group":"Üretim"},{"id":"books","name":"Kitap Projeleri","ticker":"KTP","icon":"📖","group":"Üretim"},{"id":"blog","name":"Blog Yazıları","ticker":"BLG","icon":"📝","group":"Üretim"},{"id":"content","name":"İçerik Üretimi","ticker":"ICK","icon":"🎬","group":"Üretim"},{"id":"video","name":"Vlog","ticker":"VLG","icon":"📹","group":"Üretim"},{"id":"socialmedia","name":"Sosyal Medya","ticker":"SMY","icon":"📱","group":"Üretim"},{"id":"brand","name":"Kişisel Marka","ticker":"MRK","icon":"🌟","group":"Üretim"},{"id":"sales","name":"Satış Görüşmeleri","ticker":"STS","icon":"💼","group":"Kariyer"},{"id":"network","name":"İş Ağı","ticker":"NET","icon":"🔗","group":"Kariyer"},{"id":"finance","name":"Para Yönetimi","ticker":"FIN","icon":"💰","group":"Finans"},{"id":"saving","name":"Birikim","ticker":"BRK","icon":"🏦","group":"Finans"},{"id":"income","name":"Gelir Hedefleri","ticker":"GLR","icon":"📈","group":"Finans"},{"id":"budget","name":"Bütçe Disiplini","ticker":"BTD","icon":"🧾","group":"Finans"},{"id":"sleep","name":"Uyku Düzeni","ticker":"UYK","icon":"🌙","group":"Sağlık"},{"id":"walk","name":"Yürüyüş","ticker":"YRY","icon":"🚶","group":"Sağlık"},{"id":"fitness","name":"Antrenman","ticker":"ANT","icon":"🏋️","group":"Sağlık"},{"id":"nutrition","name":"Beslenme","ticker":"BSL","icon":"🥗","group":"Sağlık"},{"id":"water","name":"Su İçme","ticker":"SU","icon":"💧","group":"Sağlık"},{"id":"rest","name":"Dinlenme","ticker":"DNL","icon":"🧘","group":"Sağlık"},{"id":"reading","name":"Kitap Okuma","ticker":"OKU","icon":"📘","group":"Eğitim"},{"id":"english","name":"Yabancı Dil","ticker":"DIL","icon":"🌍","group":"Eğitim"},{"id":"coding","name":"Yazılım","ticker":"YZM","icon":"💻","group":"Eğitim"},{"id":"research","name":"Araştırma","ticker":"ARS","icon":"🔎","group":"Eğitim"},{"id":"conference","name":"Konferanslar","ticker":"KNF","icon":"🎤","group":"Kariyer"},{"id":"confidence","name":"Özgüven","ticker":"OZG","icon":"🦁","group":"Zihin"},{"id":"focus","name":"Odaklanma","ticker":"ODK","icon":"🎯","group":"Zihin"},{"id":"discipline","name":"Disiplin","ticker":"DSP","icon":"⏱️","group":"Zihin"},{"id":"mood","name":"Ruh Hali","ticker":"RUH","icon":"☀️","group":"Zihin"},{"id":"journal","name":"Günlük Tutma","ticker":"GNL","icon":"📓","group":"Zihin"},{"id":"screen","name":"Ekran Süresi","ticker":"EKS","icon":"📵","group":"Zihin"},{"id":"friends","name":"Arkadaşlık","ticker":"ARK","icon":"👥","group":"Sosyal"},{"id":"family","name":"Aile Zamanı","ticker":"AZM","icon":"🏡","group":"Sosyal"},{"id":"communication","name":"İletişim","ticker":"ILT","icon":"💬","group":"Sosyal"},{"id":"newpeople","name":"Yeni İnsanlarla Tanışma","ticker":"YIT","icon":"🙋","group":"Sosyal"},{"id":"hobby","name":"Hobiler","ticker":"HOB","icon":"🎨","group":"Kişisel"},{"id":"travel","name":"Gezi & Keşif","ticker":"GZI","icon":"🧭","group":"Kişisel"},{"id":"grooming","name":"Kişisel Bakım","ticker":"BKM","icon":"🪞","group":"Kişisel"},{"id":"clothing","name":"Giyim & Stil","ticker":"STL","icon":"👔","group":"Kişisel"},{"id":"home","name":"Düzen & Temizlik","ticker":"DZN","icon":"🧹","group":"Kişisel"},{"id":"time","name":"Zaman Yönetimi","ticker":"ZMN","icon":"⌛","group":"Kişisel"}];
+const defaultSectors=[{"id":"iya","name":"İyi Yol Akademi","ticker":"IYA","icon":"🎓","group":"Projeler & Girişimler"},{"id":"oynabak","name":"OynaBak","ticker":"OYN","icon":"🎮","group":"Projeler & Girişimler"},{"id":"habitopia","name":"Habitopia","ticker":"HBT","icon":"🌱","group":"Projeler & Girişimler"},{"id":"robot","name":"Sen V1 Robot","ticker":"SV1","icon":"🤖","group":"Projeler & Girişimler"},{"id":"familyshop","name":"Aile İşletmesi","ticker":"AIL","icon":"🏪","group":"Projeler & Girişimler"},{"id":"income","name":"Günlük Kazanç","ticker":"KAZ","icon":"💰","group":"İş & Finans"},{"id":"sales","name":"Satış Görüşmeleri","ticker":"STS","icon":"🤝","group":"İş & Finans"},{"id":"network","name":"İş Bağlantıları","ticker":"NET","icon":"🔗","group":"İş & Finans"},{"id":"company","name":"Şirketleşme","ticker":"SRK","icon":"🏢","group":"İş & Finans"},{"id":"reading","name":"Kitap Okuma","ticker":"OKU","icon":"📚","group":"Kişisel Gelişim"},{"id":"confidence","name":"Özgüven","ticker":"OZG","icon":"🦁","group":"Kişisel Gelişim"},{"id":"focus","name":"Odaklanma","ticker":"ODK","icon":"🎯","group":"Kişisel Gelişim"},{"id":"discipline","name":"Disiplin","ticker":"DSP","icon":"⏱️","group":"Kişisel Gelişim"},{"id":"knowledge","name":"Yeni Bilgiler Öğrenme","ticker":"BIL","icon":"💡","group":"Kişisel Gelişim"},{"id":"fitness","name":"Spor","ticker":"SPR","icon":"🏋️","group":"Sağlık & Bakım"},{"id":"walk","name":"Yürüyüş","ticker":"YRY","icon":"🚶","group":"Sağlık & Bakım"},{"id":"grooming","name":"Kişisel Bakım","ticker":"BKM","icon":"✨","group":"Sağlık & Bakım"},{"id":"sleep","name":"Uyku Düzeni","ticker":"UYK","icon":"🌙","group":"Sağlık & Bakım"},{"id":"nutrition","name":"Sağlıklı Beslenme","ticker":"BSL","icon":"🥗","group":"Sağlık & Bakım"},{"id":"clothing","name":"Giyim & Tarz","ticker":"TRZ","icon":"👔","group":"Sağlık & Bakım"},{"id":"friends","name":"Arkadaşlar","ticker":"ARK","icon":"👥","group":"Sosyal & Özel Hayat"},{"id":"family","name":"Aile","ticker":"AIE","icon":"🏡","group":"Sosyal & Özel Hayat"},{"id":"newpeople","name":"Yeni İnsanlarla Tanışma","ticker":"YIT","icon":"🙋","group":"Sosyal & Özel Hayat"},{"id":"sociallife","name":"Sosyal Aktiviteler","ticker":"SOS","icon":"🎉","group":"Sosyal & Özel Hayat"},{"id":"love","name":"Aşk","ticker":"ASK","icon":"💗","group":"Sosyal & Özel Hayat"},{"id":"writing","name":"Yazarlık","ticker":"YZR","icon":"✍️","group":"Üretim & Eğitim"},{"id":"socialmedia","name":"Sosyal Medya","ticker":"SMY","icon":"📱","group":"Üretim & Eğitim"},{"id":"vlog","name":"Video & Vlog","ticker":"VLG","icon":"🎥","group":"Üretim & Eğitim"},{"id":"conference","name":"Konferanslar","ticker":"KNF","icon":"🎤","group":"Üretim & Eğitim"},{"id":"wellbeing","name":"Duygusal İyilik Hali","ticker":"DYI","icon":"🧘","group":"Duygusal Denge"},{"id":"happiness","name":"Mutluluk","ticker":"MTL","icon":"😊","group":"Duygusal Denge"}];
 const $=id=>document.getElementById(id);
 const num=n=>Number(n).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2});
 const signed=n=>(n>=0?"+":"")+num(n);
@@ -173,14 +181,14 @@ function valid(d){return d&&Number.isFinite(d.base)&&Number.isFinite(d.target)&&
 if(!valid(data))data=defaultData();
 if(!Array.isArray(data.customSectors))data.customSectors=[];
 function sectorsList(){return [...defaultSectors,...data.customSectors]}
-let days=30,stockDays=30,selectedSector="work",calendarMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);
+let days=30,stockDays=30,selectedSector="iya",selectedFund="Projeler & Girişimler",calendarMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);
 const quickTemplates=[
-{label:"📚 Kitap okudum +5",sector:"learn",delta:5},
-{label:"💪 Spor yaptım +10",sector:"health",delta:10},
-{label:"🚀 Projede çalıştım +15",sector:"work",delta:15},
-{label:"🧠 Profil kontrolü yapmadım +5",sector:"mental",delta:5},
-{label:"✨ Kişisel bakım +5",sector:"style",delta:5},
-{label:"📱 Gereksiz ekran süresi -3",sector:"mental",delta:-3}
+{label:"📚 Kitap okudum +5",sector:"reading",delta:5},
+{label:"💪 Spor yaptım +10",sector:"fitness",delta:10},
+{label:"🚀 Projede çalıştım +15",sector:"iya",delta:15},
+{label:"🧠 Profil kontrolü yapmadım +5",sector:"wellbeing",delta:5},
+{label:"✨ Kişisel bakım +5",sector:"grooming",delta:5},
+{label:"📱 Gereksiz ekran süresi -3",sector:"wellbeing",delta:-3}
 ];
 function localInputDate(d=new Date()){let z=x=>String(x).padStart(2,"0");return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}T${z(d.getHours())}:${z(d.getMinutes())}`}
 $("time").value=localInputDate();
@@ -249,6 +257,41 @@ function drawStock(rows){
  svg.innerHTML=`<line x1="55" x2="775" y1="${Y(0)}" y2="${Y(0)}" stroke="#e4eaf4" stroke-dasharray="5 5"/><path d="${path}" stroke="${color}" stroke-width="3" fill="none" stroke-linejoin="round"/><circle cx="${X(now)}" cy="${Y(value)}" r="5" fill="${color}"/><text x="55" y="211" fill="#7a879c" font-size="12">${new Date(minX).toLocaleDateString("tr-TR")}</text><text x="775" y="211" text-anchor="end" fill="#7a879c" font-size="12">${num(value)} puan</text>`;
  svg.onpointermove=e=>{let rect=svg.getBoundingClientRect(),px=(e.clientX-rect.left)/rect.width*800,nearest=points.reduce((a,b)=>Math.abs(X(a.x)-px)<Math.abs(X(b.x)-px)?a:b);paint("stockChartTitle",`${stock.icon} ${stock.name}: ${num(nearest.y)} puan • ${new Date(nearest.x).toLocaleString("tr-TR")}`)};
 }
+
+function fundSummaries(){
+ const now=Date.now(),weekStart=now-7*86400000;
+ const list=sectorsList(),names=[...new Set(list.map(s=>s.group||"Özel"))];
+ return names.map(name=>{
+  const ids=new Set(list.filter(s=>(s.group||"Özel")===name).map(s=>s.id));
+  const trades=data.trades.filter(t=>ids.has(t.sector)&&Date.parse(t.time)<=now);
+  const total=trades.reduce((a,t)=>a+t.delta,0);
+  const weekly=trades.filter(t=>Date.parse(t.time)>=weekStart).reduce((a,t)=>a+t.delta,0);
+  const today=localInputDate().slice(0,10);
+  const daily=trades.filter(t=>t.time.slice(0,10)===today).reduce((a,t)=>a+t.delta,0);
+  return {name,ids,total,weekly,daily,count:ids.size};
+ });
+}
+function renderFunds(){
+ const funds=fundSummaries();
+ if(!funds.some(f=>f.name===selectedFund))selectedFund=funds[0]?.name||"";
+ $("fundCards").innerHTML=funds.map(f=>`<button class="fund-card ${f.name===selectedFund?"chosen":""}" data-fund="${esc(f.name)}" type="button"><span class="fund-title">${esc(f.name)}</span><strong class="${f.total>=0?"up":"down"}">${signed(f.total)}</strong><span class="hint">${f.count} hisse · Haftalık <b class="${f.weekly>=0?"up":"down"}">${signed(f.weekly)}</b></span></button>`).join("");
+ const fund=funds.find(f=>f.name===selectedFund);
+ if(!fund){$("fundDetail").innerHTML="";return}
+ const members=sectorsList().filter(s=>(s.group||"Özel")===fund.name);
+ const lines=members.map(s=>{
+ const sum=data.trades.filter(t=>t.sector===s.id).reduce((a,t)=>a+t.delta,0);
+ return `<div class="stock"><div class="stock-main">${esc(s.icon)} ${esc(s.name)}</div><b class="${sum>=0?"up":"down"}">${signed(sum)}</b></div>`}).join("");
+ $("fundDetail").innerHTML=`<div class="fund-detail"><h3>${esc(fund.name)} Fonu</h3><p class="chart-note">Toplam ${signed(fund.total)} · Bugün ${signed(fund.daily)} · Son 7 gün ${signed(fund.weekly)}</p>${lines}</div>`;
+}
+$("fundCards").addEventListener("click",e=>{const btn=e.target.closest("[data-fund]");if(btn){selectedFund=btn.dataset.fund;renderFunds()}});
+$("groupFilter").addEventListener("change",()=>render());
+function refreshGroups(){
+ const select=$("groupFilter"),current=select.value;
+ const groups=[...new Set(sectorsList().map(s=>s.group||"Özel"))];
+ select.innerHTML='<option value="">Tüm Kategoriler</option>'+groups.map(g=>`<option value="${esc(g)}">${esc(g)}</option>`).join("");
+ select.value=groups.includes(current)?current:"";
+ const newGroup=$("newGroup");if(newGroup){const old=newGroup.value;newGroup.innerHTML=groups.map(g=>`<option value="${esc(g)}">${esc(g)}</option>`).join("");newGroup.value=groups.includes(old)?old:groups[0]}
+}
 function extraSections(rows){
  drawStock(rows);
  const daily={};for(const t of rows){let k=dateKey(new Date(t.time));daily[k]=(daily[k]||0)+t.delta}
@@ -280,10 +323,11 @@ function render(){
  paint("todayCount",todayRows.length+" işlem bugün");
  paint("peak",num(Math.max(data.base,...rows.map(t=>t.level))));
  paint("streak",new Set(rows.map(t=>t.time.slice(0,10))).size+" aktif gün");
- chart(rows);extraSections(rows);renderMovers();
+ chart(rows);extraSections(rows);renderMovers();renderFunds();
  let bySector=Object.fromEntries(sectorsList().map(s=>[s.id,{sum:0,count:0}]));
  for(const t of rows)if(bySector[t.sector]){bySector[t.sector].sum+=t.delta;bySector[t.sector].count++}
- paint("stockCount",sectorsList().length+" hisse • 10 ana alan ve alt kategoriler • Aramak için yukarı yaz");$("stocks").innerHTML=sectorsList().filter(s=>(s.name+" "+s.ticker+" "+(s.group||"")).toLocaleLowerCase("tr-TR").includes(($("sectorSearch")?.value||"").toLocaleLowerCase("tr-TR"))).map(s=>{let d=bySector[s.id];return `<div class="stock ${selectedSector===s.id?"selected":""}" data-sector="${esc(s.id)}"><div class="stock-icon">${s.icon}</div><div class="stock-main"><div class="stock-name">${s.name}</div><div class="stock-sub">${esc(s.group||"Özel")} · ${s.ticker} • ${d.count} işlem</div></div><div class="stock-value ${d.sum>=0?"up":"down"}">${signed(d.sum)}<div class="small">${d.sum>=0?"▲":"▼"} performans</div></div></div>`}).join("");
+ paint("stockCount",sectorsList().length+" hisse • "+new Set(sectorsList().map(s=>s.group||"Özel")).size+" kategori • Fon puanları otomatik hesaplanır");
+ $("stocks").innerHTML=sectorsList().filter(s=>(!$("groupFilter").value||(s.group||"Özel")===$("groupFilter").value)&&((s.name+" "+s.ticker).toLocaleLowerCase("tr-TR").includes(($("sectorSearch")?.value||"").toLocaleLowerCase("tr-TR")))).map(s=>{let d=bySector[s.id];return `<div class="stock ${selectedSector===s.id?"selected":""}" data-sector="${esc(s.id)}"><div class="stock-icon">${s.icon}</div><div class="stock-main"><div class="stock-name">${s.name}</div><div class="stock-sub">${esc(s.group||"Özel")} · ${s.ticker} • ${d.count} işlem</div></div><div class="stock-value ${d.sum>=0?"up":"down"}">${signed(d.sum)}<div class="small">${d.sum>=0?"▲":"▼"} performans</div></div></div>`}).join("");
  $("records").innerHTML=rows.length?rows.slice().reverse().map(t=>{let s=sectorsList().find(x=>x.id===t.sector);return `<tr><td>${new Date(t.time).toLocaleString("tr-TR")}</td><td>${s?esc(s.ticker):"DGR"}</td><td title="${esc(t.detail||"")}">${esc(t.description)}</td><td class="${t.delta>=0?"up":"down"}">${signed(t.delta)}</td><td>${num(t.level)}</td><td><button class="danger" data-remove="${esc(t.id)}">Sil</button></td></tr>`}).join(""):`<tr><td colspan="6" class="empty">Henüz işlem yok. İlk işlemini eklediğinde grafik hareket edecek.</td></tr>`;
  paint("recordCount",rows.length+" kayıt");
  $("customSectors").innerHTML=data.customSectors.map(t=>`<div class="stock"><div class="stock-main"><b>${esc(t.icon)} ${esc(t.name)}</b><div class="stock-sub">${esc(t.ticker)}</div></div><button type="button" class="danger" data-sector-remove="${esc(t.id)}">Sil</button></div>`).join("");
@@ -307,8 +351,8 @@ $("addSector").onclick=()=>{
  const name=$("newSector").value.trim(),ticker=$("newTicker").value.trim().toUpperCase(),icon=$("newIcon").value.trim()||"📈";
  if(!name||!ticker){alert("Hisse adı ve kısa kod gir.");return}
  if(sectorsList().some(s=>s.ticker.toUpperCase()===ticker)){alert("Bu kısa kod zaten kullanılıyor.");return}
- data.customSectors.push({group:"Özel",id:"custom_"+Date.now()+"_"+Math.random().toString(36).slice(2),name,ticker,icon});
- if(save()){$("newSector").value="";$("newTicker").value=""}
+ data.customSectors.push({group:$("newGroup").value||"Özel",id:"custom_"+Date.now()+"_"+Math.random().toString(36).slice(2),name,ticker,icon});
+ if(save()){$("newSector").value="";$("newTicker").value="";refreshGroups()}
 };
 $("customSectors").addEventListener("click",e=>{
  const b=e.target.closest("[data-sector-remove]");if(!b)return;
@@ -319,7 +363,7 @@ $("tradeForm").addEventListener("submit",e=>{e.preventDefault();let a=Number($("
 if(Date.parse(date)>Date.now()+60000&&!confirm("Gelecekteki bir tarih seçtin. Yine de kaydedilsin mi?"))return;
 const requested=a*Number($("side").value),available=remainingDelta($("sector").value,date.slice(0,10),requested);
 if(Math.abs(available-requested)>0.000001){alert("Bu hissenin günlük tavan/taban sınırı ±10 puandır. Bu işlem limiti aşar. Kalan uygun miktar: "+signed(available));return}
-data.trades.push({id:(crypto.randomUUID?crypto.randomUUID():Date.now()+"_"+Math.random()),time:date,sector:$("sector").value,description:desc,detail:$("detail").value.trim(),delta:requested});
+data.trades.push({id:((typeof crypto!=="undefined"&&crypto.randomUUID)?crypto.randomUUID():Date.now()+"_"+Math.random()),time:date,sector:$("sector").value,description:desc,detail:$("detail").value.trim(),delta:requested});
 if(save()){showLimit();$("description").value="";$("detail").value="";$("time").value=localInputDate()}
 });
 $("records").addEventListener("click",e=>{let b=e.target.closest("[data-remove]");if(b&&confirm("Bu işlemi silmek istiyor musun?")){data.trades=data.trades.filter(t=>t.id!==b.dataset.remove);save();showLimit()}});
@@ -343,7 +387,7 @@ function setupScreens(){
  const move=(id,target)=>{let el=$(id);if(el)target.appendChild(el)};
  home.appendChild(metric);
  move("dailyClose",home);move("calendarSection",home);move("weeklyReport",home);
- market.appendChild(performance);market.appendChild(movers);market.appendChild(portfolio);
+ market.appendChild(performance);move("funds",market);market.appendChild(movers);market.appendChild(portfolio);
  trade.appendChild(form);move("quickActions",trade);
  for(const el of [...document.querySelectorAll(".card.section")]){
    if(!el.closest(".screen-page")&&el.id!=="journal")trade.appendChild(el);
@@ -389,6 +433,7 @@ function renderMovers(){
  $("risers").innerHTML=gain.length?gain.map(line).join(""):'<p class="hint">Bu hafta yükselen hisse yok.</p>';
  $("fallers").innerHTML=loss.length?loss.map(line).join(""):'<p class="hint">Bu hafta düşen hisse yok.</p>';
 }
+refreshGroups();
 setupScreens();
 showLimit();
 
