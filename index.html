@@ -2,21 +2,21 @@
 <html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Hayat Borsam</title>
 <style>
-:root{font-family:system-ui,-apple-system,Arial;background:#0b1020;color:#eef2ff;color-scheme:dark}
+:root{font-family:system-ui,-apple-system,Arial;background:#f5f7fb;color:#15213b;color-scheme:light}
 *{box-sizing:border-box}body{margin:0}main{max-width:1050px;margin:auto;padding:22px 15px 60px}
-header{display:flex;justify-content:space-between;align-items:center;gap:12px}h1{font-size:23px;margin:0}small,.muted{color:#9caac7}
-.card{background:#151e33;border:1px solid #293650;border-radius:18px;padding:19px;margin-top:15px;box-shadow:0 8px 25px #0002}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px}h1{font-size:23px;margin:0}small,.muted{color:#6f7d94}
+.card{background:#ffffff;border:1px solid #e3e8f2;border-radius:18px;padding:19px;margin-top:15px;box-shadow:0 8px 25px #14264b0a}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.value{font-size:32px;font-weight:750;margin:7px 0}
-.positive{color:#38d6a0}.negative{color:#ff7185}
-button,input,select,textarea{font:inherit;border-radius:10px;border:1px solid #34425d;padding:11px;background:#10192c;color:#fff}
-button{cursor:pointer;background:#415dff;border:0;font-weight:650}button.secondary{background:#293650}button.danger{background:#703246}
-label{display:block;font-size:13px;color:#b7c5df;margin:10px 0 5px}
+.positive{color:#0aaf80}.negative{color:#e64b69}
+button,input,select,textarea{font:inherit;border-radius:10px;border:1px solid #d8e0ef;padding:11px;background:#f9fbff;color:#15213b}
+button{cursor:pointer;background:#4167f6;color:white;border:0;font-weight:650}button.secondary{background:#e8edfa;color:#233d78}button.danger{background:#fce5e9;color:#a52b43}
+label{display:block;font-size:13px;color:#566780;margin:10px 0 5px}
 .row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1;min-width:120px}canvas{width:100%;height:260px;display:block}
-table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:10px 6px;text-align:left;border-bottom:1px solid #293650}th{color:#aab9d4}
-.scroll{overflow:auto}.pill{display:inline-block;padding:5px 9px;background:#263751;border-radius:20px;font-size:12px}
+table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:10px 6px;text-align:left;border-bottom:1px solid #e8edf6}th{color:#667b9b}
+.scroll{overflow:auto}.pill{display:inline-block;padding:5px 9px;background:#e7efff;color:#3454a0;border-radius:20px;font-size:12px}
 @media(max-width:650px){.grid{grid-template-columns:1fr 1fr}.grid .card:last-child{grid-column:1/-1}.value{font-size:26px}}
 </style></head><body><main>
-<header><div><h1>📈 Hayat Borsam</h1><small>Kendi gelişiminin endeksi • Veriler bu tarayıcıda saklanır</small></div><span class="pill" id="today"></span></header>
+<header><div><h1>◈ Hayat Borsam</h1><small>Kişisel gelişim portföyün • Canlı puan takibi</small></div><span class="pill" id="today"></span></header>
 <div class="grid">
 <section class="card"><small>Güncel hayat puanı</small><div class="value" id="score">—</div><small id="starting"></small></section>
 <section class="card"><small>Toplam değişim</small><div class="value" id="change">—</div><small id="percent"></small></section>
@@ -65,18 +65,18 @@ function saveBase(){let n=Number($('base').value);if(!Number.isFinite(n)){alert(
 function clearData(){if(confirm('Tüm kayıtlar ve başlangıç puanı silinsin mi? Bu işlem geri alınamaz.')){state={base:100,items:[]};save()}}
 function exportData(){let blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='hayat-borsam-yedek.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 $('import').addEventListener('change',async e=>{let f=e.target.files[0];if(!f)return;try{let d=JSON.parse(await f.text());if(!Number.isFinite(d.base)||!Array.isArray(d.items)||!d.items.every(i=>typeof i.id==='string'&&typeof i.note==='string'&&typeof i.category==='string'&&Number.isFinite(i.delta)&&!isNaN(new Date(i.when))))throw Error('Geçersiz yedek');if(confirm('Mevcut veriler yedek dosyasıyla değiştirilsin mi?')){state=d;save()}}catch(err){alert('Yedek okunamadı: '+err.message)}e.target.value=''});
-function draw(items){let c=$('chart'),ctx=c.getContext('2d'),w=c.clientWidth,h=260,ratio=devicePixelRatio||1;c.width=w*ratio;c.height=h*ratio;ctx.scale(ratio,ratio);ctx.clearRect(0,0);
+function draw(items){let c=$('chart'),ctx=c.getContext('2d'),w=Math.max(c.clientWidth,300),h=260,ratio=window.devicePixelRatio||1;c.width=w*ratio;c.height=h*ratio;ctx.scale(ratio,ratio);ctx.clearRect(0,0);
 let now=Date.now(),cutoff=range?now-range*86400000:-Infinity,all=[{x:items.length?new Date(items[0].when).getTime()-1:now,y:state.base}],sum=state.base;
 for(let i of items){sum+=i.delta;all.push({x:new Date(i.when).getTime(),y:sum})}
 let previous=all[0];for(let p of all){if(p.x<cutoff)previous=p}
-let points=all.filter(p=>p.x>=cutoff);if(range&&all.length>1)points.unshift({x:cutoff,y:previous.y});if(!points.length)points=[{x:now,y:sum}];
+let points=all.filter(p=>p.x>=cutoff);if(range&&all.length>1)points.unshift({x:cutoff,y:previous.y});if(!points.length)points=[{x:now-86400000,y:sum},{x:now,y:sum}];if(points.length===1)points.unshift({x:points[0].x-3600000,y:points[0].y});
 let ys=points.map(p=>p.y),lo=Math.min(...ys),hi=Math.max(...ys),pad=Math.max((hi-lo)*.15,1);lo-=pad;hi+=pad;
 let left=52,right=w-12,top=16,bottom=h-32,xmin=Math.min(...points.map(p=>p.x)),xmax=Math.max(now,...points.map(p=>p.x),xmin+1);
 let X=x=>left+(x-xmin)/(xmax-xmin)*(right-left),Y=y=>bottom-(y-lo)/(hi-lo)*(bottom-top);
-ctx.font='11px system-ui';ctx.strokeStyle='#2e3b54';ctx.fillStyle='#aebcce';
+ctx.font='11px system-ui';ctx.strokeStyle='#e2e8f3';ctx.fillStyle='#687b9a';
 for(let j=0;j<=4;j++){let y=top+(bottom-top)*j/4;ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(right,y);ctx.stroke();ctx.fillText(fmt(hi-(hi-lo)*j/4),3,y+4)}
-ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(X(p.x),Y(p.y)):ctx.moveTo(X(p.x),Y(p.y)));ctx.strokeStyle=points.at(-1).y>=state.base?'#38d6a0':'#ff7185';ctx.lineWidth=3;ctx.stroke();
+ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(X(p.x),Y(p.y)):ctx.moveTo(X(p.x),Y(p.y)));ctx.strokeStyle=points.at(-1).y>=state.base?'#0aaf80':'#e64b69';ctx.lineWidth=3;ctx.stroke();
 let last=points.at(-1);ctx.beginPath();ctx.arc(X(last.x),Y(last.y),4,0,Math.PI*2);ctx.fillStyle=ctx.strokeStyle;ctx.fill();
-ctx.fillStyle='#aebcce';ctx.fillText(new Date(xmin).toLocaleDateString('tr-TR'),left,bottom+18);ctx.textAlign='right';ctx.fillText(new Date(xmax).toLocaleDateString('tr-TR'),right,bottom+18);ctx.textAlign='left'}
-window.addEventListener('resize',()=>draw(sorted()));render();
+ctx.fillStyle='#687b9a';ctx.fillText(new Date(xmin).toLocaleDateString('tr-TR'),left,bottom+18);ctx.textAlign='right';ctx.fillText(new Date(xmax).toLocaleDateString('tr-TR'),right,bottom+18);ctx.textAlign='left'}
+window.addEventListener('resize',()=>draw(sorted()));render();setTimeout(()=>draw(sorted()),200);
 </script></body></html>
