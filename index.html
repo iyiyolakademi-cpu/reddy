@@ -111,7 +111,7 @@ body{padding-bottom:88px}
 </style>
 </head>
 <body><main class="shell">
-<header class="top"><div><div class="logo">◈ HAYAT<span>BORSAM</span> <span style="font-size:13px;color:#7383a1;font-weight:750;letter-spacing:0">| BEKO GÜCÜ</span></div><div class="sub">Kişisel gelişim endeksin • Telefon dostu panel</div></div><div class="tag">● KİŞİSEL PİYASA</div></header>
+<header class="top"><div><div class="logo">HAYAT<span>BORSAM</span> <span style="font-size:13px;color:#7383a1;font-weight:750;letter-spacing:0">| BEKO GÜCÜ</span></div><div class="sub">Kişisel gelişim endeksin</div></div><div class="tag">● KİŞİSEL PİYASA</div></header>
 <section class="grid" id="overview">
 <div class="card"><div class="metric-label">HBX • Hayat Endeksi</div><div class="metric" id="total">100,00</div><div class="hint" id="baseText">Başlangıç: 100,00</div></div>
 <div class="card"><div class="metric-label">Toplam getiri</div><div class="metric" id="gain">+0,00</div><div class="hint" id="gainPct">%0,00</div></div>
@@ -131,7 +131,7 @@ body{padding-bottom:88px}
   <p class="chart-note" id="marketTradeLimit"></p>
   <form id="marketTradeForm">
     <div class="cols"><div class="field"><label for="marketDate">Tarih ve saat</label><input type="datetime-local" id="marketDate" required></div><div class="field"><label for="marketAmount">Puan (en fazla 10)</label><input type="number" id="marketAmount" min="0.01" max="10" step="0.01" value="5" required></div></div>
-    <div class="field"><label for="marketDescription">Ne yaptın?</label><input id="marketDescription" maxlength="160" placeholder="Örn. Bugün projem için çalıştım" required></div>
+    <div class="field"><label for="marketDescription">Ne yaptın? (isteğe bağlı)</label><input id="marketDescription" maxlength="160" placeholder="İstersen açıklama yaz"></div>
     <div class="market-buttons"><button type="submit" data-direction="1" class="market-positive">▲ Puan Ekle</button><button type="submit" data-direction="-1" class="market-negative">▼ Puan Düş</button></div>
   </form>
 </div>
@@ -145,7 +145,7 @@ body{padding-bottom:88px}
 <section class="card" id="newTrade"><h2>+ Yeni Hayat İşlemi</h2><form id="tradeForm">
 <div class="field"><label for="time">Tarih ve saat</label><input type="datetime-local" id="time" required></div>
 <div class="field"><label for="sector">Gelişim hissesi</label><select id="sector"></select></div>
-<div class="field"><label for="description">Ne yaptın?</label><input id="description" required maxlength="160" placeholder="Örn. 30 dakika yürüdüm"></div>
+<div class="field"><label for="description">Ne yaptın? (isteğe bağlı)</label><input id="description" maxlength="160" placeholder="İstersen açıklama yaz"></div>
 <div class="cols"><div class="field"><label for="side">İşlem yönü</label><select id="side"><option value="1">▲ Artış</option><option value="-1">▼ Düşüş</option></select></div><div class="field"><label for="amount">Puan miktarı</label><input id="amount" type="number" min=".01" max="1000000" step=".01" value="5" required></div></div>
 <div class="field"><div id="limitInfo" class="limit-note">Günlük hisse limiti: +10 / -10 puan</div></div>
 <div class="field"><label for="detail">Günlük not (isteğe bağlı)</label><textarea id="detail" placeholder="Bugün kendimi nasıl hissettim?"></textarea></div>
@@ -370,10 +370,10 @@ $("marketDate").addEventListener("change",updateMarketTrade);
 $("marketTradeForm").addEventListener("submit",e=>{
  e.preventDefault();const button=e.submitter;const sign=Number(button?.dataset.direction||1);
  const amount=Number($("marketAmount").value),time=$("marketDate").value,description=$("marketDescription").value.trim();
- if(!Number.isFinite(amount)||amount<=0||amount>10||!description||!Number.isFinite(Date.parse(time))){alert("Geçerli bir açıklama, tarih ve 0-10 arasında puan gir.");return}
+ if(!Number.isFinite(amount)||amount<=0||amount>10||!Number.isFinite(Date.parse(time))){alert("Geçerli bir tarih ve 0-10 arasında puan gir.");return}
  const requested=amount*sign,allowed=remainingDelta(selectedSector,time.slice(0,10),requested);
  if(Math.abs(allowed-requested)>0.000001){alert("Günlük ±10 sınırı aşılıyor. Kullanılabilir puan: "+signed(allowed));return}
- data.trades.push({id:"market_"+Date.now()+"_"+Math.random().toString(36).slice(2),time,sector:selectedSector,description,detail:"Piyasadan hızlı puanlama",delta:requested});
+ data.trades.push({id:"market_"+Date.now()+"_"+Math.random().toString(36).slice(2),time,sector:selectedSector,description:description||"Puan işlemi",detail:"Piyasadan hızlı puanlama",delta:requested});
  if(save()){$("marketDescription").value="";$("marketDate").value=localInputDate();updateMarketTrade();showLimit()}
 });
 $("stockRanges").addEventListener("click",e=>{let b=e.target.closest("[data-stock-days]");if(!b)return;stockDays=Number(b.dataset.stockDays);document.querySelectorAll("[data-stock-days]").forEach(x=>x.classList.toggle("active",x===b));render()});
@@ -394,11 +394,11 @@ $("customSectors").addEventListener("click",e=>{
  if(data.trades.some(t=>t.sector===b.dataset.sectorRemove)){alert("Bu hissede kayıtlı işlem var. Önce ilgili işlemleri sil.");return}
  if(confirm("Bu gelişim hissesi silinsin mi?")){data.customSectors=data.customSectors.filter(s=>s.id!==b.dataset.sectorRemove);save();showLimit()}
 });
-$("tradeForm").addEventListener("submit",e=>{e.preventDefault();let a=Number($("amount").value),date=$("time").value,desc=$("description").value.trim();if(!Number.isFinite(a)||a<=0||!desc||!date||!Number.isFinite(Date.parse(date))){alert("Lütfen geçerli tarih, açıklama ve pozitif miktar gir.");return}
+$("tradeForm").addEventListener("submit",e=>{e.preventDefault();let a=Number($("amount").value),date=$("time").value,desc=$("description").value.trim();if(!Number.isFinite(a)||a<=0||!date||!Number.isFinite(Date.parse(date))){alert("Lütfen geçerli tarih ve pozitif puan gir.");return}
 if(Date.parse(date)>Date.now()+60000&&!confirm("Gelecekteki bir tarih seçtin. Yine de kaydedilsin mi?"))return;
 const requested=a*Number($("side").value),available=remainingDelta($("sector").value,date.slice(0,10),requested);
 if(Math.abs(available-requested)>0.000001){alert("Bu hissenin günlük tavan/taban sınırı ±10 puandır. Bu işlem limiti aşar. Kalan uygun miktar: "+signed(available));return}
-data.trades.push({id:((typeof crypto!=="undefined"&&crypto.randomUUID)?crypto.randomUUID():Date.now()+"_"+Math.random()),time:date,sector:$("sector").value,description:desc,detail:$("detail").value.trim(),delta:requested});
+data.trades.push({id:((typeof crypto!=="undefined"&&crypto.randomUUID)?crypto.randomUUID():Date.now()+"_"+Math.random()),time:date,sector:$("sector").value,description:desc||"Puan işlemi",detail:$("detail").value.trim(),delta:requested});
 if(save()){showLimit();$("description").value="";$("detail").value="";$("time").value=localInputDate()}
 });
 $("records").addEventListener("click",e=>{let b=e.target.closest("[data-remove]");if(b&&confirm("Bu işlemi silmek istiyor musun?")){data.trades=data.trades.filter(t=>t.id!==b.dataset.remove);save();showLimit()}});
