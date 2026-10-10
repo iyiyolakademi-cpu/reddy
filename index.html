@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hayat Borsam V12 | Beko Gücü</title>
+<title>Hayat Borsam V13 | Firebase</title>
 <style>
 :root{--bg:#f4f7fc;--card:#fff;--ink:#17213a;--muted:#75839b;--line:#e5eaf3;--blue:#4169ef;--green:#00a878;--red:#e74f6b;--shadow:0 6px 24px #1b34520b}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);font:14px system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink)}
@@ -119,9 +119,12 @@ body{padding-bottom:88px}
 
 .v12-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0}.v12-metrics>div{padding:12px 7px;background:#f3f6fc;border-radius:10px;display:flex;flex-direction:column;gap:5px}.v12-metrics small{color:#73839b;font-size:11px}.v12-metrics b{font-size:17px}.v12-feed{border-bottom:1px solid var(--line);padding:10px 0}.v12-feed small{color:#74839b}.v12-feed p{margin:6px 0;overflow-wrap:anywhere}@media(max-width:380px){.v12-metrics b{font-size:14px}}
 /* V11: initial stock prices are the baseline; trade deltas are changes thereafter. */
+#firebaseBar{position:sticky;top:0;z-index:200;background:#17213a;color:#fff;padding:10px 16px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}#firebaseBar button{background:#4169ef}#firebaseBar small{opacity:.85}#authCover{position:fixed;inset:0;z-index:199;background:#f4f7fc;display:grid;place-items:center;padding:20px}#authCover .card{max-width:460px;text-align:center}#authCover[hidden]{display:none}#firebaseBar[hidden]{display:none}
 </style>
 </head>
-<body><main class="shell">
+<body>
+<div id="firebaseBar"><div><b>☁️ Hayat Borsam Firebase</b> <small id="syncState">Bağlantı bekleniyor…</small></div><div class="actions"><button type="button" id="syncNow">Şimdi eşitle</button><button type="button" id="signOutBtn">Çıkış</button></div></div>
+<div id="authCover"><div class="card"><h2>📈 Hayat Borsam V13</h2><p>31 hissen ve günlük işlemlerin Firebase'de güvenle saklanacak.</p><p id="authMessage" class="hint">Google hesabınla giriş yap.</p><button id="googleLogin" type="button">Google ile giriş yap</button><p class="hint">Yalnızca sana ait Google hesabını kullan. İlk girişte mevcut tarayıcı kayıtlarını aktarabilirsin.</p></div></div><main class="shell">
 <header class="top"><div><div class="logo">HAYAT<span>BORSAM</span> <span style="font-size:13px;color:#7383a1;font-weight:750;letter-spacing:0">| BEKO GÜCÜ</span></div><div class="sub">Kişisel gelişim endeksin</div></div><div class="tag">● KİŞİSEL PİYASA</div></header>
 <section class="card section" id="marketStatus"><div class="head"><h2>📊 Piyasa Durumu</h2><span id="marketMood" class="status-chip">Yatay Piyasa</span></div><p id="marketMoodText" class="chart-note"></p></section>
 <section class="grid" id="overview">
@@ -190,7 +193,7 @@ body{padding-bottom:88px}
 <div id="screen-market" class="screen-page" hidden></div>
 <div id="screen-trade" class="screen-page" hidden></div>
 <div id="screen-history" class="screen-page" hidden></div>
-<footer>Hayat Borsası bir kişisel alışkanlık ve motivasyon aracıdır; puanlar kişisel değerini ölçmez. Kayıtlar bu tarayıcının localStorage alanında tutulur. Başka cihazda otomatik eşitlenmez. Tarayıcı verileri temizlenirse kaybolabileceği için düzenli JSON yedeği al.</footer>
+<footer>Hayat Borsası bir kişisel alışkanlık ve motivasyon aracıdır; puanlar kişisel değerini ölçmez. Giriş yapıldığında kayıtlar Firebase Firestore ile eşitlenir; ayrıca bu tarayıcıda yerel yedek tutulur. Düzenli JSON yedeği al.</footer>
 <nav class="mobile-nav" aria-label="Mobil gezinme">
 <a href="#screen-home" data-screen="home"><b>⌂</b>Ana Sayfa</a><a href="#screen-market" data-screen="market"><b>⌁</b>Piyasa</a>
 <a href="#screen-trade" data-screen="trade"><b>＋</b>İşlem</a><a href="#screen-history" data-screen="history"><b>▤</b>Geçmiş</a>
@@ -232,7 +235,7 @@ function localInputDate(d=new Date()){let z=x=>String(x).padStart(2,"0");return 
 $("time").value=localInputDate();
 $("sector").innerHTML=sectorsList().map(s=>`<option value="${s.id}">${s.icon} ${s.name} (${s.ticker})</option>`).join("");
 function timeline(){let total=data.base;return [...data.trades].sort((a,b)=>Date.parse(a.time)-Date.parse(b.time)||a.id.localeCompare(b.id)).map(t=>({...t,level:(total+=indexDelta(t))}))}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){alert("Tarayıcıya kaydedilemedi. Depolama alanını kontrol et.");return false}render();return true}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){alert("Tarayıcıya kaydedilemedi. Depolama alanını kontrol et.");return false}render();if(window.firebaseQueueSave)window.firebaseQueueSave();return true}
 function paint(id,v){$(id).textContent=v}
 function colorize(id,v){$(id).classList.remove("up","down");$(id).classList.add(v>=0?"up":"down")}
 function chart(rows){
@@ -567,4 +570,42 @@ refreshGroups();
 setupScreens();
 showLimit();
 
-</script></body></html>
+</script>
+<script type="module">
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+import {getFirestore,doc,getDoc,setDoc} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+const firebaseConfig={apiKey:'AIzaSyA4LCrNmHpO0JWs4rIYN_SjdC-YvX6bKmY',authDomain:'hayat-borsam.firebaseapp.com',projectId:'hayat-borsam',storageBucket:'hayat-borsam.firebasestorage.app',messagingSenderId:'462672167238',appId:'1:462672167238:web:7ffbe44eb8740df8b32547',measurementId:'G-T4STJQ0HP2'};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+const status=document.getElementById('syncState'),cover=document.getElementById('authCover'),msg=document.getElementById('authMessage');
+let user=null,ready=false,timer=null,busy=false,queued=false;
+const setStatus=t=>status.textContent=t;
+const authMessage=t=>msg.textContent=t;
+const hasLocal=()=>{try{const d=JSON.parse(localStorage.getItem(KEY));return d&&((d.trades?.length||0)+(d.news?.length||0)+(d.dividends?.length||0)+(d.customSectors?.length||0)>0)}catch{return false}};
+const ref=()=>doc(db,'users',user.uid,'state','main');
+async function push(){if(!ready||!user)return; if(busy){queued=true;return}busy=true;setStatus('Kaydediliyor…');try{await setDoc(ref(),{payload:JSON.parse(JSON.stringify(data)),updatedAt:new Date().toISOString()});setStatus('✓ Firebase’e kaydedildi')}catch(e){console.error(e);setStatus('⚠️ Buluta kaydedilemedi; yerel kayıt korundu')}finally{busy=false;if(queued){queued=false;queueSave()}}}
+function queueSave(){if(!ready)return;clearTimeout(timer);setStatus('Kaydedilmeyi bekliyor…');timer=setTimeout(push,900)}
+window.firebaseQueueSave=queueSave;
+async function loadAccount(u){ready=false;user=u;setStatus('Bulut kayıtları okunuyor…');try{
+const snap=await getDoc(ref());
+if(snap.exists()){
+ const cloud=snap.data().payload;
+ if(!valid(cloud))throw Error('Buluttaki kayıt biçimi geçersiz');
+ if(hasLocal()&&JSON.stringify(cloud)!==JSON.stringify(data)){
+  const useLocal=confirm('Bu tarayıcıda farklı kayıtlar bulundu. TAMAM: Bu tarayıcıdaki kayıtları Firebase üzerine yükle. İPTAL: Firebase kayıtlarını bu tarayıcıya getir.\n\nEmin değilsen İPTAL seç ve önce JSON yedeği al.');
+  if(useLocal){ready=true;await push();}else{data=cloud;localStorage.setItem(KEY,JSON.stringify(data))}
+ }else{data=cloud;localStorage.setItem(KEY,JSON.stringify(data))}
+}else{
+ if(hasLocal()){
+  if(confirm('Firebase hesabın boş. Bu tarayıcıdaki mevcut işlemleri ve kayıtları buluta aktarmak ister misin?')){ready=true;await push()}
+  else {data=defaultData();localStorage.setItem(KEY,JSON.stringify(data));ready=true;await push()}
+ }else{ready=true;await push()}
+}
+ready=true;render();cover.hidden=true;setStatus('✓ Bağlandı');
+}catch(e){console.error(e);ready=false;cover.hidden=false;authMessage('Bağlantı hatası: '+e.message+' — Firestore kurallarını ve yetkili alan adını kontrol et.');setStatus('Bağlantı başarısız')}}
+document.getElementById('googleLogin').onclick=async()=>{try{authMessage('Google giriş penceresi açılıyor…');await signInWithPopup(auth,new GoogleAuthProvider())}catch(e){authMessage('Giriş başarısız: '+e.message+' (HTML dosyasını file:// yerine HTTPS üzerinden aç.)')}};
+document.getElementById('signOutBtn').onclick=async()=>{clearTimeout(timer);if(ready)await push();await signOut(auth)};
+document.getElementById('syncNow').onclick=()=>{clearTimeout(timer);push()};
+onAuthStateChanged(auth,u=>{if(u)loadAccount(u);else{user=null;ready=false;cover.hidden=false;authMessage('Google hesabınla giriş yap.');setStatus('Oturum kapalı')}});
+</script>
+</body></html>
