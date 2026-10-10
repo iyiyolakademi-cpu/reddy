@@ -145,6 +145,10 @@ body{padding-bottom:88px}
 .mover-click{cursor:pointer;transition:background .15s,transform .15s}
 .mover-click:hover,.mover-click:focus-visible{background:#eef4ff;outline:2px solid #92b4fa;outline-offset:1px}
 .mover-click:active{transform:scale(.99)}
+/* V21: Puanlama penceresi sayfayı kaydırmadan açılır */
+.mover-modal-backdrop{position:fixed;inset:0;background:rgba(5,9,20,.76);z-index:9998}
+#marketTrade.mover-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(92vw,480px);max-height:88dvh;overflow-y:auto;z-index:9999;background:#151c2d;border:1px solid #48536a;border-radius:18px;padding:18px;box-shadow:0 24px 80px #0009}
+body.mover-modal-open{overflow:hidden}
 </style>
 </head>
 <body>
@@ -573,14 +577,39 @@ function renderMovers(){
  $("neutralMovers").innerHTML=neutral.length?neutral.map(line).join(""):'<p class="hint">Bugün tüm hisselerde hareket var.</p>';
 }
 // Günlük hareket listelerindeki her hisse, mevcut puanlama formunu açar.
+const marketTradeOriginalParent=$("marketTrade").parentNode;
+const marketTradeOriginalNext=$("marketTrade").nextSibling;
+function closeMoverModal(){
+ const form=$("marketTrade");
+ if(!form.classList.contains("mover-modal"))return;
+ form.classList.remove("mover-modal");
+ form.hidden=true;
+ if(marketTradeOriginalNext&&marketTradeOriginalNext.parentNode===marketTradeOriginalParent)
+  marketTradeOriginalParent.insertBefore(form,marketTradeOriginalNext);
+ else marketTradeOriginalParent.appendChild(form);
+ document.getElementById("moverModalBackdrop")?.remove();
+ document.body.classList.remove("mover-modal-open");
+}
 function openMoverTrade(id){
  if(!sectorsList().some(s=>s.id===id))return;
  selectedSector=id;
- $("marketTrade").hidden=false;
+ const form=$("marketTrade");
+ if(!form.classList.contains("mover-modal")){
+  const backdrop=document.createElement("div");
+  backdrop.id="moverModalBackdrop";
+  backdrop.className="mover-modal-backdrop";
+  backdrop.addEventListener("click",closeMoverModal);
+  document.body.appendChild(backdrop);
+  document.body.appendChild(form);
+  form.classList.add("mover-modal");
+  document.body.classList.add("mover-modal-open");
+ }
+ form.hidden=false;
  $("marketDate").value=localInputDate();
  render();updateMarketTrade();
- $("marketTrade").scrollIntoView({behavior:"smooth",block:"center"});
 }
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeMoverModal()});
+$("closeMarketTrade").addEventListener("click",closeMoverModal);
 $("movers").addEventListener("click",e=>{
  const item=e.target.closest("[data-mover-sector]");
  if(item)openMoverTrade(item.dataset.moverSector);
