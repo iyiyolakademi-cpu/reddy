@@ -146,7 +146,7 @@ body{padding-bottom:88px}
 </head>
 <body>
 
-<div id="authCover"><div class="card"><h2>📈 Hayat Borsam V17</h2><p>31 hissen ve günlük işlemlerin Firebase'de güvenle saklanacak.</p><p id="authMessage" class="hint">Google hesabınla giriş yap.</p><button id="googleLogin" type="button">Google ile giriş yap</button><p class="hint">Yalnızca sana ait Google hesabını kullan. İlk girişte mevcut tarayıcı kayıtlarını aktarabilirsin.</p></div></div><main class="shell">
+<div id="authCover"><div class="card"><h2>📈 Hayat Borsam V19</h2><p>31 hissen ve günlük işlemlerin Firebase'de güvenle saklanacak.</p><p id="authMessage" class="hint">Google hesabınla giriş yap.</p><button id="googleLogin" type="button">Google ile giriş yap</button><p class="hint">Yalnızca sana ait Google hesabını kullan. İlk girişte mevcut tarayıcı kayıtlarını aktarabilirsin.</p></div></div><main class="shell">
 <header class="top"><div><div class="logo">HAYAT<span>BORSAM</span> <span style="font-size:13px;color:#7383a1;font-weight:750;letter-spacing:0">| BEKO GÜCÜ</span></div><div class="sub">Kişisel gelişim endeksin</div></div><div class="header-right"><div class="tag">● KİŞİSEL PİYASA</div><details id="firebaseMenu" class="firebase-menu"><summary title="Bulut hesabı ve eşitleme" aria-label="Bulut hesabı ve eşitleme"><span class="cloud-icon">☁️</span><span class="cloud-label">Hesap</span><span class="cloud-dot" id="cloudDot"></span></summary><div class="firebase-popover"><strong>☁️ Firebase hesabım</strong><p id="syncState" role="status" aria-live="polite">Bağlantı bekleniyor…</p><p class="cloud-note">İşlemler otomatik kaydedilir. Gerekirse manuel eşitleyebilirsin.</p><div class="cloud-actions"><button type="button" id="syncNow">↻ Eşitle</button><button type="button" id="signOutBtn" class="ghost">Çıkış yap</button></div></div></details></div></header>
 <section class="card section" id="marketStatus"><div class="head"><h2>📊 Piyasa Durumu</h2><span id="marketMood" class="status-chip">Yatay Piyasa</span></div><p id="marketMoodText" class="chart-note"></p></section>
 <section class="grid" id="overview">
@@ -641,8 +641,8 @@ if(snap.exists()){
  }else{ready=true;await push()}
 }
 ready=true;localStorage.setItem('hb_v17_cloud_initialized_'+u.uid,'1');render();cover.hidden=true;setStatus('✓ Bağlandı');
-}catch(e){console.error(e);ready=false;cover.hidden=false;authMessage('Bağlantı hatası: '+e.message+' — Firestore kurallarını ve yetkili alan adını kontrol et.');setStatus('Bağlantı başarısız')}}
-document.getElementById('googleLogin').onclick=async()=>{try{authMessage('Oturum kalıcı olarak ayarlanıyor…');await setPersistence(auth,browserLocalPersistence);authMessage('Google giriş penceresi açılıyor…');await signInWithPopup(auth,new GoogleAuthProvider())}catch(e){authMessage('Giriş başarısız: '+e.message+' (HTML dosyasını file:// yerine HTTPS üzerinden aç.)')}};
+}catch(e){console.error(e);ready=true;cover.hidden=true;render();setStatus('⚠️ Bulut bağlantısı kurulamadı; yerel kayıt açık.');}}
+document.getElementById('googleLogin').onclick=async()=>{try{authMessage('Oturum kalıcı olarak ayarlanıyor…');try{await setPersistence(auth,browserLocalPersistence)}catch(err){console.warn('Kalıcı oturum ayarlanamadı:',err)}authMessage('Google giriş penceresi açılıyor…');await signInWithPopup(auth,new GoogleAuthProvider())}catch(e){authMessage('Giriş başarısız: '+e.message+' (HTML dosyasını file:// yerine HTTPS üzerinden aç.)')}};
 document.getElementById('signOutBtn').onclick=async()=>{clearTimeout(timer);if(ready)await push();await signOut(auth)};
 document.getElementById('syncNow').onclick=()=>{clearTimeout(timer);push()};
 document.addEventListener('click',e=>{const m=document.getElementById('firebaseMenu');if(m?.open&&!m.contains(e.target))m.open=false});
@@ -652,7 +652,7 @@ document.addEventListener('click',e=>{const m=document.getElementById('firebaseM
  onAuthStateChanged(auth,u=>{
   if(u){authMessage('Kaydedilmiş oturum bulundu. Veriler yükleniyor…');loadAccount(u)}
   else{user=null;ready=false;cover.hidden=false;authMessage('Oturum bulunamadı. Google ile bir kez giriş yap. Safari özel gezinme modunda olmadığından emin ol.');setStatus('Oturum kapalı')}
- },e=>{authMessage('Oturum kontrol hatası: '+e.message);setStatus('⚠ Oturum kontrol edilemedi')});
+ },e=>{console.error(e);cover.hidden=true;render();setStatus('⚠ Oturum kontrolü başarısız; yerel kayıt açık')});
 })();
 </script>
 </body></html>
