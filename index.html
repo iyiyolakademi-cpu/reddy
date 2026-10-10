@@ -142,11 +142,14 @@ body{padding-bottom:88px}
 .neutral-movers-grid .stock-main{min-width:0}
 .neutral-delta{color:#78869a;font-weight:800}
 @media(max-width:640px){.neutral-movers-grid{grid-template-columns:1fr}}
+.mover-click{cursor:pointer;transition:background .15s,transform .15s}
+.mover-click:hover,.mover-click:focus-visible{background:#eef4ff;outline:2px solid #92b4fa;outline-offset:1px}
+.mover-click:active{transform:scale(.99)}
 </style>
 </head>
 <body>
 
-<div id="authCover"><div class="card"><h2>📈 Hayat Borsam V19</h2><p>31 hissen ve günlük işlemlerin Firebase'de güvenle saklanacak.</p><p id="authMessage" class="hint">Google hesabınla giriş yap.</p><button id="googleLogin" type="button">Google ile giriş yap</button><p class="hint">Yalnızca sana ait Google hesabını kullan. İlk girişte mevcut tarayıcı kayıtlarını aktarabilirsin.</p></div></div><main class="shell">
+<div id="authCover"><div class="card"><h2>📈 Hayat Borsam V20</h2><p>31 hissen ve günlük işlemlerin Firebase'de güvenle saklanacak.</p><p id="authMessage" class="hint">Google hesabınla giriş yap.</p><button id="googleLogin" type="button">Google ile giriş yap</button><p class="hint">Yalnızca sana ait Google hesabını kullan. İlk girişte mevcut tarayıcı kayıtlarını aktarabilirsin.</p></div></div><main class="shell">
 <header class="top"><div><div class="logo">HAYAT<span>BORSAM</span> <span style="font-size:13px;color:#7383a1;font-weight:750;letter-spacing:0">| BEKO GÜCÜ</span></div><div class="sub">Kişisel gelişim endeksin</div></div><div class="header-right"><div class="tag">● KİŞİSEL PİYASA</div><details id="firebaseMenu" class="firebase-menu"><summary title="Bulut hesabı ve eşitleme" aria-label="Bulut hesabı ve eşitleme"><span class="cloud-icon">☁️</span><span class="cloud-label">Hesap</span><span class="cloud-dot" id="cloudDot"></span></summary><div class="firebase-popover"><strong>☁️ Firebase hesabım</strong><p id="syncState" role="status" aria-live="polite">Bağlantı bekleniyor…</p><p class="cloud-note">İşlemler otomatik kaydedilir. Gerekirse manuel eşitleyebilirsin.</p><div class="cloud-actions"><button type="button" id="syncNow">↻ Eşitle</button><button type="button" id="signOutBtn" class="ghost">Çıkış yap</button></div></div></details></div></header>
 <section class="card section" id="marketStatus"><div class="head"><h2>📊 Piyasa Durumu</h2><span id="marketMood" class="status-chip">Yatay Piyasa</span></div><p id="marketMoodText" class="chart-note"></p></section>
 <section class="grid" id="overview">
@@ -563,12 +566,30 @@ function renderMovers(){
  const gain=totals.filter(t=>t.delta>0).sort((a,b)=>b.delta-a.delta).slice(0,5);
  const loss=totals.filter(t=>t.delta<0).sort((a,b)=>a.delta-b.delta).slice(0,5);
  const neutral=totals.filter(t=>t.delta===0);
- const line=t=>`<div class="stock"><div class="stock-main"><b>${esc(t.icon)} ${esc(t.name)}</b><div class="stock-sub">${esc(t.ticker)} · Bugün ${t.count} işlem</div></div><b class="${t.delta>0?'up':t.delta<0?'down':'neutral-delta'}">${signed(t.delta)}</b></div>`;
+ const line=t=>`<div class="stock mover-click" data-mover-sector="${esc(t.id)}" role="button" tabindex="0" aria-label="${esc(t.name)} hissesini puanla"><div class="stock-main"><b>${esc(t.icon)} ${esc(t.name)}</b><div class="stock-sub">${esc(t.ticker)} · Bugün ${t.count} işlem</div></div><b class="${t.delta>0?'up':t.delta<0?'down':'neutral-delta'}">${signed(t.delta)}</b></div>`;
  $("risers").innerHTML=gain.length?gain.map(line).join(""):'<p class="hint">Bugün henüz yükselen hisse yok.</p>';
  $("fallers").innerHTML=loss.length?loss.map(line).join(""):'<p class="hint">Bugün henüz düşen hisse yok.</p>';
  $("moversDateNote").textContent=`${new Date().toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'})} · Günlük değişimler 00.00’da sıfırlanır; toplam puanlar korunur.`;
  $("neutralMovers").innerHTML=neutral.length?neutral.map(line).join(""):'<p class="hint">Bugün tüm hisselerde hareket var.</p>';
 }
+// Günlük hareket listelerindeki her hisse, mevcut puanlama formunu açar.
+function openMoverTrade(id){
+ if(!sectorsList().some(s=>s.id===id))return;
+ selectedSector=id;
+ $("marketTrade").hidden=false;
+ $("marketDate").value=localInputDate();
+ render();updateMarketTrade();
+ $("marketTrade").scrollIntoView({behavior:"smooth",block:"center"});
+}
+$("movers").addEventListener("click",e=>{
+ const item=e.target.closest("[data-mover-sector]");
+ if(item)openMoverTrade(item.dataset.moverSector);
+});
+$("movers").addEventListener("keydown",e=>{
+ if(e.key!=="Enter"&&e.key!==" ")return;
+ const item=e.target.closest("[data-mover-sector]");
+ if(item){e.preventDefault();openMoverTrade(item.dataset.moverSector);}
+});
 // Sekme açık kalsa bile gece yarısı yeni güne geçildiğinde ekranı yenile.
 let lastRenderedDay=dateKey(new Date());
 setInterval(()=>{
