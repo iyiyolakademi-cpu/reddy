@@ -116,6 +116,8 @@ body{padding-bottom:88px}
 .goal-item{border-bottom:1px solid #e5eaf2;padding:12px 0}
 .goal-item .progress{height:7px;background:#e9eef8;border-radius:8px;overflow:hidden;margin-top:8px}
 .goal-item .progress>div{height:100%;background:#4169ef;border-radius:8px}
+
+/* V11: initial stock prices are the baseline; trade deltas are changes thereafter. */
 </style>
 </head>
 <body><main class="shell">
@@ -200,18 +202,27 @@ const $=id=>document.getElementById(id);
 const num=n=>Number(n).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2});
 const signed=n=>(n>=0?"+":"")+num(n);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-function defaultData(){return {base:100,target:250,trades:[],customSectors:[]}}
+const START_PRICES={"iya":93,"oynabak":80,"habitopia":35,"robot":48,"familyshop":60,"income":35,"sales":40,"network":40,"company":30,"reading":40,"confidence":80,"focus":45,"discipline":80,"knowledge":50,"fitness":49,"walk":65,"grooming":60,"sleep":40,"nutrition":46,"clothing":60,"friends":66,"family":74,"newpeople":70,"sociallife":60,"love":24,"writing":55,"socialmedia":56,"vlog":52,"conference":52,"wellbeing":33,"happiness":42};
+const START_AVERAGE=53.5483870968;
+function defaultData(){return {base:START_AVERAGE,target:80,trades:[],customSectors:[],initialPrices:{...START_PRICES},initialVersion:11}}
 let data;
 try{data=JSON.parse(localStorage.getItem(KEY))||defaultData()}catch{data=defaultData()}
 function valid(d){return d&&Number.isFinite(d.base)&&Number.isFinite(d.target)&&Array.isArray(d.trades)&&d.trades.every(t=>typeof t.id==="string"&&typeof t.sector==="string"&&typeof t.description==="string"&&typeof t.time==="string"&&Number.isFinite(Date.parse(t.time))&&Number.isFinite(t.delta))}
 if(!valid(data))data=defaultData();
 if(!Array.isArray(data.customSectors))data.customSectors=[];
+// V11 migration: seed all 31 stocks while retaining existing transaction history.
+if(!data.initialPrices||data.initialVersion!==11){data.initialPrices={...START_PRICES,...(data.initialPrices||{})};data.initialVersion=11}
+for(const [id,v] of Object.entries(START_PRICES))if(!Number.isFinite(Number(data.initialPrices[id])))data.initialPrices[id]=v;
+data.base=START_AVERAGE;
+function initialOf(id){return Number(data.initialPrices?.[id]??0)}
+function currentOf(id){return initialOf(id)+data.trades.filter(t=>t.sector===id&&Date.parse(t.time)<=Date.now()).reduce((a,t)=>a+t.delta,0)}
+function indexDelta(t){return t.delta/sectorsList().length}
 function sectorsList(){return [...defaultSectors,...data.customSectors]}
 let days=30,stockDays=30,selectedSector="iya",selectedFund="Projeler & Girişimler",calendarMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);
 const quickTemplates=[
 {label:"📚 Kitap okudum +5",sector:"reading",delta:5},
 {label:"💪 Spor yaptım +10",sector:"fitness",delta:10},
-{label:"🚀 Projede çalıştım +15",sector:"iya",delta:15},
+{label:"🚀 Projede çalıştım +10",sector:"iya",delta:10},
 {label:"🧠 Profil kontrolü yapmadım +5",sector:"wellbeing",delta:5},
 {label:"✨ Kişisel bakım +5",sector:"grooming",delta:5},
 {label:"📱 Gereksiz ekran süresi -3",sector:"wellbeing",delta:-3}
@@ -219,7 +230,7 @@ const quickTemplates=[
 function localInputDate(d=new Date()){let z=x=>String(x).padStart(2,"0");return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}T${z(d.getHours())}:${z(d.getMinutes())}`}
 $("time").value=localInputDate();
 $("sector").innerHTML=sectorsList().map(s=>`<option value="${s.id}">${s.icon} ${s.name} (${s.ticker})</option>`).join("");
-function timeline(){let total=data.base;return [...data.trades].sort((a,b)=>Date.parse(a.time)-Date.parse(b.time)||a.id.localeCompare(b.id)).map(t=>({...t,level:(total+=t.delta)}))}
+function timeline(){let total=data.base;return [...data.trades].sort((a,b)=>Date.parse(a.time)-Date.parse(b.time)||a.id.localeCompare(b.id)).map(t=>({...t,level:(total+=indexDelta(t))}))}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){alert("Tarayıcıya kaydedilemedi. Depolama alanını kontrol et.");return false}render();return true}
 function paint(id,v){$(id).textContent=v}
 function colorize(id,v){$(id).classList.remove("up","down");$(id).classList.add(v>=0?"up":"down")}
@@ -263,7 +274,7 @@ function chart(rows){
    paint("chartInfo",`Seçilen nokta: ${label}`);
  };
  svg.onpointerleave=()=>{let tip=svg.querySelector("#point-tooltip");if(tip)tip.remove()};
- svg.addEventListener("pointerdown",svg.onpointermove);
+ svg.onpointerdown=svg.onpointermove;
  svg.onclick=svg.onpointermove;
  paint("chartInfo",`${days?days+" günlük":"Tüm zamanların"} görünüm • Grafiğe dokunarak puanları incele • Güncel: ${num(currentNow)}`);
 }
@@ -272,7 +283,7 @@ function drawStock(rows){
  let stock=sectorsList().find(t=>t.id===selectedSector)||sectorsList()[0];selectedSector=stock.id;
  paint("stockChartTitle",`${stock.icon} ${stock.name} • ${stock.ticker}`);
  let relevant=rows.filter(t=>t.sector===selectedSector),now=Date.now(),cutoff=stockDays?now-stockDays*86400000:-Infinity;
- let points=[{x:stockDays?cutoff:(relevant.length?Date.parse(relevant[0].time)-3600000:now-86400000),y:0}],value=0;
+ let points=[{x:stockDays?cutoff:(relevant.length?Date.parse(relevant[0].time)-3600000:now-86400000),y:initialOf(selectedSector)}],value=initialOf(selectedSector);
  for(const t of relevant){let x=Date.parse(t.time);if(x>now)continue;value+=t.delta;if(x<cutoff)points[0].y=value;else points.push({x,y:value})}
  points.push({x:now,y:value});
  let low=Math.min(...points.map(p=>p.y))-2,high=Math.max(...points.map(p=>p.y))+2;
@@ -290,7 +301,7 @@ function fundSummaries(){
  return names.map(name=>{
   const ids=new Set(list.filter(s=>(s.group||"Özel")===name).map(s=>s.id));
   const trades=data.trades.filter(t=>ids.has(t.sector)&&Date.parse(t.time)<=now);
-  const total=trades.reduce((a,t)=>a+t.delta,0);
+  const total=[...ids].reduce((a,id)=>a+initialOf(id),0)+trades.reduce((a,t)=>a+t.delta,0);
   const weekly=trades.filter(t=>Date.parse(t.time)>=weekStart).reduce((a,t)=>a+t.delta,0);
   const today=localInputDate().slice(0,10);
   const daily=trades.filter(t=>t.time.slice(0,10)===today).reduce((a,t)=>a+t.delta,0);
@@ -302,7 +313,7 @@ function weightedFund(fund){
  const members=sectorsList().filter(s=>(s.group||"Özel")===fund);
  const denom=members.reduce((a,s)=>a+weightFor(s),0);
  if(!denom)return 0;
- return members.reduce((a,s)=>a+(data.trades.filter(t=>t.sector===s.id&&Date.parse(t.time)<=Date.now()).reduce((v,t)=>v+t.delta,0))*weightFor(s),0)/denom;
+ return members.reduce((a,s)=>a+currentOf(s.id)*weightFor(s),0)/denom;
 }
 function renderWeightEditor(){
  const members=sectorsList().filter(s=>(s.group||"Özel")===selectedFund);
@@ -320,14 +331,14 @@ $("resetWeights").onclick=()=>{
 function renderFunds(){
  const funds=fundSummaries();
  if(!funds.some(f=>f.name===selectedFund))selectedFund=funds[0]?.name||"";
- $("fundCards").innerHTML=funds.map(f=>`<button class="fund-card ${f.name===selectedFund?"chosen":""}" data-fund="${esc(f.name)}" type="button"><span class="fund-title">${esc(f.name)}</span><strong class="${f.total>=0?"up":"down"}">${signed(f.total)}</strong><span class="hint">${f.count} hisse · Haftalık <b class="${f.weekly>=0?"up":"down"}">${signed(f.weekly)}</b></span></button>`).join("");
+ $("fundCards").innerHTML=funds.map(f=>`<button class="fund-card ${f.name===selectedFund?"chosen":""}" data-fund="${esc(f.name)}" type="button"><span class="fund-title">${esc(f.name)}</span><strong class="${f.total>=0?"up":"down"}">${num(weightedFund(f.name))}</strong><span class="hint">${f.count} hisse · Haftalık <b class="${f.weekly>=0?"up":"down"}">${signed(f.weekly)}</b></span></button>`).join("");
  const fund=funds.find(f=>f.name===selectedFund);
  if(!fund){$("fundDetail").innerHTML="";return}
  const members=sectorsList().filter(s=>(s.group||"Özel")===fund.name);
  const lines=members.map(s=>{
- const sum=data.trades.filter(t=>t.sector===s.id).reduce((a,t)=>a+t.delta,0);
+ const sum=currentOf(s.id);
  return `<div class="stock"><div class="stock-main">${esc(s.icon)} ${esc(s.name)}</div><b class="${sum>=0?"up":"down"}">${signed(sum)}</b></div>`}).join("");
- $("fundDetail").innerHTML=`<div class="fund-detail"><h3>${esc(fund.name)} Fonu</h3><p class="chart-note">Ağırlıklı fon puanı: <b>${signed(weightedFund(fund.name))}</b> · Hisselerin toplamı: ${signed(fund.total)} · Bugün ${signed(fund.daily)} · Son 7 gün ${signed(fund.weekly)}</p>${lines}</div>`;renderWeightEditor();
+ $("fundDetail").innerHTML=`<div class="fund-detail"><h3>${esc(fund.name)} Fonu</h3><p class="chart-note">Ağırlıklı fon puanı: <b>${num(weightedFund(fund.name))}</b> · Hisselerin toplamı: ${num(fund.total)} · Bugün ${signed(fund.daily)} · Son 7 gün ${signed(fund.weekly)}</p>${lines}</div>`;renderWeightEditor();
 }
 $("fundCards").addEventListener("click",e=>{const btn=e.target.closest("[data-fund]");if(btn){selectedFund=btn.dataset.fund;renderFunds()}});
 $("groupFilter").addEventListener("change",()=>render());
@@ -340,7 +351,7 @@ function refreshGroups(){
 }
 function extraSections(rows){
  drawStock(rows);
- const daily={};for(const t of rows){let k=dateKey(new Date(t.time));daily[k]=(daily[k]||0)+t.delta}
+ const daily={};for(const t of rows){let k=dateKey(new Date(t.time));daily[k]=(daily[k]||0)+indexDelta(t)}
  const now=new Date(),recent=[];
  for(let i=0;i<7;i++){let d=new Date(now.getFullYear(),now.getMonth(),now.getDate()-i),key=dateKey(d),end=new Date(d.getFullYear(),d.getMonth(),d.getDate()+1).getTime(),last=data.base;
  for(const t of rows){if(Date.parse(t.time)<end)last=t.level}
@@ -353,7 +364,7 @@ function extraSections(rows){
  for(let d=1;d<=lastDay;d++){let key=dateKey(new Date(year,month,d)),v=daily[key]||0,cls=v>0?"positive":v<0?"negative":"";cal+=`<div class="calendar-day ${cls}" title="${key}: ${signed(v)} puan"><span>${d}</span><span class="delta">${v?signed(v):"·"}</span></div>`}
  $("calendar").innerHTML=cal;
  let start=new Date(now.getFullYear(),now.getMonth(),now.getDate()-6),week=rows.filter(t=>new Date(t.time)>=start&&new Date(t.time)<=now);
- let sum=week.reduce((a,t)=>a+t.delta,0),bestDay=recent.reduce((a,b)=>b.delta>a.delta?b:a);
+ let sum=week.reduce((a,t)=>a+indexDelta(t),0),bestDay=recent.reduce((a,b)=>b.delta>a.delta?b:a);
  let categories={};for(const t of week)categories[t.sector]=(categories[t.sector]||0)+t.delta;
  let bestSector=Object.entries(categories).sort((a,b)=>b[1]-a[1])[0],sector=bestSector&&sectorsList().find(s=>s.id===bestSector[0]);
  $("report").innerHTML=`<div class="stock"><div class="stock-main">Son 7 günün puan değişimi</div><b class="${sum>=0?"up":"down"}">${signed(sum)}</b></div><div class="stock"><div class="stock-main">İşlem sayısı</div><b>${week.length}</b></div><div class="stock"><div class="stock-main">En yüksek günlük artış</div><b>${bestDay.delta>0?`${bestDay.date} (${signed(bestDay.delta)})`:"Henüz yok"}</b></div><div class="stock"><div class="stock-main">En çok gelişen hisse</div><b>${bestSector&&bestSector[1]>0?esc(sector?.name||bestSector[0]):"Henüz yok"}</b></div><p class="chart-note">${sum>0?"Bu hafta pozitif ilerledin. Sürdürebildiğin küçük adımlara devam et.":sum<0?"Zor bir hafta olabilir. Gelecek hafta tek bir kolay alışkanlığa odaklan.":"Bu hafta küçük bir adımla başlamak için iyi bir fırsat."}</p>`;
@@ -385,10 +396,10 @@ $("goalList").addEventListener("click",e=>{const b=e.target.closest("[data-goal-
 function render(){
  const rows=timeline(),total=rows.length?rows[rows.length-1].level:data.base,change=total-data.base;
  const today=new Date().toDateString(),todayRows=rows.filter(t=>new Date(t.time).toDateString()===today),dayDelta=todayRows.reduce((s,t)=>s+t.delta,0);
- paint("total",num(total));paint("baseText","Başlangıç: "+num(data.base));
+ paint("total",num(total));paint("baseText","31 hissenin başlangıç ortalaması: "+num(data.base));
  paint("gain",signed(change));colorize("gain",change);
  paint("gainPct",data.base===0?"Başlangıç sıfır: yüzde hesaplanmaz":signed(change/data.base*100)+"%");
- renderMood(dayDelta);renderGoals();paint("todayGain",signed(dayDelta));colorize("todayGain",dayDelta);
+ renderMood(dayDelta/sectorsList().length);renderGoals();paint("todayGain",signed(dayDelta/sectorsList().length));colorize("todayGain",dayDelta);
  paint("todayCount",todayRows.length+" işlem bugün");
  paint("peak",num(Math.max(data.base,...rows.map(t=>t.level))));
  paint("streak",new Set(rows.map(t=>t.time.slice(0,10))).size+" aktif gün");
@@ -396,14 +407,14 @@ function render(){
  let bySector=Object.fromEntries(sectorsList().map(s=>[s.id,{sum:0,count:0}]));
  for(const t of rows)if(bySector[t.sector]){bySector[t.sector].sum+=t.delta;bySector[t.sector].count++}
  paint("stockCount",sectorsList().length+" hisse • "+new Set(sectorsList().map(s=>s.group||"Özel")).size+" kategori • Fon puanları otomatik hesaplanır");
- $("stocks").innerHTML=sectorsList().filter(s=>(!$("groupFilter").value||(s.group||"Özel")===$("groupFilter").value)&&((s.name+" "+s.ticker).toLocaleLowerCase("tr-TR").includes(($("sectorSearch")?.value||"").toLocaleLowerCase("tr-TR")))).map(s=>{let d=bySector[s.id];return `<div class="stock ${selectedSector===s.id?"selected":""}" data-sector="${esc(s.id)}" tabindex="0" role="button" aria-label="${esc(s.name)} hissesini puanla"><div class="stock-icon">${s.icon}</div><div class="stock-main"><div class="stock-name">${s.name}</div><div class="stock-sub">${esc(s.group||"Özel")} · ${s.ticker} • ${d.count} işlem</div></div><div class="stock-value ${d.sum>=0?"up":"down"}">${signed(d.sum)}<div class="small">${d.sum>=0?"▲":"▼"} performans</div></div></div>`}).join("");
+ $("stocks").innerHTML=sectorsList().filter(s=>(!$("groupFilter").value||(s.group||"Özel")===$("groupFilter").value)&&((s.name+" "+s.ticker).toLocaleLowerCase("tr-TR").includes(($("sectorSearch")?.value||"").toLocaleLowerCase("tr-TR")))).map(s=>{let d=bySector[s.id];const price=currentOf(s.id);return `<div class="stock ${selectedSector===s.id?"selected":""}" data-sector="${esc(s.id)}" tabindex="0" role="button" aria-label="${esc(s.name)} hissesini puanla"><div class="stock-icon">${s.icon}</div><div class="stock-main"><div class="stock-name">${s.name}</div><div class="stock-sub">${esc(s.group||"Özel")} · ${s.ticker} • ${d.count} işlem</div></div><div class="stock-value ${d.sum>=0?"up":"down"}">${num(price)}<div class="small ${d.sum>=0?"up":"down"}">${signed(d.sum)} değişim</div></div></div>`}).join("");
  $("records").innerHTML=rows.length?rows.slice().reverse().map(t=>{let s=sectorsList().find(x=>x.id===t.sector);return `<tr><td>${new Date(t.time).toLocaleString("tr-TR")}</td><td>${s?esc(s.ticker):"DGR"}</td><td title="${esc(t.detail||"")}">${esc(t.description)}</td><td class="${t.delta>=0?"up":"down"}">${signed(t.delta)}</td><td>${num(t.level)}</td><td><button class="danger" data-remove="${esc(t.id)}">Sil</button></td></tr>`}).join(""):`<tr><td colspan="6" class="empty">Henüz işlem yok. İlk işlemini eklediğinde grafik hareket edecek.</td></tr>`;
  paint("recordCount",rows.length+" kayıt");
  $("customSectors").innerHTML=data.customSectors.map(t=>`<div class="stock"><div class="stock-main"><b>${esc(t.icon)} ${esc(t.name)}</b><div class="stock-sub">${esc(t.ticker)}</div></div><button type="button" class="danger" data-sector-remove="${esc(t.id)}">Sil</button></div>`).join("");
  $("sector").innerHTML=sectorsList().map(t=>`<option value="${esc(t.id)}">${esc(t.icon)} ${esc(t.name)} (${esc(t.ticker)})</option>`).join("");
  const gains=rows.filter(t=>t.delta>0),losses=rows.filter(t=>t.delta<0),best=rows.length?rows.reduce((a,b)=>a.delta>b.delta?a:b):null;
  $("insights").innerHTML=`<div class="stock"><div class="stock-main">Pozitif işlemler</div><b class="up">${gains.length}</b></div><div class="stock"><div class="stock-main">Negatif işlemler</div><b class="down">${losses.length}</b></div><div class="stock"><div class="stock-main">En yüksek tek artış</div><b>${best&&best.delta>0?signed(best.delta):"—"}</b></div><div class="stock"><div class="stock-main">İşlem başına ortalama</div><b>${rows.length?signed(change/rows.length):"—"}</b></div>`;
- $("initial").value=data.base;$("target").value=data.target;
+ $("initial").value=data.base;$("initial").disabled=true;$("saveInitial").disabled=true;$("target").value=data.target;
  let progress=data.target>0?Math.max(0,Math.min(100,total/data.target*100)):0;
  $("targetBar").style.width=progress+"%";
  paint("targetText",`${num(total)} / ${num(data.target)} puan • ${num(progress)}% tamamlandı`);
@@ -412,7 +423,7 @@ function render(){
 function updateMarketTrade(){
  const sector=sectorsList().find(t=>t.id===selectedSector);
  if(!sector)return;
- paint("marketTradeTitle",`${sector.icon} ${sector.name} • Puanlama`);
+ paint("marketTradeTitle",`${sector.icon} ${sector.name} • ${num(currentOf(sector.id))} puan`);
  const date=$("marketDate").value.slice(0,10),used=daySectorSum(selectedSector,date);
  paint("marketTradeLimit",`${date}: ${signed(used)} puan • Günlük tavan +10 / taban −10 • Artış hakkı ${num(Math.max(0,10-used))} • Düşüş hakkı ${num(Math.max(0,10+used))}`);
 }
@@ -457,12 +468,12 @@ if(save()){showLimit();$("description").value="";$("detail").value="";$("time").
 });
 $("records").addEventListener("click",e=>{let b=e.target.closest("[data-remove]");if(b&&confirm("Bu işlemi silmek istiyor musun?")){data.trades=data.trades.filter(t=>t.id!==b.dataset.remove);save();showLimit()}});
 $("ranges").addEventListener("click",e=>{let b=e.target.closest("[data-days]");if(b){days=Number(b.dataset.days);render()}});
-$("saveInitial").onclick=()=>{let n=Number($("initial").value);if(!Number.isFinite(n)){alert("Geçerli puan gir.");return}data.base=n;save()};
+$("saveInitial").onclick=()=>alert("Başlangıç endeksi 31 hissenin ortalamasından otomatik hesaplanır.");
 $("saveTarget").onclick=()=>{let n=Number($("target").value);if(!Number.isFinite(n)||n<=0){alert("Pozitif hedef gir.");return}data.target=n;save()};
 function download(name,content,type){let blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)}
 $("backup").onclick=()=>download("hayat-borsasi-yedek.json",JSON.stringify(data,null,2),"application/json");
 $("csv").onclick=()=>{let lines=[["Tarih","Kategori","Aciklama","Not","Degisim","Endeks"],...timeline().map(t=>[t.time,t.sector,t.description,t.detail||"",t.delta,t.level])];download("hayat-borsasi-islemler.csv","\ufeff"+lines.map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(";")).join("\r\n"),"text/csv;charset=utf-8")};
-$("restore").onchange=async e=>{let file=e.target.files[0];if(!file)return;try{let incoming=JSON.parse(await file.text());if(!valid(incoming))throw Error("Dosya biçimi geçersiz");if(confirm("Mevcut kayıtların üzerine yedek yüklensin mi?")){data=incoming;save()}}catch(err){alert("Yedek yüklenemedi: "+err.message)}e.target.value=""};
+$("restore").onchange=async e=>{let file=e.target.files[0];if(!file)return;try{let incoming=JSON.parse(await file.text());if(!valid(incoming))throw Error("Dosya biçimi geçersiz");if(confirm("Mevcut kayıtların üzerine yedek yüklensin mi?")){data=incoming;data.initialPrices={...START_PRICES,...(incoming.initialPrices||{})};data.initialVersion=11;data.base=START_AVERAGE;save()}}catch(err){alert("Yedek yüklenemedi: "+err.message)}e.target.value=""};
 $("reset").onclick=()=>{if(confirm("TÜM işlemler ve ayarlar silinecek. Emin misin?")){data=defaultData();save()}};
 render();
 
