@@ -149,6 +149,8 @@ body{padding-bottom:88px}
 .mover-modal-backdrop{position:fixed;inset:0;background:rgba(5,9,20,.76);z-index:9998}
 #marketTrade.mover-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(92vw,480px);max-height:88dvh;overflow-y:auto;z-index:9999;background:#151c2d;border:1px solid #48536a;border-radius:18px;padding:18px;box-shadow:0 24px 80px #0009}
 body.mover-modal-open{overflow:hidden}
+.mover-more-btn{display:block;width:100%;margin:9px 0 4px;padding:11px 13px;border:1px solid var(--line);border-radius:11px;background:transparent;color:inherit;font:inherit;font-weight:700;cursor:pointer}
+.mover-more-btn:hover{background:rgba(130,150,190,.12)}
 </style>
 </head>
 <body>
@@ -557,6 +559,7 @@ function showLimit(){
 $("time").addEventListener("change",showLimit);
 $("sector").addEventListener("change",showLimit);
 $("sectorSearch").addEventListener("input",()=>render());
+const moverExpanded={risers:false,fallers:false,neutralMovers:false};
 function renderMovers(){
  const today=dateKey(new Date());
  const dayTrades=data.trades.filter(t=>{
@@ -567,14 +570,20 @@ function renderMovers(){
    const trades=dayTrades.filter(t=>t.sector===s.id);
    return {...s,delta:trades.reduce((sum,t)=>sum+t.delta,0),count:trades.length};
  });
- const gain=totals.filter(t=>t.delta>0).sort((a,b)=>b.delta-a.delta).slice(0,5);
- const loss=totals.filter(t=>t.delta<0).sort((a,b)=>a.delta-b.delta).slice(0,5);
+ const gain=totals.filter(t=>t.delta>0).sort((a,b)=>b.delta-a.delta);
+ const loss=totals.filter(t=>t.delta<0).sort((a,b)=>a.delta-b.delta);
  const neutral=totals.filter(t=>t.delta===0);
  const line=t=>`<div class="stock mover-click" data-mover-sector="${esc(t.id)}" role="button" tabindex="0" aria-label="${esc(t.name)} hissesini puanla"><div class="stock-main"><b>${esc(t.icon)} ${esc(t.name)}</b><div class="stock-sub">${esc(t.ticker)} · Bugün ${t.count} işlem</div></div><b class="${t.delta>0?'up':t.delta<0?'down':'neutral-delta'}">${signed(t.delta)}</b></div>`;
- $("risers").innerHTML=gain.length?gain.map(line).join(""):'<p class="hint">Bugün henüz yükselen hisse yok.</p>';
- $("fallers").innerHTML=loss.length?loss.map(line).join(""):'<p class="hint">Bugün henüz düşen hisse yok.</p>';
+ const renderGroup=(id,items,empty)=>{
+  const expanded=moverExpanded[id];
+  const shown=expanded?items:items.slice(0,5);
+  const more=items.length>5?`<button type="button" class="mover-more-btn" data-mover-toggle="${id}" aria-expanded="${expanded}">${expanded?'▲ Diğerlerini Kapat':`▼ Diğerleri (${items.length-5} hisse)`}</button>`:'';
+  $(id).innerHTML=items.length?shown.map(line).join("")+more:`<p class="hint">${empty}</p>`;
+ };
+ renderGroup("risers",gain,"Bugün henüz yükselen hisse yok.");
+ renderGroup("fallers",loss,"Bugün henüz düşen hisse yok.");
  $("moversDateNote").textContent=`${new Date().toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'})} · Günlük değişimler 00.00’da sıfırlanır; toplam puanlar korunur.`;
- $("neutralMovers").innerHTML=neutral.length?neutral.map(line).join(""):'<p class="hint">Bugün tüm hisselerde hareket var.</p>';
+ renderGroup("neutralMovers",neutral,"Bugün tüm hisselerde hareket var.");
 }
 // Günlük hareket listelerindeki her hisse, mevcut puanlama formunu açar.
 const marketTradeOriginalParent=$("marketTrade").parentNode;
@@ -611,11 +620,14 @@ function openMoverTrade(id){
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeMoverModal()});
 $("closeMarketTrade").addEventListener("click",closeMoverModal);
 $("movers").addEventListener("click",e=>{
+ const toggle=e.target.closest("[data-mover-toggle]");
+ if(toggle){const id=toggle.dataset.moverToggle;if(Object.prototype.hasOwnProperty.call(moverExpanded,id)){moverExpanded[id]=!moverExpanded[id];renderMovers();}return;}
  const item=e.target.closest("[data-mover-sector]");
  if(item)openMoverTrade(item.dataset.moverSector);
 });
 $("movers").addEventListener("keydown",e=>{
  if(e.key!=="Enter"&&e.key!==" ")return;
+ if(e.target.closest("[data-mover-toggle]"))return;
  const item=e.target.closest("[data-mover-sector]");
  if(item){e.preventDefault();openMoverTrade(item.dataset.moverSector);}
 });
