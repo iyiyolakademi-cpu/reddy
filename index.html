@@ -557,6 +557,7 @@ function showLimit(){
 $("time").addEventListener("change",showLimit);
 $("sector").addEventListener("change",showLimit);
 $("sectorSearch").addEventListener("input",()=>render());
+const moverListExpanded={risers:false,fallers:false};
 function renderMovers(){
  const today=dateKey(new Date());
  const dayTrades=data.trades.filter(t=>{
@@ -567,12 +568,18 @@ function renderMovers(){
    const trades=dayTrades.filter(t=>t.sector===s.id);
    return {...s,delta:trades.reduce((sum,t)=>sum+t.delta,0),count:trades.length};
  });
- const gain=totals.filter(t=>t.delta>0).sort((a,b)=>b.delta-a.delta).slice(0,5);
- const loss=totals.filter(t=>t.delta<0).sort((a,b)=>a.delta-b.delta).slice(0,5);
+ const gain=totals.filter(t=>t.delta>0).sort((a,b)=>b.delta-a.delta);
+ const loss=totals.filter(t=>t.delta<0).sort((a,b)=>a.delta-b.delta);
  const neutral=totals.filter(t=>t.delta===0);
  const line=t=>`<div class="stock mover-click" data-mover-sector="${esc(t.id)}" role="button" tabindex="0" aria-label="${esc(t.name)} hissesini puanla"><div class="stock-main"><b>${esc(t.icon)} ${esc(t.name)}</b><div class="stock-sub">${esc(t.ticker)} · Bugün ${t.count} işlem</div></div><b class="${t.delta>0?'up':t.delta<0?'down':'neutral-delta'}">${signed(t.delta)}</b></div>`;
- $("risers").innerHTML=gain.length?gain.map(line).join(""):'<p class="hint">Bugün henüz yükselen hisse yok.</p>';
- $("fallers").innerHTML=loss.length?loss.map(line).join(""):'<p class="hint">Bugün henüz düşen hisse yok.</p>';
+ const displayMovers=(id,items,empty)=>{
+   const expanded=moverListExpanded[id];
+   const visible=expanded?items:items.slice(0,5);
+   const toggle=items.length>5?`<button type="button" class="ghost" data-more-movers="${id}" style="margin-top:10px;width:100%;">${expanded?'▲ Kapat':`▼ Diğerleri (${items.length-5})`}</button>`:'';
+   $(id).innerHTML=items.length?visible.map(line).join("")+toggle:`<p class="hint">${empty}</p>`;
+ };
+ displayMovers("risers",gain,"Bugün henüz yükselen hisse yok.");
+ displayMovers("fallers",loss,"Bugün henüz düşen hisse yok.");
  $("moversDateNote").textContent=`${new Date().toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'})} · Günlük değişimler 00.00’da sıfırlanır; toplam puanlar korunur.`;
  $("neutralMovers").innerHTML=neutral.length?neutral.map(line).join(""):'<p class="hint">Bugün tüm hisselerde hareket var.</p>';
 }
@@ -611,6 +618,8 @@ function openMoverTrade(id){
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeMoverModal()});
 $("closeMarketTrade").addEventListener("click",closeMoverModal);
 $("movers").addEventListener("click",e=>{
+ const more=e.target.closest("[data-more-movers]");
+ if(more){const id=more.dataset.moreMovers;if(Object.prototype.hasOwnProperty.call(moverListExpanded,id)){moverListExpanded[id]=!moverListExpanded[id];renderMovers();}return;}
  const item=e.target.closest("[data-mover-sector]");
  if(item)openMoverTrade(item.dataset.moverSector);
 });
