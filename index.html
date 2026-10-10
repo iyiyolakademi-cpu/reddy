@@ -119,13 +119,25 @@ body{padding-bottom:88px}
 
 .v12-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0}.v12-metrics>div{padding:12px 7px;background:#f3f6fc;border-radius:10px;display:flex;flex-direction:column;gap:5px}.v12-metrics small{color:#73839b;font-size:11px}.v12-metrics b{font-size:17px}.v12-feed{border-bottom:1px solid var(--line);padding:10px 0}.v12-feed small{color:#74839b}.v12-feed p{margin:6px 0;overflow-wrap:anywhere}@media(max-width:380px){.v12-metrics b{font-size:14px}}
 /* V11: initial stock prices are the baseline; trade deltas are changes thereafter. */
-#firebaseBar{position:sticky;top:0;z-index:200;background:#17213a;color:#fff;padding:10px 16px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}#firebaseBar button{background:#4169ef}#firebaseBar small{opacity:.85}#authCover{position:fixed;inset:0;z-index:199;background:#f4f7fc;display:grid;place-items:center;padding:20px}#authCover .card{max-width:460px;text-align:center}#authCover[hidden]{display:none}#firebaseBar[hidden]{display:none}
+#authCover{position:fixed;inset:0;z-index:199;background:#f4f7fc;display:grid;place-items:center;padding:20px}#authCover .card{max-width:460px;text-align:center}#authCover[hidden]{display:none}
+/* V14: Bulut kontrolleri üstte yer kaplamak yerine küçük bir hesap menüsündedir. */
+.header-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.firebase-menu{position:relative;z-index:180}
+.firebase-menu summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:7px;background:#eef3ff;border:1px solid #d7e2ff;border-radius:999px;color:#274b9d;padding:9px 12px;font-size:12px;font-weight:800;user-select:none;white-space:nowrap}
+.firebase-menu summary::-webkit-details-marker{display:none}
+.firebase-menu summary:focus-visible{outline:3px solid #7099ff;outline-offset:2px}
+.cloud-icon{font-size:17px}.cloud-dot{height:7px;width:7px;border-radius:50%;background:#f59e0b;display:inline-block}
+.firebase-popover{position:absolute;right:0;top:calc(100% + 9px);width:min(320px,calc(100vw - 32px));background:#fff;color:#18233b;box-shadow:0 14px 38px #14234a35;border:1px solid #dfe7f3;border-radius:15px;padding:17px;z-index:250}
+.firebase-popover strong{font-size:14px}.firebase-popover #syncState{font-size:12px;color:#4262a2;margin:10px 0 6px;overflow-wrap:anywhere}
+.cloud-note{font-size:12px;line-height:1.5;color:#6d7a91;margin:0 0 14px}
+.cloud-actions{display:flex;gap:8px}.cloud-actions button{flex:1;min-height:39px;padding:9px 8px;font-size:12px}
+@media(max-width:640px){.header-right .tag{display:none}.header-right{margin-left:auto}.firebase-menu summary{padding:9px 11px}.cloud-label{display:none}.firebase-popover{right:0}}
 </style>
 </head>
 <body>
-<div id="firebaseBar"><div><b>☁️ Hayat Borsam Firebase</b> <small id="syncState">Bağlantı bekleniyor…</small></div><div class="actions"><button type="button" id="syncNow">Şimdi eşitle</button><button type="button" id="signOutBtn">Çıkış</button></div></div>
+
 <div id="authCover"><div class="card"><h2>📈 Hayat Borsam V13</h2><p>31 hissen ve günlük işlemlerin Firebase'de güvenle saklanacak.</p><p id="authMessage" class="hint">Google hesabınla giriş yap.</p><button id="googleLogin" type="button">Google ile giriş yap</button><p class="hint">Yalnızca sana ait Google hesabını kullan. İlk girişte mevcut tarayıcı kayıtlarını aktarabilirsin.</p></div></div><main class="shell">
-<header class="top"><div><div class="logo">HAYAT<span>BORSAM</span> <span style="font-size:13px;color:#7383a1;font-weight:750;letter-spacing:0">| BEKO GÜCÜ</span></div><div class="sub">Kişisel gelişim endeksin</div></div><div class="tag">● KİŞİSEL PİYASA</div></header>
+<header class="top"><div><div class="logo">HAYAT<span>BORSAM</span> <span style="font-size:13px;color:#7383a1;font-weight:750;letter-spacing:0">| BEKO GÜCÜ</span></div><div class="sub">Kişisel gelişim endeksin</div></div><div class="header-right"><div class="tag">● KİŞİSEL PİYASA</div><details id="firebaseMenu" class="firebase-menu"><summary title="Bulut hesabı ve eşitleme" aria-label="Bulut hesabı ve eşitleme"><span class="cloud-icon">☁️</span><span class="cloud-label">Hesap</span><span class="cloud-dot" id="cloudDot"></span></summary><div class="firebase-popover"><strong>☁️ Firebase hesabım</strong><p id="syncState" role="status" aria-live="polite">Bağlantı bekleniyor…</p><p class="cloud-note">İşlemler otomatik kaydedilir. Gerekirse manuel eşitleyebilirsin.</p><div class="cloud-actions"><button type="button" id="syncNow">↻ Eşitle</button><button type="button" id="signOutBtn" class="ghost">Çıkış yap</button></div></div></details></div></header>
 <section class="card section" id="marketStatus"><div class="head"><h2>📊 Piyasa Durumu</h2><span id="marketMood" class="status-chip">Yatay Piyasa</span></div><p id="marketMoodText" class="chart-note"></p></section>
 <section class="grid" id="overview">
 <div class="card"><div class="metric-label">HBX • Hayat Endeksi</div><div class="metric" id="total">100,00</div><div class="hint" id="baseText">Başlangıç: 100,00</div></div>
@@ -579,7 +591,7 @@ const firebaseConfig={apiKey:'AIzaSyA4LCrNmHpO0JWs4rIYN_SjdC-YvX6bKmY',authDomai
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
 const status=document.getElementById('syncState'),cover=document.getElementById('authCover'),msg=document.getElementById('authMessage');
 let user=null,ready=false,timer=null,busy=false,queued=false;
-const setStatus=t=>status.textContent=t;
+const setStatus=t=>{status.textContent=t;const dot=document.getElementById('cloudDot');if(dot)dot.style.background=t.includes('✓')?'#0eae7b':t.includes('⚠')||t.includes('başarısız')?'#e45b64':'#f59e0b'};
 const authMessage=t=>msg.textContent=t;
 const hasLocal=()=>{try{const d=JSON.parse(localStorage.getItem(KEY));return d&&((d.trades?.length||0)+(d.news?.length||0)+(d.dividends?.length||0)+(d.customSectors?.length||0)>0)}catch{return false}};
 const ref=()=>doc(db,'users',user.uid,'state','main');
@@ -591,7 +603,7 @@ const snap=await getDoc(ref());
 if(snap.exists()){
  const cloud=snap.data().payload;
  if(!valid(cloud))throw Error('Buluttaki kayıt biçimi geçersiz');
- if(hasLocal()&&JSON.stringify(cloud)!==JSON.stringify(data)){
+ if(hasLocal()&&JSON.stringify(cloud)!==localStorage.getItem(KEY)){
   const useLocal=confirm('Bu tarayıcıda farklı kayıtlar bulundu. TAMAM: Bu tarayıcıdaki kayıtları Firebase üzerine yükle. İPTAL: Firebase kayıtlarını bu tarayıcıya getir.\n\nEmin değilsen İPTAL seç ve önce JSON yedeği al.');
   if(useLocal){ready=true;await push();}else{data=cloud;localStorage.setItem(KEY,JSON.stringify(data))}
  }else{data=cloud;localStorage.setItem(KEY,JSON.stringify(data))}
@@ -606,6 +618,7 @@ ready=true;render();cover.hidden=true;setStatus('✓ Bağlandı');
 document.getElementById('googleLogin').onclick=async()=>{try{authMessage('Google giriş penceresi açılıyor…');await signInWithPopup(auth,new GoogleAuthProvider())}catch(e){authMessage('Giriş başarısız: '+e.message+' (HTML dosyasını file:// yerine HTTPS üzerinden aç.)')}};
 document.getElementById('signOutBtn').onclick=async()=>{clearTimeout(timer);if(ready)await push();await signOut(auth)};
 document.getElementById('syncNow').onclick=()=>{clearTimeout(timer);push()};
+document.addEventListener('click',e=>{const m=document.getElementById('firebaseMenu');if(m?.open&&!m.contains(e.target))m.open=false});
 onAuthStateChanged(auth,u=>{if(u)loadAccount(u);else{user=null;ready=false;cover.hidden=false;authMessage('Google hesabınla giriş yap.');setStatus('Oturum kapalı')}});
 </script>
 </body></html>
