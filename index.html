@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hayat Borsası | Kişisel Gelişim Terminali</title>
+<title>Hayat Borsam V12 | Beko Gücü</title>
 <style>
 :root{--bg:#f4f7fc;--card:#fff;--ink:#17213a;--muted:#75839b;--line:#e5eaf3;--blue:#4169ef;--green:#00a878;--red:#e74f6b;--shadow:0 6px 24px #1b34520b}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);font:14px system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink)}
@@ -117,6 +117,7 @@ body{padding-bottom:88px}
 .goal-item .progress{height:7px;background:#e9eef8;border-radius:8px;overflow:hidden;margin-top:8px}
 .goal-item .progress>div{height:100%;background:#4169ef;border-radius:8px}
 
+.v12-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0}.v12-metrics>div{padding:12px 7px;background:#f3f6fc;border-radius:10px;display:flex;flex-direction:column;gap:5px}.v12-metrics small{color:#73839b;font-size:11px}.v12-metrics b{font-size:17px}.v12-feed{border-bottom:1px solid var(--line);padding:10px 0}.v12-feed small{color:#74839b}.v12-feed p{margin:6px 0;overflow-wrap:anywhere}@media(max-width:380px){.v12-metrics b{font-size:14px}}
 /* V11: initial stock prices are the baseline; trade deltas are changes thereafter. */
 </style>
 </head>
@@ -127,7 +128,7 @@ body{padding-bottom:88px}
 <div class="card"><div class="metric-label">HBX • Hayat Endeksi</div><div class="metric" id="total">100,00</div><div class="hint" id="baseText">Başlangıç: 100,00</div></div>
 <div class="card"><div class="metric-label">Toplam getiri</div><div class="metric" id="gain">+0,00</div><div class="hint" id="gainPct">%0,00</div></div>
 <div class="card"><div class="metric-label">Bugünkü değişim</div><div class="metric" id="todayGain">+0,00</div><div class="hint" id="todayCount">0 işlem</div></div>
-<div class="card"><div class="metric-label">Tüm zamanların zirvesi</div><div class="metric" id="peak">100,00</div><div class="hint" id="streak">0 aktif gün</div></div>
+<div class="card"><div class="metric-label">Tüm zamanların zirvesi</div><div class="metric" id="peak">100,00</div><div class="hint" id="streak">Rekor takibi</div></div>
 </section>
 <div class="layout">
 <div>
@@ -169,14 +170,14 @@ body{padding-bottom:88px}
 <div class="chart-note">Eklediğin hisseler işlem ekranında ve portföyünde görünür. Kayıtlarınla birlikte saklanır.</div>
 <div id="customSectors"></div>
 </section>
-<section class="card section" id="funds"><div class="head"><h2>💼 Fon Piyasası</h2><span class="hint">Otomatik hesaplanır</span></div><p class="chart-note">Fonlara ayrı puan girilmez. Her fonun puanı, içindeki hisselerin toplam puan değişimidir. Hisseye verdiğin +5 puan fonuna da +5 yansır; toplam hayat endeksine yalnızca bir kez eklenir.</p><div id="fundCards"></div><div id="fundDetail"></div><div class="rule"></div><h3>⚖️ Fon Ağırlıkları</h3><p class="chart-note">Varsayılan olarak fon içindeki hisseler eşit ağırlıktadır. Ağırlıkları değiştirdiğinde fon performansı ağırlıklı ortalama ile hesaplanır. Ana hayat endeksi değişmez.</p><div id="weightEditor"></div><button type="button" class="ghost" id="resetWeights">Bu Fonun Ağırlıklarını Eşitle</button></section>
-<section class="card section" id="stockGoals"><div class="head"><h2>🎯 Hisse Hedefleri</h2></div><p class="chart-note">Her hissenin ulaşmasını istediğin toplam puanı belirle. Puanlama yaptıkça hedef ilerlemesi otomatik güncellenir.</p><div class="cols"><div class="field"><label for="goalSector">Hisse</label><select id="goalSector"></select></div><div class="field"><label for="goalAmount">Hedef puan</label><input type="number" id="goalAmount" step="0.01" min="0.01" value="30"></div></div><button id="setStockGoal" type="button">Hisse Hedefini Kaydet</button><div id="goalList"></div></section>
+<section class="card section" id="funds"><div class="head"><h2>💼 Fon Piyasası</h2><span class="hint">Otomatik hesaplanır</span></div><p class="chart-note">Fonlara ayrı puan girilmez. Fon puanı, içindeki hisselerin güncel değerlerinden otomatik hesaplanır. Ağırlıkları değiştirebilirsin.</p><div id="fundCards"></div><div id="fundDetail"></div><div class="rule"></div><h3>⚖️ Fon Ağırlıkları</h3><p class="chart-note">Varsayılan olarak fon içindeki hisseler eşit ağırlıktadır. Ağırlıkları değiştirdiğinde fon performansı ağırlıklı ortalama ile hesaplanır. Ana hayat endeksi değişmez.</p><div id="weightEditor"></div><button type="button" class="ghost" id="resetWeights">Bu Fonun Ağırlıklarını Eşitle</button></section>
+<section class="card section" id="candleSection"><div class="head"><h2>🕯️ Günlük Mum Grafiği</h2><span class="hint">Son 30 gün</span></div><div class="chart-wrap"><svg id="candleGraph" viewBox="0 0 800 250" preserveAspectRatio="none" role="img" aria-label="Günlük açılış kapanış mum grafiği"></svg></div><p class="chart-note">Yeşil mum yükselişi, kırmızı mum düşüşü gösterir. İşlem yapılmayan günlerde fiyat sabit kalır.</p></section><section class="card section" id="stockAlerts"><h2>🚨 Hisse Alarmları</h2><p class="chart-note">30 puanın altındaki hisseler otomatik olarak burada görünür.</p><div id="alertView"></div></section><section class="card section" id="stockGoals"><div class="head"><h2>🎯 Hisse Hedefleri</h2></div><p class="chart-note">Her hissenin ulaşmasını istediğin toplam puanı belirle. Puanlama yaptıkça hedef ilerlemesi otomatik güncellenir.</p><div class="cols"><div class="field"><label for="goalSector">Hisse</label><select id="goalSector"></select></div><div class="field"><label for="goalAmount">Hedef puan</label><input type="number" id="goalAmount" step="0.01" min="0.01" value="30"></div></div><button id="setStockGoal" type="button">Hisse Hedefini Kaydet</button><div id="goalList"></div></section>
 <section class="card section" id="movers"><h2>🔥 Haftanın Popülerleri</h2><p class="chart-note">Son 7 gündeki puan değişimine göre en çok yükselen ve düşen hisseler.</p><div class="cols"><div><h3 class="up">▲ En Çok Artanlar</h3><div id="risers"></div></div><div><h3 class="down">▼ En Çok Düşenler</h3><div id="fallers"></div></div></div></section>
-<section class="card section" id="quickActions"><h2>Hızlı İşlemler</h2><p class="chart-note">Tek dokunuşla puan ekle. Her işlem otomatik kaydedilir.</p><div class="quick-grid" id="quickButtons"></div></section>
+<section class="card section" id="lifeNews"><h2>📰 Hayat Borsası Haberleri</h2><div class="field"><label for="newsStock">İlgili hisse</label><select id="newsStock"></select></div><div class="field"><label for="newsText">Gelişme / haber</label><textarea id="newsText" maxlength="300" placeholder="Bugün yeni bir müşteriyle görüştüm..."></textarea></div><button type="button" id="addNews">Haberi Kaydet</button><div id="newsFeed"></div><p class="chart-note">Haber kaydı puanı otomatik değiştirmez; puanlamak istersen hisse işlemi yap.</p></section><section class="card section" id="dividends"><h2>🎁 Temettü • Kendime Ödül</h2><p class="chart-note">Tamamladığın bir hedef için kendine vereceğin ödülü kaydet. Temettü, endeks puanını değiştirmez.</p><div class="field"><label for="dividendText">Ödül / kutlama</label><input id="dividendText" maxlength="120" placeholder="Örneğin: Kendime güzel bir kahve ısmarladım"></div><button type="button" id="addDividend">Temettü Kaydet</button><div id="dividendFeed"></div></section><section class="card section" id="quickActions"><h2>Hızlı İşlemler</h2><p class="chart-note">Tek dokunuşla puan ekle. Her işlem otomatik kaydedilir.</p><div class="quick-grid" id="quickButtons"></div></section>
 <section class="card section"><h2>Piyasa Özeti</h2><div id="insights"></div></section>
 <section class="card section" id="dailyClose"><h2>Günlük Kapanışlar</h2><p class="chart-note">Kapanış değeri gün sonunda, o tarihe kadar kaydedilmiş işlemlerden hesaplanır. Geçmişe işlem eklersen kapanış yeniden hesaplanır.</p><div id="closes"></div></section>
 <section class="card section" id="calendarSection"><h2>Performans Takvimi</h2><div class="head"><button class="ghost" id="prevMonth" type="button">‹ Önceki</button><b id="monthTitle"></b><button class="ghost" id="nextMonth" type="button">Sonraki ›</button></div><div id="calendar" class="calendar-grid"></div><p class="chart-note">Yeşil: puan artışı, kırmızı: düşüş, gri: işlem yok veya sıfır değişim.</p></section>
-<section class="card section" id="weeklyReport"><h2>Haftalık Gelişim Raporu</h2><div id="report"></div></section>
+<section class="card section" id="openingClosing"><h2>🔔 Borsa Açılış / Kapanış</h2><div id="openCloseView"></div><button type="button" id="closeDay">Bugünün Kapanışını Kaydet</button><p class="chart-note">Açılış önceki günün kapanışıdır. Kaydettiğin kapanış notu sonradan yaptığın işlemleri engellemez.</p></section><section class="card section" id="monthlyReport"><h2>📆 Aylık Hayat Raporu</h2><div id="monthlyView"></div></section><section class="card section" id="weeklyReport"><h2>Haftalık Gelişim Raporu</h2><div id="report"></div></section>
 <section class="card section"><h2>Hedef Endeksi</h2><div class="field"><label for="target">Ulaşmak istediğin puan</label><input id="target" type="number" step=".01" min="0"></div><button class="ghost" id="saveTarget" type="button">Hedefi Kaydet</button><div class="progress"><div id="targetBar"></div></div><div class="hint" id="targetText"></div></section>
 <section class="card section"><h2>Başlangıç & Veri Kasası</h2><div class="field"><label for="initial">Başlangıç puanın</label><input type="number" step=".01" id="initial"></div><button class="ghost" id="saveInitial" type="button">Başlangıcı Güncelle</button><div class="rule"></div>
 <div class="actions"><button type="button" class="ghost" id="backup">JSON Yedeği İndir</button><button type="button" class="ghost" id="csv">CSV İndir</button></div>
@@ -383,7 +384,7 @@ function renderGoals(){
  if(sectorsList().some(s=>s.id===selected))$("goalSector").value=selected;
  const entries=Object.entries(data.stockGoals).filter(([id,goal])=>sectorsList().some(s=>s.id===id)&&Number(goal)>0);
  $("goalList").innerHTML=entries.length?entries.map(([id,goal])=>{
- const s=sectorsList().find(s=>s.id===id),score=data.trades.filter(t=>t.sector===id&&Date.parse(t.time)<=Date.now()).reduce((n,t)=>n+t.delta,0);
+ const s=sectorsList().find(s=>s.id===id),score=currentOf(id);
  const pct=Math.max(0,Math.min(100,score/goal*100));
  return `<div class="goal-item"><div class="head"><b>${esc(s.icon)} ${esc(s.name)}</b><button class="ghost" type="button" data-goal-remove="${esc(id)}">Sil</button></div><div class="hint">${signed(score)} / ${num(goal)} puan · %${num(pct)}</div><div class="progress"><div style="width:${pct}%"></div></div></div>`}).join(""):'<p class="hint">Henüz hisse hedefi belirlemedin.</p>';
 }
@@ -399,10 +400,10 @@ function render(){
  paint("total",num(total));paint("baseText","31 hissenin başlangıç ortalaması: "+num(data.base));
  paint("gain",signed(change));colorize("gain",change);
  paint("gainPct",data.base===0?"Başlangıç sıfır: yüzde hesaplanmaz":signed(change/data.base*100)+"%");
- renderMood(dayDelta/sectorsList().length);renderGoals();paint("todayGain",signed(dayDelta/sectorsList().length));colorize("todayGain",dayDelta);
+ renderMood(dayDelta/sectorsList().length);renderGoals();renderV12(rows);paint("todayGain",signed(dayDelta/sectorsList().length));colorize("todayGain",dayDelta);
  paint("todayCount",todayRows.length+" işlem bugün");
  paint("peak",num(Math.max(data.base,...rows.map(t=>t.level))));
- paint("streak",new Set(rows.map(t=>t.time.slice(0,10))).size+" aktif gün");
+ paint("streak",total>=Math.max(data.base,...rows.map(t=>t.level))?"🏆 Zirve seviyesi":"Zirveye "+num(Math.max(data.base,...rows.map(t=>t.level))-total)+" puan kaldı");
  chart(rows);extraSections(rows);renderMovers();renderFunds();if(!$("marketTrade").hidden)updateMarketTrade();
  let bySector=Object.fromEntries(sectorsList().map(s=>[s.id,{sum:0,count:0}]));
  for(const t of rows)if(bySector[t.sector]){bySector[t.sector].sum+=t.delta;bySector[t.sector].count++}
@@ -486,9 +487,9 @@ function setupScreens(){
  const extra=[...document.querySelectorAll(".card.section")];
  const move=(id,target)=>{let el=$(id);if(el)target.appendChild(el)};
  home.appendChild(metric);move("marketStatus",home);
- move("dailyClose",home);move("calendarSection",home);move("weeklyReport",home);
- market.appendChild(performance);move("funds",market);move("stockGoals",market);market.appendChild(movers);market.appendChild(portfolio);
- trade.appendChild(form);move("quickActions",trade);
+ move("dailyClose",home);move("openingClosing",home);move("monthlyReport",home);move("calendarSection",home);move("weeklyReport",home);
+ market.appendChild(performance);move("candleSection",market);move("funds",market);move("stockAlerts",market);move("stockGoals",market);market.appendChild(movers);market.appendChild(portfolio);
+ trade.appendChild(form);move("quickActions",trade);move("lifeNews",trade);move("dividends",trade);
  for(const el of [...document.querySelectorAll(".card.section")]){
    if(!el.closest(".screen-page")&&el.id!=="journal")trade.appendChild(el);
  }
@@ -533,6 +534,35 @@ function renderMovers(){
  $("risers").innerHTML=gain.length?gain.map(line).join(""):'<p class="hint">Bu hafta yükselen hisse yok.</p>';
  $("fallers").innerHTML=loss.length?loss.map(line).join(""):'<p class="hint">Bu hafta düşen hisse yok.</p>';
 }
+
+/* V12 features: candlesticks, monthly reports, alerts, news, rewards, market open/close. */
+function v12Days(rows){
+ const by={};for(const t of rows){const key=t.time.slice(0,10);(by[key]??=[]).push(t)}
+ let prev=data.base;const dates=[];let start=new Date();start.setHours(0,0,0,0);start.setDate(start.getDate()-29);
+ for(let i=0;i<30;i++){const d=new Date(start);d.setDate(start.getDate()+i);const key=dateKey(d),items=by[key]||[],open=prev;let high=open,low=open;for(const t of items){prev=t.level;high=Math.max(high,prev);low=Math.min(low,prev)}dates.push({key,open,close:prev,high,low})}return dates
+}
+function renderV12(rows){
+ const days=v12Days(rows),now=days.at(-1),previous=days.at(-2),todayKey=dateKey(new Date());
+ const open=now.open,close=now.close,change=close-open;
+ const saved=data.dayCloses?.[todayKey];
+ $("openCloseView").innerHTML=`<div class="v12-metrics"><div><small>Bugün açılış</small><b>${num(open)}</b></div><div><small>Şu an</small><b>${num(close)}</b></div><div><small>Günlük fark</small><b class="${change>=0?'up':'down'}">${signed(change)}</b></div></div><p class="hint">${saved?'🔒 Kapanış kaydı: '+num(saved.value)+' ('+new Date(saved.savedAt).toLocaleTimeString('tr-TR')+')':'Bugünün kapanışı henüz kaydedilmedi.'}</p>`;
+ const low=Math.min(...days.map(d=>d.low))-1,high=Math.max(...days.map(d=>d.high))+1,range=Math.max(1,high-low),y=v=>220-(v-low)/range*185;
+ $("candleGraph").innerHTML=days.map((d,i)=>{const x=22+i*25.3,up=d.close>=d.open,col=up?'#00a878':'#e74f6b',top=Math.min(y(d.open),y(d.close)),h=Math.max(2,Math.abs(y(d.open)-y(d.close)));return `<g><title>${d.key}: ${num(d.open)} → ${num(d.close)}</title><line x1="${x}" x2="${x}" y1="${y(d.high)}" y2="${y(d.low)}" stroke="${col}" stroke-width="2"/><rect x="${x-6}" y="${top}" width="12" height="${h}" fill="${col}" rx="2"/></g>`}).join('')+`<text x="12" y="16" font-size="12" fill="#75839b">${num(high)}</text><text x="12" y="240" font-size="12" fill="#75839b">${days[0].key}</text><text x="790" y="240" text-anchor="end" font-size="12" fill="#75839b">${now.key}</text>`;
+ const alerts=sectorsList().filter(s=>currentOf(s.id)<30).sort((a,b)=>currentOf(a.id)-currentOf(b.id));
+ $("alertView").innerHTML=alerts.length?alerts.map(s=>`<div class="stock"><div class="stock-main">${esc(s.icon)} <b>${esc(s.name)}</b><div class="hint">30 puan eşiğinin altında</div></div><b class="down">${num(currentOf(s.id))}</b></div>`).join(''):'<p class="hint">Şu anda kritik seviyede hisse yok.</p>';
+ const m=new Date(),prefix=`${m.getFullYear()}-${String(m.getMonth()+1).padStart(2,'0')}`,monthTrades=rows.filter(t=>t.time.slice(0,7)===prefix),startValue=monthTrades.length?monthTrades[0].level-indexDelta(monthTrades[0]):rows.filter(t=>t.time.slice(0,7)<prefix).at(-1)?.level??data.base,endValue=monthTrades.at(-1)?.level??startValue;
+ const changes=sectorsList().map(s=>({s,delta:monthTrades.filter(t=>t.sector===s.id).reduce((a,t)=>a+t.delta,0)})).sort((a,b)=>b.delta-a.delta),best=changes[0],worst=changes.at(-1);
+ $("monthlyView").innerHTML=`<div class="v12-metrics"><div><small>Ay başı</small><b>${num(startValue)}</b></div><div><small>Şimdi</small><b>${num(endValue)}</b></div><div><small>Değişim</small><b class="${endValue>=startValue?'up':'down'}">${signed(endValue-startValue)}</b></div></div><p class="hint">Bu ay ${monthTrades.length} işlem • En çok yükselen: ${best&&best.delta>0?esc(best.s.name)+' '+signed(best.delta):'Yok'} • En çok düşen: ${worst&&worst.delta<0?esc(worst.s.name)+' '+signed(worst.delta):'Yok'}</p>`;
+ const stockSelect=$("newsStock"),old=stockSelect.value;stockSelect.innerHTML=sectorsList().map(s=>`<option value="${esc(s.id)}">${esc(s.icon)} ${esc(s.name)}</option>`).join('');if(sectorsList().some(s=>s.id===old))stockSelect.value=old;
+ $("newsFeed").innerHTML=(data.news||[]).slice().reverse().map(n=>`<div class="v12-feed"><small>${new Date(n.date).toLocaleString('tr-TR')} • ${esc(sectorsList().find(s=>s.id===n.sector)?.name||'Hisse')}</small><p>${esc(n.text)}</p><button class="ghost" type="button" data-delete-news="${esc(n.id)}">Sil</button></div>`).join('')||'<p class="hint">Henüz haber eklenmedi.</p>';
+ $("dividendFeed").innerHTML=(data.dividends||[]).slice().reverse().map(n=>`<div class="v12-feed"><small>${new Date(n.date).toLocaleDateString('tr-TR')}</small><p>🎁 ${esc(n.text)}</p><button class="ghost" type="button" data-delete-dividend="${esc(n.id)}">Sil</button></div>`).join('')||'<p class="hint">Henüz ödül kaydı yok.</p>';
+}
+$("closeDay").onclick=()=>{data.dayCloses??={};const rows=timeline(),total=rows.at(-1)?.level??data.base;data.dayCloses[dateKey(new Date())]={value:total,savedAt:new Date().toISOString()};save()};
+$("addNews").onclick=()=>{const v=$("newsText").value.trim();if(!v)return alert('Haber metni gir.');data.news??=[];data.news.push({id:crypto.randomUUID(),date:new Date().toISOString(),sector:$("newsStock").value,text:v});$("newsText").value='';save()};
+$("addDividend").onclick=()=>{const v=$("dividendText").value.trim();if(!v)return alert('Ödül açıklaması gir.');data.dividends??=[];data.dividends.push({id:crypto.randomUUID(),date:new Date().toISOString(),text:v});$("dividendText").value='';save()};
+$("newsFeed").onclick=e=>{const b=e.target.closest('[data-delete-news]');if(b&&confirm('Haberi sil?')){data.news=data.news.filter(n=>n.id!==b.dataset.deleteNews);save()}};
+$("dividendFeed").onclick=e=>{const b=e.target.closest('[data-delete-dividend]');if(b&&confirm('Ödül kaydını sil?')){data.dividends=data.dividends.filter(n=>n.id!==b.dataset.deleteDividend);save()}};
+
 refreshGroups();
 setupScreens();
 showLimit();
