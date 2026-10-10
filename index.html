@@ -101,6 +101,13 @@ body{padding-bottom:88px}
 #fundCards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .fund-detail{margin-top:12px;padding:12px;border:1px solid #e3eaf5;border-radius:12px}
 @media(max-width:390px){#fundCards{grid-template-columns:1fr}}
+.market-trade{margin:14px 0;background:#f6f9ff;border:1px solid #b9cbfa;border-radius:14px;padding:15px;scroll-margin-top:15px}
+.market-trade[hidden]{display:none}
+.market-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.market-positive{background:#079b72}.market-negative{background:#d94c69}
+#stocks .stock{cursor:pointer}
+#stocks .stock:active{transform:scale(.995)}
+@media(max-width:440px){.market-trade .cols{grid-template-columns:1fr}.market-buttons button{padding:12px 5px}}
 </style>
 </head>
 <body><main class="shell">
@@ -119,6 +126,15 @@ body{padding-bottom:88px}
 <div class="chart-note" id="chartInfo">Başlangıç değeri ve puan değişimlerinden otomatik oluşturulur.</div>
 </section>
 <section class="card section" id="portfolio"><div class="head"><h2>Portföyüm • Gelişim Alanları</h2><span class="hint">Kategori bazlı puan performansı</span></div><div class="field"><label for="groupFilter">Kategori seç</label><select id="groupFilter"><option value="">Tüm Kategoriler</option></select></div><div class="field"><label for="sectorSearch">Hisse ara</label><input id="sectorSearch" placeholder="Hisse adı veya kodu ara..."></div><p class="chart-note" id="stockCount"></p><div id="stocks"></div>
+<div id="marketTrade" class="market-trade" hidden>
+  <div class="head"><h3 id="marketTradeTitle">Hisseyi Puanla</h3><button type="button" class="ghost" id="closeMarketTrade">Kapat ×</button></div>
+  <p class="chart-note" id="marketTradeLimit"></p>
+  <form id="marketTradeForm">
+    <div class="cols"><div class="field"><label for="marketDate">Tarih ve saat</label><input type="datetime-local" id="marketDate" required></div><div class="field"><label for="marketAmount">Puan (en fazla 10)</label><input type="number" id="marketAmount" min="0.01" max="10" step="0.01" value="5" required></div></div>
+    <div class="field"><label for="marketDescription">Ne yaptın?</label><input id="marketDescription" maxlength="160" placeholder="Örn. Bugün projem için çalıştım" required></div>
+    <div class="market-buttons"><button type="submit" data-direction="1" class="market-positive">▲ Puan Ekle</button><button type="submit" data-direction="-1" class="market-negative">▼ Puan Düş</button></div>
+  </form>
+</div>
 <div class="rule"></div><div class="head"><h3 id="stockChartTitle">Hisse Grafiği</h3><div class="ranges" id="stockRanges"><button class="ghost" data-stock-days="7">1H</button><button class="ghost active" data-stock-days="30">1A</button><button class="ghost" data-stock-days="365">1Y</button><button class="ghost" data-stock-days="0">Tümü</button></div></div>
 <div class="chart-wrap" style="height:215px"><svg id="stockGraph" viewBox="0 0 800 220" preserveAspectRatio="none" aria-label="Seçilen hisse puan grafiği"></svg></div>
 <p class="chart-note">Bir hisseye dokunarak o hissenin performansını incele.</p>
@@ -323,11 +339,11 @@ function render(){
  paint("todayCount",todayRows.length+" işlem bugün");
  paint("peak",num(Math.max(data.base,...rows.map(t=>t.level))));
  paint("streak",new Set(rows.map(t=>t.time.slice(0,10))).size+" aktif gün");
- chart(rows);extraSections(rows);renderMovers();renderFunds();
+ chart(rows);extraSections(rows);renderMovers();renderFunds();if(!$("marketTrade").hidden)updateMarketTrade();
  let bySector=Object.fromEntries(sectorsList().map(s=>[s.id,{sum:0,count:0}]));
  for(const t of rows)if(bySector[t.sector]){bySector[t.sector].sum+=t.delta;bySector[t.sector].count++}
  paint("stockCount",sectorsList().length+" hisse • "+new Set(sectorsList().map(s=>s.group||"Özel")).size+" kategori • Fon puanları otomatik hesaplanır");
- $("stocks").innerHTML=sectorsList().filter(s=>(!$("groupFilter").value||(s.group||"Özel")===$("groupFilter").value)&&((s.name+" "+s.ticker).toLocaleLowerCase("tr-TR").includes(($("sectorSearch")?.value||"").toLocaleLowerCase("tr-TR")))).map(s=>{let d=bySector[s.id];return `<div class="stock ${selectedSector===s.id?"selected":""}" data-sector="${esc(s.id)}"><div class="stock-icon">${s.icon}</div><div class="stock-main"><div class="stock-name">${s.name}</div><div class="stock-sub">${esc(s.group||"Özel")} · ${s.ticker} • ${d.count} işlem</div></div><div class="stock-value ${d.sum>=0?"up":"down"}">${signed(d.sum)}<div class="small">${d.sum>=0?"▲":"▼"} performans</div></div></div>`}).join("");
+ $("stocks").innerHTML=sectorsList().filter(s=>(!$("groupFilter").value||(s.group||"Özel")===$("groupFilter").value)&&((s.name+" "+s.ticker).toLocaleLowerCase("tr-TR").includes(($("sectorSearch")?.value||"").toLocaleLowerCase("tr-TR")))).map(s=>{let d=bySector[s.id];return `<div class="stock ${selectedSector===s.id?"selected":""}" data-sector="${esc(s.id)}" tabindex="0" role="button" aria-label="${esc(s.name)} hissesini puanla"><div class="stock-icon">${s.icon}</div><div class="stock-main"><div class="stock-name">${s.name}</div><div class="stock-sub">${esc(s.group||"Özel")} · ${s.ticker} • ${d.count} işlem</div></div><div class="stock-value ${d.sum>=0?"up":"down"}">${signed(d.sum)}<div class="small">${d.sum>=0?"▲":"▼"} performans</div></div></div>`}).join("");
  $("records").innerHTML=rows.length?rows.slice().reverse().map(t=>{let s=sectorsList().find(x=>x.id===t.sector);return `<tr><td>${new Date(t.time).toLocaleString("tr-TR")}</td><td>${s?esc(s.ticker):"DGR"}</td><td title="${esc(t.detail||"")}">${esc(t.description)}</td><td class="${t.delta>=0?"up":"down"}">${signed(t.delta)}</td><td>${num(t.level)}</td><td><button class="danger" data-remove="${esc(t.id)}">Sil</button></td></tr>`}).join(""):`<tr><td colspan="6" class="empty">Henüz işlem yok. İlk işlemini eklediğinde grafik hareket edecek.</td></tr>`;
  paint("recordCount",rows.length+" kayıt");
  $("customSectors").innerHTML=data.customSectors.map(t=>`<div class="stock"><div class="stock-main"><b>${esc(t.icon)} ${esc(t.name)}</b><div class="stock-sub">${esc(t.ticker)}</div></div><button type="button" class="danger" data-sector-remove="${esc(t.id)}">Sil</button></div>`).join("");
@@ -340,7 +356,26 @@ function render(){
  paint("targetText",`${num(total)} / ${num(data.target)} puan • ${num(progress)}% tamamlandı`);
  document.querySelectorAll("#ranges button").forEach(b=>b.classList.toggle("active",Number(b.dataset.days)===days));
 }
-$("stocks").addEventListener("click",e=>{let el=e.target.closest("[data-sector]");if(el){selectedSector=el.dataset.sector;render()}});
+function updateMarketTrade(){
+ const sector=sectorsList().find(t=>t.id===selectedSector);
+ if(!sector)return;
+ paint("marketTradeTitle",`${sector.icon} ${sector.name} • Puanlama`);
+ const date=$("marketDate").value.slice(0,10),used=daySectorSum(selectedSector,date);
+ paint("marketTradeLimit",`${date}: ${signed(used)} puan • Günlük tavan +10 / taban −10 • Artış hakkı ${num(Math.max(0,10-used))} • Düşüş hakkı ${num(Math.max(0,10+used))}`);
+}
+$("stocks").addEventListener("click",e=>{let el=e.target.closest("[data-sector]");if(el){selectedSector=el.dataset.sector;$("marketTrade").hidden=false;$("marketDate").value=localInputDate();render();updateMarketTrade();$("marketTrade").scrollIntoView({behavior:"smooth",block:"center"})}});
+$("stocks").addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches("[data-sector]")){e.preventDefault();e.target.click()}});
+$("closeMarketTrade").onclick=()=>{$("marketTrade").hidden=true};
+$("marketDate").addEventListener("change",updateMarketTrade);
+$("marketTradeForm").addEventListener("submit",e=>{
+ e.preventDefault();const button=e.submitter;const sign=Number(button?.dataset.direction||1);
+ const amount=Number($("marketAmount").value),time=$("marketDate").value,description=$("marketDescription").value.trim();
+ if(!Number.isFinite(amount)||amount<=0||amount>10||!description||!Number.isFinite(Date.parse(time))){alert("Geçerli bir açıklama, tarih ve 0-10 arasında puan gir.");return}
+ const requested=amount*sign,allowed=remainingDelta(selectedSector,time.slice(0,10),requested);
+ if(Math.abs(allowed-requested)>0.000001){alert("Günlük ±10 sınırı aşılıyor. Kullanılabilir puan: "+signed(allowed));return}
+ data.trades.push({id:"market_"+Date.now()+"_"+Math.random().toString(36).slice(2),time,sector:selectedSector,description,detail:"Piyasadan hızlı puanlama",delta:requested});
+ if(save()){$("marketDescription").value="";$("marketDate").value=localInputDate();updateMarketTrade();showLimit()}
+});
 $("stockRanges").addEventListener("click",e=>{let b=e.target.closest("[data-stock-days]");if(!b)return;stockDays=Number(b.dataset.stockDays);document.querySelectorAll("[data-stock-days]").forEach(x=>x.classList.toggle("active",x===b));render()});
 $("prevMonth").onclick=()=>{calendarMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth()-1,1);render()};
 $("nextMonth").onclick=()=>{calendarMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth()+1,1);render()};
