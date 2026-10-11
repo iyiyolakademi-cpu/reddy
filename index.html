@@ -128,6 +128,17 @@ body{padding-bottom:88px}
 .dividend-date{font-weight:850;color:#264aa5}
 .stock-extra{margin-top:7px;display:grid;gap:5px}
 .stock-extra-line{font-size:11px;color:#596985;background:#f5f8fd;border:1px solid #e4ebf5;border-radius:9px;padding:6px 8px;line-height:1.35}
+.people-score-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}
+.people-score-card{background:#f6f9ff;border:1px solid #dfe8f7;border-radius:13px;padding:12px;min-width:0}
+.people-score-card.active{border-color:#4169ef;background:#edf3ff;box-shadow:0 6px 18px #4169ef18}
+.people-score-card small{display:block;color:#708099;font-weight:750;margin-bottom:5px}
+.people-score-card b{font-size:20px}
+.people-step{display:flex;justify-content:space-between;gap:10px;align-items:center;background:#f7f9fd;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:8px 0}
+.people-step.done{background:#e9f8f1;border-color:#c6eedc}
+.people-step.current{background:#edf3ff;border-color:#b9ccff}
+.people-step strong{font-size:13px}.people-step span{font-size:12px;color:#6f7d93}
+.people-history{display:grid;gap:8px;margin-top:10px}
+@media(max-width:640px){.people-score-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.people-step{align-items:flex-start;flex-direction:column}}
 /* V11: initial stock prices are the baseline; trade deltas are changes thereafter. */
 #authCover{position:fixed;inset:0;z-index:199;background:#f4f7fc;display:grid;place-items:center;padding:20px}#authCover .card{max-width:460px;text-align:center}#authCover[hidden]{display:none}
 /* V14: Bulut kontrolleri üstte yer kaplamak yerine küçük bir hesap menüsündedir. */
@@ -219,6 +230,7 @@ body.mover-modal-open{overflow:hidden}
 <section class="card section" id="candleSection"><div class="head"><h2>🕯️ Günlük Mum Grafiği</h2><span class="hint">Son 30 gün</span></div><div class="chart-wrap"><svg id="candleGraph" viewBox="0 0 800 250" preserveAspectRatio="none" role="img" aria-label="Günlük açılış kapanış mum grafiği"></svg></div><p class="chart-note">Yeşil mum yükselişi, kırmızı mum düşüşü gösterir. İşlem yapılmayan günlerde fiyat sabit kalır.</p></section><section class="card section" id="stockAlerts"><h2>🚨 Hisse Alarmları</h2><p class="chart-note">30 puanın altındaki hisseler otomatik olarak burada görünür.</p><div id="alertView"></div></section><section class="card section" id="stockGoals"><div class="head"><h2>🎯 Hisse Hedefleri</h2></div><p class="chart-note">Her hissenin ulaşmasını istediğin toplam puanı belirle. Puanlama yaptıkça hedef ilerlemesi otomatik güncellenir.</p><div class="cols"><div class="field"><label for="goalSector">Hisse</label><select id="goalSector"></select></div><div class="field"><label for="goalAmount">Hedef puan</label><input type="number" id="goalAmount" step="0.01" min="0.01" value="30"></div></div><button id="setStockGoal" type="button">Hisse Hedefini Kaydet</button><div id="goalList"></div></section>
 <section class="card section" id="movers"><h2>📊 Günün Hisse Hareketleri</h2><p class="chart-note" id="moversDateNote">Her gün 00.00 itibarıyla günlük değişimler sıfırdan başlar. Toplam hisse puanları ve geçmiş kayıtlar korunur.</p><div class="cols"><div><h3 class="up">▲ En Çok Artanlar</h3><div id="risers"></div></div><div><h3 class="down">▼ En Çok Düşenler</h3><div id="fallers"></div></div></div><div class="neutral-movers-wrap"><h3>➖ Bugün Değişmeyen Hisseler <span class="muted-label">(0 puan)</span></h3><div id="neutralMovers" class="neutral-movers-grid"></div></div></section>
 <section class="card section" id="lifeNews"><h2>📰 Hayat Borsası Haberleri</h2><p class="chart-note">Haberleri tek hisseye ya da direkt HBX • Hayat Endeksi'ne bağlayabilirsin.</p><div class="field"><label for="newsStock">Haber başlığı / ilgili alan</label><select id="newsStock"></select></div><div class="field"><label for="newsText">Gelişme / haber</label><textarea id="newsText" maxlength="300" placeholder="Örneğin: HBX bugün güçlü kapandı veya OynaBak için yeni görüşme yaptım..."></textarea></div><button type="button" id="addNews">Haberi Kaydet</button><div id="newsFeed" class="news-feed"></div><p class="chart-note">Haber kaydı puanı otomatik değiştirmez; puanlamak istersen hisse işlemi yap.</p></section><section class="card section" id="dividends"><h2>🎁 Temettü • Kendime Ödül</h2><p class="chart-note">Hangi hissenin ne zaman temettü vereceğini ve sana ne ödül kazandıracağını kaydet. Hisseye basınca temettü bilgisi kartta görünür.</p><div class="field"><label for="dividendStock">Temettü verecek hisse</label><select id="dividendStock"></select></div><div class="cols"><div class="field"><label for="dividendDate">Temettü tarihi</label><input type="date" id="dividendDate"></div><div class="field"><label for="dividendText">Ne verecek?</label><input id="dividendText" maxlength="120" placeholder="Örn. kahve, yemek, küçük alışveriş"></div></div><div class="field"><label for="dividendReason">Neden verecek?</label><input id="dividendReason" maxlength="160" placeholder="Örn. hedef tamamlandı, satış görüşmesi yapıldı, düzenli spor sürdü"></div><button type="button" id="addDividend">Temettü Kaydet</button><div id="dividendFeed" class="news-feed"></div></section><section class="card section" id="quickActions"><h2>Hızlı İşlemler</h2><p class="chart-note">Tek dokunuşla puan ekle. Her işlem otomatik kaydedilir.</p><div class="quick-grid" id="quickButtons"></div></section>
+<section class="card section" id="peopleIndex"><div class="head"><h2>👥 İnsan Puanlama Endeksi</h2><span class="hint" id="peopleIndexHint">Yakın çevre puan takibi</span></div><p class="chart-note">Puanlama sırası: Ayberk → Eren → Annem → Babam → Ablam → Ben. Sistem sırayı takip eder; önce önceki kişilerin puanı alınır.</p><div class="people-score-grid" id="peopleScoreCards"></div><form id="peopleScoreForm"><div class="field"><label for="peopleDate">Tarih ve saat</label><input type="datetime-local" id="peopleDate" required></div><div class="field"><label id="peopleScoreLabel" for="peopleScore">Ayberk puanı</label><input type="number" id="peopleScore" min="0" max="100" step="1" value="50" required></div><div class="field"><label for="peopleNote">Kısa not (isteğe bağlı)</label><input id="peopleNote" maxlength="160" placeholder="Bugünkü izlenim veya sebep"></div><button type="submit" style="width:100%" id="savePeopleScore">Sıradaki Puanı Kaydet</button></form><div id="peopleSteps"></div><div class="rule"></div><div class="head"><h3>Son İnsan Puanları</h3><button type="button" class="ghost" id="resetPeopleRound">Yeni tur başlat</button></div><div id="peopleHistory" class="people-history"></div></section>
 <section class="card section"><h2>Piyasa Özeti</h2><div id="insights"></div></section>
 <section class="card section" id="dailyClose"><h2>Günlük Kapanışlar</h2><p class="chart-note">Kapanış değeri gün sonunda, o tarihe kadar kaydedilmiş işlemlerden hesaplanır. Geçmişe işlem eklersen kapanış yeniden hesaplanır.</p><div id="closes"></div></section>
 <section class="card section" id="calendarSection"><h2>Performans Takvimi</h2><div class="head"><button class="ghost" id="prevMonth" type="button">‹ Önceki</button><b id="monthTitle"></b><button class="ghost" id="nextMonth" type="button">Sonraki ›</button></div><div id="calendar" class="calendar-grid"></div><p class="chart-note">Yeşil: puan artışı, kırmızı: düşüş, gri: işlem yok veya sıfır değişim.</p></section>
@@ -250,12 +262,21 @@ const signed=n=>(n>=0?"+":"")+num(n);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const START_PRICES={"iya":93,"oynabak":80,"habitopia":35,"robot":48,"familyshop":60,"income":35,"sales":40,"network":40,"company":30,"reading":40,"confidence":80,"focus":45,"discipline":80,"knowledge":50,"fitness":49,"walk":65,"grooming":60,"sleep":40,"nutrition":46,"clothing":60,"friends":66,"family":74,"newpeople":70,"sociallife":60,"love":24,"writing":55,"socialmedia":56,"vlog":52,"conference":52,"wellbeing":33,"happiness":42};
 const START_AVERAGE=53.5483870968;
-function defaultData(){return {base:START_AVERAGE,target:80,trades:[],customSectors:[],initialPrices:{...START_PRICES},initialVersion:11}}
+const PEOPLE_ORDER=[
+{id:"ayberk",name:"Ayberk",icon:"A"},
+{id:"eren",name:"Eren",icon:"E"},
+{id:"annem",name:"Annem",icon:"AN"},
+{id:"babam",name:"Babam",icon:"BA"},
+{id:"ablam",name:"Ablam",icon:"AB"},
+{id:"ben",name:"Ben",icon:"B"}
+];
+function defaultData(){return {base:START_AVERAGE,target:80,trades:[],customSectors:[],initialPrices:{...START_PRICES},initialVersion:11,peopleRatings:[]}}
 let data;
 try{data=JSON.parse(localStorage.getItem(KEY))||defaultData()}catch{data=defaultData()}
 function valid(d){return d&&Number.isFinite(d.base)&&Number.isFinite(d.target)&&Array.isArray(d.trades)&&d.trades.every(t=>typeof t.id==="string"&&typeof t.sector==="string"&&typeof t.description==="string"&&typeof t.time==="string"&&Number.isFinite(Date.parse(t.time))&&Number.isFinite(t.delta))}
 if(!valid(data))data=defaultData();
 if(!Array.isArray(data.customSectors))data.customSectors=[];
+if(!Array.isArray(data.peopleRatings))data.peopleRatings=[];
 // V11 migration: seed all 31 stocks while retaining existing transaction history.
 if(!data.initialPrices||data.initialVersion!==11){data.initialPrices={...START_PRICES,...(data.initialPrices||{})};data.initialVersion=11}
 for(const [id,v] of Object.entries(START_PRICES))if(!Number.isFinite(Number(data.initialPrices[id])))data.initialPrices[id]=v;
@@ -459,13 +480,50 @@ $("setStockGoal").onclick=()=>{
  data.stockGoals??={};data.stockGoals[id]=amount;save();
 };
 $("goalList").addEventListener("click",e=>{const b=e.target.closest("[data-goal-remove]");if(!b)return;delete data.stockGoals[b.dataset.goalRemove];save()});
+function latestPeopleRound(){
+ const list=[...(data.peopleRatings||[])].sort((a,b)=>Date.parse(a.date)-Date.parse(b.date));
+ const round=[];
+ for(const item of list){
+  const expected=PEOPLE_ORDER[round.length];
+  if(!expected||item.person!==expected.id){round.length=0}
+  const next=PEOPLE_ORDER[round.length];
+  if(next&&item.person===next.id)round.push(item);
+ }
+ return round.length===PEOPLE_ORDER.length?[]:round;
+}
+function peopleAverage(){
+ const latest={};
+ for(const item of data.peopleRatings||[])latest[item.person]=Number(item.score);
+ const scores=PEOPLE_ORDER.map(p=>latest[p.id]).filter(Number.isFinite);
+ return scores.length?scores.reduce((a,b)=>a+b,0)/scores.length:0;
+}
+function renderPeopleIndex(){
+ const round=latestPeopleRound(),next=PEOPLE_ORDER[round.length]||PEOPLE_ORDER[0];
+ const latest={};for(const item of data.peopleRatings||[])latest[item.person]=item;
+ $("peopleIndexHint").textContent=`Genel insan endeksi: ${num(peopleAverage())} / 100`;
+ $("peopleScoreCards").innerHTML=PEOPLE_ORDER.map((p,i)=>{
+  const item=latest[p.id],active=p.id===next.id;
+  return `<div class="people-score-card ${active?"active":""}"><small>${esc(p.name)}</small><b>${item?num(item.score):"--"}</b><div class="hint">${item?new Date(item.date).toLocaleDateString("tr-TR"):"Henüz puan yok"}</div></div>`
+ }).join("");
+ $("peopleSteps").innerHTML=PEOPLE_ORDER.map((p,i)=>{
+  const item=round[i],cls=item?"done":i===round.length?"current":"";
+  return `<div class="people-step ${cls}"><strong>${i+1}. ${esc(p.name)}</strong><span>${item?num(item.score)+" puan alındı":i===round.length?"Sıradaki kişi":"Önce önceki kişiyi puanla"}</span></div>`
+ }).join("");
+ $("peopleScoreLabel").textContent=`${next.name} puanı`;
+ $("savePeopleScore").textContent=`${next.name} Puanını Kaydet`;
+ const history=[...(data.peopleRatings||[])].filter(item=>PEOPLE_ORDER.some(p=>p.id===item.person)).slice().reverse().slice(0,10);
+ $("peopleHistory").innerHTML=history.length?history.map(item=>{
+  const p=PEOPLE_ORDER.find(x=>x.id===item.person)||{name:"Kişi",icon:"?"};
+  return `<div class="news-card"><div class="news-card-header"><span class="news-pill">👥 ${esc(p.name)}</span><time>${new Date(item.date).toLocaleString("tr-TR")}</time></div><p><b>${num(item.score)} / 100</b>${item.note?`<br>${esc(item.note)}`:""}</p><button class="ghost" type="button" data-delete-person-score="${esc(item.id)}">Sil</button></div>`
+ }).join(""):'<p class="hint">Henüz insan puanı eklenmedi.</p>';
+}
 function render(){
  const rows=timeline(),total=rows.length?rows[rows.length-1].level:data.base,change=total-data.base;
  const today=new Date().toDateString(),todayRows=rows.filter(t=>new Date(t.time).toDateString()===today),dayDelta=todayRows.reduce((s,t)=>s+t.delta,0);
  paint("total",num(total));paint("baseText","31 hissenin başlangıç ortalaması: "+num(data.base));
  paint("gain",signed(change));colorize("gain",change);
  paint("gainPct",data.base===0?"Başlangıç sıfır: yüzde hesaplanmaz":signed(change/data.base*100)+"%");
- renderMood(dayDelta/sectorsList().length);renderGoals();renderV12(rows);paint("todayGain",signed(dayDelta/sectorsList().length));colorize("todayGain",dayDelta);
+ renderMood(dayDelta/sectorsList().length);renderGoals();renderPeopleIndex();renderV12(rows);paint("todayGain",signed(dayDelta/sectorsList().length));colorize("todayGain",dayDelta);
  paint("todayCount",todayRows.length+" işlem bugün");
  paint("peak",num(Math.max(data.base,...rows.map(t=>t.level))));
  paint("streak",total>=Math.max(data.base,...rows.map(t=>t.level))?"🏆 Zirve seviyesi":"Zirveye "+num(Math.max(data.base,...rows.map(t=>t.level))-total)+" puan kaldı");
@@ -515,6 +573,22 @@ $("nextMonth").onclick=()=>{calendarMonth=new Date(calendarMonth.getFullYear(),c
 $("quickButtons").addEventListener("click",e=>{let b=e.target.closest("[data-quick]");if(!b)return;let t=quickTemplates[Number(b.dataset.quick)];if(!t)return;const allowed=remainingDelta(t.sector,localInputDate().slice(0,10),t.delta);
 if(Math.abs(allowed-t.delta)>0.000001){alert("Günlük ±10 puan limiti nedeniyle bu hızlı işlem eklenemiyor. Kalan: "+signed(allowed));return}
 data.trades.push({id:"quick_"+Date.now()+"_"+Math.random().toString(36).slice(2),time:localInputDate(),sector:t.sector,description:t.label,detail:"Hızlı işlem",delta:t.delta});save();showLimit()});
+$("peopleDate").value=localInputDate();
+$("peopleScoreForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ const round=latestPeopleRound(),person=PEOPLE_ORDER[round.length]||PEOPLE_ORDER[0];
+ const score=Number($("peopleScore").value),date=$("peopleDate").value,note=$("peopleNote").value.trim();
+ if(!Number.isFinite(score)||score<0||score>100){alert("0 ile 100 arasında puan gir.");return}
+ if(!date||!Number.isFinite(Date.parse(date))){alert("Geçerli tarih ve saat gir.");return}
+ data.peopleRatings??=[];
+ data.peopleRatings.push({id:"person_"+Date.now()+"_"+Math.random().toString(36).slice(2),person:person.id,score,date,note});
+ $("peopleNote").value="";
+ $("peopleScore").value=50;
+ $("peopleDate").value=localInputDate();
+ save();
+});
+$("resetPeopleRound").onclick=()=>{if(confirm("Yeni tur başlatılsın mı? Mevcut geçmiş silinmez, sadece sıradaki kişi Ayberk olur.")){data.peopleRatings??=[];data.peopleRatings.push({id:"person_round_"+Date.now(),person:"__round_reset",score:0,date:new Date().toISOString(),note:"Yeni tur başlatıldı"});save()}};
+$("peopleHistory").addEventListener("click",e=>{const b=e.target.closest("[data-delete-person-score]");if(b&&confirm("Bu insan puanı silinsin mi?")){data.peopleRatings=data.peopleRatings.filter(x=>x.id!==b.dataset.deletePersonScore);save()}});
 $("addSector").onclick=()=>{
  const name=$("newSector").value.trim(),ticker=$("newTicker").value.trim().toUpperCase(),icon=$("newIcon").value.trim()||"📈",initial=Number($("newInitialPrice").value);
  if(!name||!ticker){alert("Hisse adı ve kısa kod gir.");return}
@@ -544,7 +618,7 @@ $("saveTarget").onclick=()=>{let n=Number($("target").value);if(!Number.isFinite
 function download(name,content,type){let blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)}
 $("backup").onclick=()=>download("hayat-borsasi-yedek.json",JSON.stringify(data,null,2),"application/json");
 $("csv").onclick=()=>{let lines=[["Tarih","Kategori","Aciklama","Not","Degisim","Endeks"],...timeline().map(t=>[t.time,t.sector,t.description,t.detail||"",t.delta,t.level])];download("hayat-borsasi-islemler.csv","\ufeff"+lines.map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(";")).join("\r\n"),"text/csv;charset=utf-8")};
-$("restore").onchange=async e=>{let file=e.target.files[0];if(!file)return;try{let incoming=JSON.parse(await file.text());if(!valid(incoming))throw Error("Dosya biçimi geçersiz");if(confirm("Mevcut kayıtların üzerine yedek yüklensin mi?")){data=incoming;data.initialPrices={...START_PRICES,...(incoming.initialPrices||{})};data.initialVersion=11;data.base=START_AVERAGE;save()}}catch(err){alert("Yedek yüklenemedi: "+err.message)}e.target.value=""};
+$("restore").onchange=async e=>{let file=e.target.files[0];if(!file)return;try{let incoming=JSON.parse(await file.text());if(!valid(incoming))throw Error("Dosya biçimi geçersiz");if(confirm("Mevcut kayıtların üzerine yedek yüklensin mi?")){data=incoming;data.initialPrices={...START_PRICES,...(incoming.initialPrices||{})};data.initialVersion=11;data.base=START_AVERAGE;if(!Array.isArray(data.peopleRatings))data.peopleRatings=[];save()}}catch(err){alert("Yedek yüklenemedi: "+err.message)}e.target.value=""};
 $("reset").onclick=()=>{if(confirm("TÜM işlemler ve ayarlar silinecek. Emin misin?")){data=defaultData();save()}};
 render();
 
@@ -559,7 +633,7 @@ function setupScreens(){
  home.appendChild(metric);move("marketStatus",home);
  move("dailyClose",home);move("openingClosing",home);move("monthlyReport",home);move("calendarSection",home);move("weeklyReport",home);
  market.appendChild(performance);move("candleSection",market);move("funds",market);move("stockAlerts",market);move("stockGoals",market);market.appendChild(movers);market.appendChild(portfolio);
- trade.appendChild(form);move("quickActions",trade);move("lifeNews",trade);move("dividends",trade);
+ trade.appendChild(form);move("peopleIndex",trade);move("quickActions",trade);move("lifeNews",trade);move("dividends",trade);
  for(const el of [...document.querySelectorAll(".card.section")]){
    if(!el.closest(".screen-page")&&el.id!=="journal")trade.appendChild(el);
  }
