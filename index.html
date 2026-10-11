@@ -145,6 +145,7 @@ body{padding-bottom:88px}
 .mover-click{cursor:pointer;transition:background .15s,transform .15s}
 .mover-click:hover,.mover-click:focus-visible{background:#eef4ff;outline:2px solid #92b4fa;outline-offset:1px}
 .mover-click:active{transform:scale(.99)}
+.mover-more{width:100%;margin-top:9px;background:#edf2ff;color:#3655b7}
 /* V21: Puanlama penceresi sayfayı kaydırmadan açılır */
 .mover-modal-backdrop{position:fixed;inset:0;background:rgba(5,9,20,.76);z-index:9998}
 #marketTrade.mover-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(92vw,480px);max-height:88dvh;overflow-y:auto;z-index:9999;background:#151c2d;border:1px solid #48536a;border-radius:18px;padding:18px;box-shadow:0 24px 80px #0009}
@@ -198,6 +199,7 @@ body.mover-modal-open{overflow:hidden}
 <section class="card section"><h2>Gelişim Hissesi Oluştur</h2>
 <div class="field"><label for="newSector">Hisse adı (ör. İyi Yol Akademi)</label><input id="newSector" maxlength="45" placeholder="Yeni proje veya alışkanlık"></div>
 <div class="field"><label for="newGroup">Kategori / Fon</label><select id="newGroup"></select></div><div class="cols"><div class="field"><label for="newTicker">Kısa kod</label><input id="newTicker" maxlength="8" placeholder="IYA"></div><div class="field"><label for="newIcon">Simge</label><input id="newIcon" maxlength="4" value="📈"></div></div>
+<div class="field"><label for="newInitialPrice">Başlangıç fiyatı</label><input id="newInitialPrice" type="number" min="0" max="1000" step="0.01" value="50" placeholder="Örn. 50"></div>
 <button id="addSector" type="button">Yeni Hisse Ekle</button>
 <div class="chart-note">Eklediğin hisseler işlem ekranında ve portföyünde görünür. Kayıtlarınla birlikte saklanır.</div>
 <div id="customSectors"></div>
@@ -252,6 +254,7 @@ function currentOf(id){return initialOf(id)+data.trades.filter(t=>t.sector===id&
 function indexDelta(t){return t.delta/sectorsList().length}
 function sectorsList(){return [...defaultSectors,...data.customSectors]}
 let days=30,stockDays=30,selectedSector="iya",selectedFund="Projeler & Girişimler",calendarMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);
+let moversExpanded={risers:false,fallers:false};
 const quickTemplates=[
 {label:"📚 Kitap okudum +5",sector:"reading",delta:5},
 {label:"💪 Spor yaptım +10",sector:"fitness",delta:10},
@@ -443,7 +446,7 @@ function render(){
  $("stocks").innerHTML=sectorsList().filter(s=>(!$("groupFilter").value||(s.group||"Özel")===$("groupFilter").value)&&((s.name+" "+s.ticker).toLocaleLowerCase("tr-TR").includes(($("sectorSearch")?.value||"").toLocaleLowerCase("tr-TR")))).map(s=>{let d=bySector[s.id];const price=currentOf(s.id);return `<div class="stock ${selectedSector===s.id?"selected":""}" data-sector="${esc(s.id)}" tabindex="0" role="button" aria-label="${esc(s.name)} hissesini puanla"><div class="stock-icon">${s.icon}</div><div class="stock-main"><div class="stock-name">${s.name}</div><div class="stock-sub">${esc(s.group||"Özel")} · ${s.ticker} • ${d.count} işlem</div></div><div class="stock-value ${d.sum>=0?"up":"down"}">${num(price)}<div class="small ${d.sum>=0?"up":"down"}">${signed(d.sum)} değişim</div></div></div>`}).join("");
  $("records").innerHTML=rows.length?rows.slice().reverse().map(t=>{let s=sectorsList().find(x=>x.id===t.sector);return `<tr><td>${new Date(t.time).toLocaleString("tr-TR")}</td><td>${s?esc(s.ticker):"DGR"}</td><td title="${esc(t.detail||"")}">${esc(t.description)}</td><td class="${t.delta>=0?"up":"down"}">${signed(t.delta)}</td><td>${num(t.level)}</td><td><button class="danger" data-remove="${esc(t.id)}">Sil</button></td></tr>`}).join(""):`<tr><td colspan="6" class="empty">Henüz işlem yok. İlk işlemini eklediğinde grafik hareket edecek.</td></tr>`;
  paint("recordCount",rows.length+" kayıt");
- $("customSectors").innerHTML=data.customSectors.map(t=>`<div class="stock"><div class="stock-main"><b>${esc(t.icon)} ${esc(t.name)}</b><div class="stock-sub">${esc(t.ticker)}</div></div><button type="button" class="danger" data-sector-remove="${esc(t.id)}">Sil</button></div>`).join("");
+ $("customSectors").innerHTML=data.customSectors.map(t=>`<div class="stock"><div class="stock-main"><b>${esc(t.icon)} ${esc(t.name)}</b><div class="stock-sub">${esc(t.ticker)} · Başlangıç ${num(initialOf(t.id))}</div></div><button type="button" class="danger" data-sector-remove="${esc(t.id)}">Sil</button></div>`).join("");
  $("sector").innerHTML=sectorsList().map(t=>`<option value="${esc(t.id)}">${esc(t.icon)} ${esc(t.name)} (${esc(t.ticker)})</option>`).join("");
  const gains=rows.filter(t=>t.delta>0),losses=rows.filter(t=>t.delta<0),best=rows.length?rows.reduce((a,b)=>a.delta>b.delta?a:b):null;
  $("insights").innerHTML=`<div class="stock"><div class="stock-main">Pozitif işlemler</div><b class="up">${gains.length}</b></div><div class="stock"><div class="stock-main">Negatif işlemler</div><b class="down">${losses.length}</b></div><div class="stock"><div class="stock-main">En yüksek tek artış</div><b>${best&&best.delta>0?signed(best.delta):"—"}</b></div><div class="stock"><div class="stock-main">İşlem başına ortalama</div><b>${rows.length?signed(change/rows.length):"—"}</b></div>`;
@@ -481,16 +484,19 @@ $("quickButtons").addEventListener("click",e=>{let b=e.target.closest("[data-qui
 if(Math.abs(allowed-t.delta)>0.000001){alert("Günlük ±10 puan limiti nedeniyle bu hızlı işlem eklenemiyor. Kalan: "+signed(allowed));return}
 data.trades.push({id:"quick_"+Date.now()+"_"+Math.random().toString(36).slice(2),time:localInputDate(),sector:t.sector,description:t.label,detail:"Hızlı işlem",delta:t.delta});save();showLimit()});
 $("addSector").onclick=()=>{
- const name=$("newSector").value.trim(),ticker=$("newTicker").value.trim().toUpperCase(),icon=$("newIcon").value.trim()||"📈";
+ const name=$("newSector").value.trim(),ticker=$("newTicker").value.trim().toUpperCase(),icon=$("newIcon").value.trim()||"📈",initial=Number($("newInitialPrice").value);
  if(!name||!ticker){alert("Hisse adı ve kısa kod gir.");return}
+ if(!Number.isFinite(initial)||initial<0||initial>1000){alert("Başlangıç fiyatı 0-1000 arasında olmalı.");return}
  if(sectorsList().some(s=>s.ticker.toUpperCase()===ticker)){alert("Bu kısa kod zaten kullanılıyor.");return}
- data.customSectors.push({group:$("newGroup").value||"Özel",id:"custom_"+Date.now()+"_"+Math.random().toString(36).slice(2),name,ticker,icon});
- if(save()){$("newSector").value="";$("newTicker").value="";refreshGroups()}
+ const id="custom_"+Date.now()+"_"+Math.random().toString(36).slice(2);
+ data.customSectors.push({group:$("newGroup").value||"Özel",id,name,ticker,icon});
+ data.initialPrices??={};data.initialPrices[id]=initial;
+ if(save()){$("newSector").value="";$("newTicker").value="";$("newInitialPrice").value="50";refreshGroups()}
 };
 $("customSectors").addEventListener("click",e=>{
  const b=e.target.closest("[data-sector-remove]");if(!b)return;
  if(data.trades.some(t=>t.sector===b.dataset.sectorRemove)){alert("Bu hissede kayıtlı işlem var. Önce ilgili işlemleri sil.");return}
- if(confirm("Bu gelişim hissesi silinsin mi?")){data.customSectors=data.customSectors.filter(s=>s.id!==b.dataset.sectorRemove);save();showLimit()}
+ if(confirm("Bu gelişim hissesi silinsin mi?")){data.customSectors=data.customSectors.filter(s=>s.id!==b.dataset.sectorRemove);if(data.initialPrices)delete data.initialPrices[b.dataset.sectorRemove];save();showLimit()}
 });
 $("tradeForm").addEventListener("submit",e=>{e.preventDefault();let a=Number($("amount").value),date=$("time").value,desc=$("description").value.trim();if(!Number.isFinite(a)||a<=0||!date||!Number.isFinite(Date.parse(date))){alert("Lütfen geçerli tarih ve pozitif puan gir.");return}
 if(Date.parse(date)>Date.now()+60000){alert("Gelecek tarihe işlem girilemez. Bugünü veya geçmiş bir günü seç.");return;}
@@ -567,12 +573,15 @@ function renderMovers(){
    const trades=dayTrades.filter(t=>t.sector===s.id);
    return {...s,delta:trades.reduce((sum,t)=>sum+t.delta,0),count:trades.length};
  });
- const gain=totals.filter(t=>t.delta>0).sort((a,b)=>b.delta-a.delta).slice(0,5);
- const loss=totals.filter(t=>t.delta<0).sort((a,b)=>a.delta-b.delta).slice(0,5);
+ const gainAll=totals.filter(t=>t.delta>0).sort((a,b)=>b.delta-a.delta);
+ const lossAll=totals.filter(t=>t.delta<0).sort((a,b)=>a.delta-b.delta);
+ const gain=moversExpanded.risers?gainAll:gainAll.slice(0,5);
+ const loss=moversExpanded.fallers?lossAll:lossAll.slice(0,5);
  const neutral=totals.filter(t=>t.delta===0);
  const line=t=>`<div class="stock mover-click" data-mover-sector="${esc(t.id)}" role="button" tabindex="0" aria-label="${esc(t.name)} hissesini puanla"><div class="stock-main"><b>${esc(t.icon)} ${esc(t.name)}</b><div class="stock-sub">${esc(t.ticker)} · Bugün ${t.count} işlem</div></div><b class="${t.delta>0?'up':t.delta<0?'down':'neutral-delta'}">${signed(t.delta)}</b></div>`;
- $("risers").innerHTML=gain.length?gain.map(line).join(""):'<p class="hint">Bugün henüz yükselen hisse yok.</p>';
- $("fallers").innerHTML=loss.length?loss.map(line).join(""):'<p class="hint">Bugün henüz düşen hisse yok.</p>';
+ const moreButton=(type,total,shown)=>total>5&&!moversExpanded[type]?`<button type="button" class="mover-more" data-mover-more="${type}">Devamı (${total-shown})</button>`:"";
+ $("risers").innerHTML=gain.length?gain.map(line).join("")+moreButton("risers",gainAll.length,gain.length):'<p class="hint">Bugün henüz yükselen hisse yok.</p>';
+ $("fallers").innerHTML=loss.length?loss.map(line).join("")+moreButton("fallers",lossAll.length,loss.length):'<p class="hint">Bugün henüz düşen hisse yok.</p>';
  $("moversDateNote").textContent=`${new Date().toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'})} · Günlük değişimler 00.00’da sıfırlanır; toplam puanlar korunur.`;
  $("neutralMovers").innerHTML=neutral.length?neutral.map(line).join(""):'<p class="hint">Bugün tüm hisselerde hareket var.</p>';
 }
@@ -611,11 +620,15 @@ function openMoverTrade(id){
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeMoverModal()});
 $("closeMarketTrade").addEventListener("click",closeMoverModal);
 $("movers").addEventListener("click",e=>{
+ const more=e.target.closest("[data-mover-more]");
+ if(more){moversExpanded[more.dataset.moverMore]=true;renderMovers();return}
  const item=e.target.closest("[data-mover-sector]");
  if(item)openMoverTrade(item.dataset.moverSector);
 });
 $("movers").addEventListener("keydown",e=>{
  if(e.key!=="Enter"&&e.key!==" ")return;
+ const more=e.target.closest("[data-mover-more]");
+ if(more){e.preventDefault();moversExpanded[more.dataset.moverMore]=true;renderMovers();return}
  const item=e.target.closest("[data-mover-sector]");
  if(item){e.preventDefault();openMoverTrade(item.dataset.moverSector);}
 });
