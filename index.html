@@ -239,6 +239,7 @@ body.mover-modal-open{overflow:hidden}
 <section class="card section" id="lifeNews"><h2>📰 Hayat Borsası Haberleri</h2><p class="chart-note">Haberleri tek hisseye ya da direkt HBX • Hayat Endeksi'ne bağlayabilirsin.</p><div class="field"><label for="newsStock">Haber başlığı / ilgili alan</label><select id="newsStock"></select></div><div class="field"><label for="newsText">Gelişme / haber</label><textarea id="newsText" maxlength="300" placeholder="Örneğin: HBX bugün güçlü kapandı veya OynaBak için yeni görüşme yaptım..."></textarea></div><button type="button" id="addNews">Haberi Kaydet</button><div id="newsFeed" class="news-feed"></div><p class="chart-note">Haber kaydı puanı otomatik değiştirmez; puanlamak istersen hisse işlemi yap.</p></section><section class="card section" id="dividends"><h2>🎁 Temettü • Kendime Ödül</h2><p class="chart-note">Hangi hissenin ne zaman temettü vereceğini ve sana ne ödül kazandıracağını kaydet. Hisseye basınca temettü bilgisi kartta görünür.</p><div class="field"><label for="dividendStock">Temettü verecek hisse</label><select id="dividendStock"></select></div><div class="cols"><div class="field"><label for="dividendDate">Temettü tarihi</label><input type="date" id="dividendDate"></div><div class="field"><label for="dividendText">Ne verecek?</label><input id="dividendText" maxlength="120" placeholder="Örn. kahve, yemek, küçük alışveriş"></div></div><div class="field"><label for="dividendReason">Neden verecek?</label><input id="dividendReason" maxlength="160" placeholder="Örn. hedef tamamlandı, satış görüşmesi yapıldı, düzenli spor sürdü"></div><button type="button" id="addDividend">Temettü Kaydet</button><div id="dividendFeed" class="news-feed"></div></section><section class="card section" id="quickActions"><h2>Hızlı İşlemler</h2><p class="chart-note">Tek dokunuşla puan ekle. Her işlem otomatik kaydedilir.</p><div class="quick-grid" id="quickButtons"></div></section>
 <section class="card section" id="marketIndexSelector"><div class="head"><h2>Endeks Seçimi</h2><span class="hint">Piyasa ekranında iki ayrı endeks</span></div><div class="index-switch-grid" id="indexSwitchCards"></div></section>
 <section class="card section" id="peopleIndex"><div class="head"><h2>👥 İnsan Endeksi</h2><span class="hint" id="peopleIndexHint">Ayrı sosyal piyasa</span></div><div class="v12-metrics" id="peopleMetrics"></div></section>
+<section class="card section" id="peoplePerformance"><div class="head"><h2>İnsan Endeksi / Performans Grafiği</h2><div class="ranges" id="peopleRanges"><button class="ghost" data-people-days="1">1G</button><button class="ghost" data-people-days="7">1H</button><button class="ghost active" data-people-days="30">1A</button><button class="ghost" data-people-days="90">3A</button><button class="ghost" data-people-days="365">1Y</button><button class="ghost" data-people-days="0">Tümü</button></div></div><div class="chart-wrap"><svg id="peopleGraph" viewBox="0 0 800 300" preserveAspectRatio="none" role="img" aria-label="İnsan Endeksi zaman grafiği"><text x="30" y="150" fill="#74839b">Grafik hazırlanıyor...</text></svg></div><div class="chart-note" id="peopleChartInfo">Başlangıç kişi puanları ve insan işlemlerinden otomatik oluşturulur.</div></section>
 <section class="card section" id="peopleMovers"><h2>📊 Günün İnsan Hareketleri</h2><p class="chart-note" id="peopleMoversDateNote">İnsan Endeksi hareketleri de günlük olarak ayrı takip edilir.</p><div class="cols"><div><h3 class="up">▲ En Çok Artanlar</h3><div id="peopleRisers"></div></div><div><h3 class="down">▼ En Çok Düşenler</h3><div id="peopleFallers"></div></div></div><div class="neutral-movers-wrap"><h3>➖ Bugün Değişmeyenler <span class="muted-label">(0 puan)</span></h3><div id="peopleNeutral" class="neutral-movers-grid"></div></div></section>
 <section class="card section" id="peoplePortfolio"><div class="head"><h2>Portföyüm • İnsan Alanları</h2><span class="hint">Kişi bazlı puan performansı</span></div><p class="chart-note">Kişiye basınca düzenleme ve yükseliş/düşüş ekranı açılır.</p><div id="peopleStocks"></div><div id="peopleTradeBox" class="market-trade" hidden><div class="head"><h3 id="peopleTradeTitle">Kişiyi Puanla</h3><button type="button" class="ghost" id="closePeopleTrade">Kapat ×</button></div><form id="peopleTradeForm"><div class="cols"><div class="field"><label for="peopleDate">Tarih ve saat</label><input type="datetime-local" id="peopleDate" required></div><div class="field"><label for="peoplePerson">Kişi</label><select id="peoplePerson"></select></div></div><div class="cols"><div class="field"><label for="peopleSide">İşlem yönü</label><select id="peopleSide"><option value="1">▲ Yükseliş</option><option value="-1">▼ Düşüş</option></select></div><div class="field"><label for="peopleAmount">Puan miktarı</label><input type="number" id="peopleAmount" min="0.01" max="100" step="0.01" value="5" required></div></div><div class="field"><label for="peopleNote">Sebep / not</label><input id="peopleNote" maxlength="160" placeholder="Örn. destek oldu, moralimi düşürdü, güzel konuşma geçti"></div><button type="submit" style="width:100%" id="savePeopleScore">İnsan İşlemini Kaydet</button></form></div><div class="rule"></div><h3>Başlangıç Puanları</h3><div id="peopleBaseEditor"></div><button type="button" class="ghost" id="savePeopleBase">Başlangıç Puanlarını Kaydet</button></section>
 <section class="card section" id="peopleHistoryCard"><div class="head"><h2>İnsan İşlem Geçmişi</h2><button type="button" class="ghost" id="resetPeopleRound">İnsan Endeksini Sıfırla</button></div><div id="peopleHistory" class="people-history"></div></section>
@@ -321,7 +322,7 @@ function formatDividendDate(value){
  const d=new Date(value+"T00:00:00");
  return Number.isNaN(d.getTime())?value:d.toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"});
 }
-let days=30,stockDays=30,selectedSector="iya",selectedPerson="ayberk",selectedFund="Projeler & Girişimler",selectedMarketIndex="hbx",calendarMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);
+let days=30,stockDays=30,peopleDays=30,selectedSector="iya",selectedPerson="ayberk",selectedFund="Projeler & Girişimler",selectedMarketIndex="hbx",calendarMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);
 let moversExpanded={risers:false,fallers:false};
 const quickTemplates=[
 {label:"📚 Kitap okudum +5",sector:"reading",delta:5},
@@ -507,6 +508,48 @@ function peopleTodayDelta(){
  const today=dateKey(new Date());
  return (data.peopleTrades||[]).filter(t=>dateKey(new Date(t.time))===today&&Date.parse(t.time)<=Date.now()).reduce((a,t)=>a+t.delta,0)/PEOPLE_ORDER.length;
 }
+function peopleTimeline(){
+ let total=peopleIndexBase();
+ return [...(data.peopleTrades||[])].sort((a,b)=>Date.parse(a.time)-Date.parse(b.time)||a.id.localeCompare(b.id)).map(t=>({...t,level:(total+=t.delta/PEOPLE_ORDER.length)}));
+}
+function peopleChart(){
+ const rows=peopleTimeline(),svg=$("peopleGraph");
+ if(!svg)return;
+ const base=peopleIndexBase(),now=Date.now(),start=peopleDays?now-peopleDays*86400000:null;
+ let prior=base;for(const t of rows){if(start!==null&&Date.parse(t.time)<start)prior=t.level}
+ let pts=[];
+ if(start!==null)pts.push({x:start,y:prior});
+ else pts.push({x:rows.length?Math.min(Date.parse(rows[0].time)-3600000,now-3600000):now-86400000,y:base});
+ for(const t of rows){const x=Date.parse(t.time);if(x<=now&&(start===null||x>=start))pts.push({x,y:t.level})}
+ const past=rows.filter(t=>Date.parse(t.time)<=now),currentNow=past.length?past[past.length-1].level:base;
+ pts.push({x:now,y:currentNow});
+ pts=pts.filter(p=>p.x<=now);
+ pts[pts.length-1]={x:now,y:currentNow};
+ const minX=Math.min(...pts.map(p=>p.x)),maxX=Math.max(now,minX+3600000);
+ let minY=Math.min(...pts.map(p=>p.y)),maxY=Math.max(...pts.map(p=>p.y));
+ const margin=Math.max((maxY-minY)*.15,2);minY-=margin;maxY+=margin;
+ const X=x=>62+(x-minX)/(maxX-minX)*710,Y=y=>250-(y-minY)/(maxY-minY)*216;
+ let grid="",path="";
+ for(let i=0;i<5;i++){const y=34+i*54,v=maxY-(maxY-minY)*i/4;grid+=`<line x1="62" x2="775" y1="${y}" y2="${y}" stroke="#e7edf5" stroke-dasharray="4 5"/><text x="55" y="${y+4}" font-size="12" text-anchor="end" fill="#7a879c">${esc(num(v))}</text>`}
+ pts.forEach((p,i)=>{path+=(i?" L":"M")+X(p.x).toFixed(2)+" "+Y(p.y).toFixed(2)});
+ const rising=currentNow>=base,col=rising?"#00a878":"#e74f6b",last=pts[pts.length-1],area=path+` L ${X(last.x).toFixed(2)} 250 L ${X(pts[0].x).toFixed(2)} 250 Z`;
+ svg.innerHTML=`<defs><linearGradient id="peopleShade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity=".2"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient></defs>${grid}<path d="${area}" fill="url(#peopleShade)"/><path d="${path}" fill="none" stroke="${col}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${X(last.x)}" cy="${Y(last.y)}" r="5" fill="${col}" stroke="white" stroke-width="2"/><text x="62" y="284" fill="#7a879c" font-size="12">${new Date(minX).toLocaleDateString("tr-TR")}</text><text x="775" y="284" fill="#7a879c" font-size="12" text-anchor="end">${new Date(now).toLocaleDateString("tr-TR")}</text>`;
+ svg.onpointermove=ev=>{
+  const rect=svg.getBoundingClientRect(),px=(ev.clientX-rect.left)/rect.width*800;
+  let nearest=pts[0],dist=Infinity;
+  for(const p of pts){const d=Math.abs(X(p.x)-px);if(d<dist){dist=d;nearest=p}}
+  const x=X(nearest.x),y=Y(nearest.y),date=new Date(nearest.x).toLocaleString("tr-TR",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}),label=`${date} • ${num(nearest.y)} puan`;
+  svg.querySelector("#people-point-tooltip")?.remove();
+  const tx=Math.max(90,Math.min(710,x));
+  svg.insertAdjacentHTML("beforeend",`<g id="people-point-tooltip" pointer-events="none"><line x1="${x}" y1="25" x2="${x}" y2="250" stroke="#8295b6" stroke-dasharray="4 4"/><circle cx="${x}" cy="${y}" r="6" fill="${col}" stroke="white" stroke-width="2"/><rect x="${tx-89}" y="3" width="178" height="28" rx="8" fill="#17213a"/><text x="${tx}" y="22" fill="white" font-size="12" text-anchor="middle">${esc(label)}</text></g>`);
+  paint("peopleChartInfo",`Seçilen nokta: ${label}`);
+ };
+ svg.onpointerleave=()=>{svg.querySelector("#people-point-tooltip")?.remove()};
+ svg.onpointerdown=svg.onpointermove;
+ svg.onclick=svg.onpointermove;
+ paint("peopleChartInfo",`${peopleDays?peopleDays+" günlük":"Tüm zamanların"} görünüm • Grafiğe dokunarak kişi endeksini incele • Güncel: ${num(currentNow)}`);
+ document.querySelectorAll("#peopleRanges button").forEach(b=>b.classList.toggle("active",Number(b.dataset.peopleDays)===peopleDays));
+}
 function peopleTodayByPerson(){
  const today=dateKey(new Date());
  return Object.fromEntries(PEOPLE_ORDER.map(p=>[p.id,(data.peopleTrades||[]).filter(t=>t.person===p.id&&dateKey(new Date(t.time))===today&&Date.parse(t.time)<=Date.now()).reduce((a,t)=>a+t.delta,0)]));
@@ -515,6 +558,7 @@ function renderPeopleIndex(){
  const base=peopleIndexBase(),now=peopleIndexNow(),change=now-base,today=peopleTodayDelta();
  $("peopleIndexHint").textContent=`İnsan Endeksi: ${num(now)} • ${signed(change)} toplam değişim`;
  $("peopleMetrics").innerHTML=`<div><small>İnsan Endeksi</small><b>${num(now)}</b></div><div><small>Toplam değişim</small><b class="${change>=0?"up":"down"}">${signed(change)}</b></div><div><small>Bugün</small><b class="${today>=0?"up":"down"}">${signed(today)}</b></div>`;
+ peopleChart();
  const todayMap=peopleTodayByPerson();
  const line=p=>{const current=peopleCurrentOf(p.id),delta=current-peopleBaseOf(p.id),today=todayMap[p.id]||0;return `<div class="stock mover-click ${selectedPerson===p.id?"selected":""}" data-person-sector="${esc(p.id)}" role="button" tabindex="0"><div class="stock-icon">👤</div><div class="stock-main"><div class="stock-name">${esc(p.name)}</div><div class="stock-sub">${esc(p.icon)} • Bugün ${signed(today)}</div></div><div class="stock-value ${delta>=0?"up":"down"}">${num(current)}<div class="small ${delta>=0?"up":"down"}">${signed(delta)} değişim</div></div></div>`};
  $("peopleStocks").innerHTML=PEOPLE_ORDER.map(line).join("");
@@ -672,6 +716,7 @@ if(save()){showLimit();$("description").value="";$("detail").value="";$("time").
 });
 $("records").addEventListener("click",e=>{let b=e.target.closest("[data-remove]");if(b&&confirm("Bu işlemi silmek istiyor musun?")){data.trades=data.trades.filter(t=>t.id!==b.dataset.remove);save();showLimit()}});
 $("ranges").addEventListener("click",e=>{let b=e.target.closest("[data-days]");if(b){days=Number(b.dataset.days);render()}});
+$("peopleRanges").addEventListener("click",e=>{let b=e.target.closest("[data-people-days]");if(b){peopleDays=Number(b.dataset.peopleDays);render()}});
 $("saveInitial").onclick=()=>alert("Başlangıç endeksi 31 hissenin ortalamasından otomatik hesaplanır.");
 $("saveTarget").onclick=()=>{let n=Number($("target").value);if(!Number.isFinite(n)||n<=0){alert("Pozitif hedef gir.");return}data.target=n;save()};
 function download(name,content,type){let blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)}
@@ -696,7 +741,7 @@ function setupScreens(){
  move("dailyClose",home);move("openingClosing",home);move("monthlyReport",home);move("calendarSection",home);move("weeklyReport",home);
  move("marketIndexSelector",market);market.appendChild(hbxPanel);market.appendChild(peoplePanel);
  hbxPanel.appendChild(performance);move("candleSection",hbxPanel);move("funds",hbxPanel);move("stockAlerts",hbxPanel);move("stockGoals",hbxPanel);hbxPanel.appendChild(movers);hbxPanel.appendChild(portfolio);
- move("peopleIndex",peoplePanel);move("peopleMovers",peoplePanel);move("peoplePortfolio",peoplePanel);move("peopleHistoryCard",peoplePanel);
+ move("peopleIndex",peoplePanel);move("peoplePerformance",peoplePanel);move("peopleMovers",peoplePanel);move("peoplePortfolio",peoplePanel);move("peopleHistoryCard",peoplePanel);
  trade.appendChild(form);move("quickActions",trade);move("lifeNews",trade);move("dividends",trade);
  for(const el of [...document.querySelectorAll(".card.section")]){
    if(!el.closest(".screen-page")&&el.id!=="journal")trade.appendChild(el);
