@@ -234,7 +234,7 @@ body.mover-modal-open{overflow:hidden}
 </section>
 <section class="card section" id="funds"><div class="head"><h2>💼 Fon Piyasası</h2><span class="hint">Otomatik hesaplanır</span></div><p class="chart-note">Fonlara ayrı puan girilmez. Fon puanı, içindeki hisselerin güncel değerlerinden otomatik hesaplanır. Ağırlıkları değiştirebilirsin.</p><div id="fundCards"></div><div id="fundDetail"></div><div class="rule"></div><h3>⚖️ Fon Ağırlıkları</h3><p class="chart-note">Varsayılan olarak fon içindeki hisseler eşit ağırlıktadır. Ağırlıkları değiştirdiğinde fon performansı ağırlıklı ortalama ile hesaplanır. Ana hayat endeksi değişmez.</p><div id="weightEditor"></div><button type="button" class="ghost" id="resetWeights">Bu Fonun Ağırlıklarını Eşitle</button></section>
 <section class="card section" id="candleSection"><div class="head"><h2>🕯️ Günlük Mum Grafiği</h2><span class="hint">Son 30 gün</span></div><div class="chart-wrap"><svg id="candleGraph" viewBox="0 0 800 250" preserveAspectRatio="none" role="img" aria-label="Günlük açılış kapanış mum grafiği"></svg></div><p class="chart-note">Yeşil mum yükselişi, kırmızı mum düşüşü gösterir. İşlem yapılmayan günlerde fiyat sabit kalır.</p></section><section class="card section" id="stockAlerts"><h2>🚨 Hisse Alarmları</h2><p class="chart-note">30 puanın altındaki hisseler otomatik olarak burada görünür.</p><div id="alertView"></div></section><section class="card section" id="stockGoals"><div class="head"><h2>🎯 Hisse Hedefleri</h2></div><p class="chart-note">Her hissenin ulaşmasını istediğin toplam puanı belirle. Puanlama yaptıkça hedef ilerlemesi otomatik güncellenir.</p><div class="cols"><div class="field"><label for="goalSector">Hisse</label><select id="goalSector"></select></div><div class="field"><label for="goalAmount">Hedef puan</label><input type="number" id="goalAmount" step="0.01" min="0.01" value="30"></div></div><button id="setStockGoal" type="button">Hisse Hedefini Kaydet</button><div id="goalList"></div></section>
-<section class="card section" id="movers"><h2>📊 Günün Hisse Hareketleri</h2><p class="chart-note" id="moversDateNote">Her gün 00.00 itibarıyla günlük değişimler sıfırdan başlar. Toplam hisse puanları ve geçmiş kayıtlar korunur.</p><div class="cols"><div><h3 class="up">▲ En Çok Artanlar</h3><div id="risers"></div></div><div><h3 class="down">▼ En Çok Düşenler</h3><div id="fallers"></div></div></div><div class="neutral-movers-wrap"><h3>➖ Bugün Değişmeyen Hisseler <span class="muted-label">(0 puan)</span></h3><div id="neutralMovers" class="neutral-movers-grid"></div></div></section>
+<section class="card section" id="movers"><h2>📊 Günün Hisse Hareketleri</h2><p class="chart-note" id="moversDateNote">Her gün 00.00 itibarıyla günlük değişimler sıfırdan başlar. Toplam hisse puanları ve geçmiş kayıtlar korunur.</p><div class="cols"><div><h3 class="up">▲ En Çok Artanlar</h3><div id="risers"></div></div><div><h3 class="down">▼ En Çok Düşenler</h3><div id="fallers"></div></div></div><div class="neutral-movers-wrap"><h3>➖ Bugün Değişmeyen Hisseler <span class="muted-label">(0 puan)</span></h3><div id="neutralMovers" class="neutral-movers-grid"></div></div><div class="rule"></div><h2>📅 Haftanın Hisse Hareketleri</h2><p class="chart-note" id="weeklyMoversNote">Bugün dahil son 7 günün puan değişimleri.</p><div class="cols"><div><h3 class="up">▲ Haftanın En Çok Yükselenleri</h3><div id="weeklyRisers"></div></div><div><h3 class="down">▼ Haftanın En Çok Düşenleri</h3><div id="weeklyFallers"></div></div></div></section>
 <section class="card section" id="lifeNews"><h2>📰 Hayat Borsası Haberleri</h2><p class="chart-note">Haberleri tek hisseye ya da direkt HBX • Hayat Endeksi'ne bağlayabilirsin.</p><div class="field"><label for="newsStock">Haber başlığı / ilgili alan</label><select id="newsStock"></select></div><div class="field"><label for="newsText">Gelişme / haber</label><textarea id="newsText" maxlength="300" placeholder="Örneğin: HBX bugün güçlü kapandı veya OynaBak için yeni görüşme yaptım..."></textarea></div><button type="button" id="addNews">Haberi Kaydet</button><div id="newsFeed" class="news-feed"></div><p class="chart-note">Haber kaydı puanı otomatik değiştirmez; puanlamak istersen hisse işlemi yap.</p></section><section class="card section" id="dividends"><h2>🎁 Temettü • Kendime Ödül</h2><p class="chart-note">Hangi hissenin ne zaman temettü vereceğini ve sana ne ödül kazandıracağını kaydet. Hisseye basınca temettü bilgisi kartta görünür.</p><div class="field"><label for="dividendStock">Temettü verecek hisse</label><select id="dividendStock"></select></div><div class="cols"><div class="field"><label for="dividendDate">Temettü tarihi</label><input type="date" id="dividendDate"></div><div class="field"><label for="dividendText">Ne verecek?</label><input id="dividendText" maxlength="120" placeholder="Örn. kahve, yemek, küçük alışveriş"></div></div><div class="field"><label for="dividendReason">Neden verecek?</label><input id="dividendReason" maxlength="160" placeholder="Örn. hedef tamamlandı, satış görüşmesi yapıldı, düzenli spor sürdü"></div><button type="button" id="addDividend">Temettü Kaydet</button><div id="dividendFeed" class="news-feed"></div></section><section class="card section" id="quickActions"><h2>Hızlı İşlemler</h2><p class="chart-note">Tek dokunuşla puan ekle. Her işlem otomatik kaydedilir.</p><div class="quick-grid" id="quickButtons"></div></section>
 <section class="card section" id="marketIndexSelector"><div class="head"><h2>Endeks Seçimi</h2><span class="hint">Piyasa ekranında iki ayrı endeks</span></div><div class="index-switch-grid" id="indexSwitchCards"></div></section>
 <section class="card section" id="peopleIndex"><div class="head"><h2>👥 İnsan Endeksi</h2><span class="hint" id="peopleIndexHint">Ayrı sosyal piyasa</span></div><div class="v12-metrics" id="peopleMetrics"></div></section>
@@ -322,7 +322,7 @@ function formatDividendDate(value){
  return Number.isNaN(d.getTime())?value:d.toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"});
 }
 let days=30,stockDays=30,peopleDays=30,selectedSector="iya",selectedPerson="ayberk",selectedFund="Projeler & Girişimler",selectedMarketIndex="hbx",calendarMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);
-let moversExpanded={risers:false,fallers:false};
+let moversExpanded={risers:false,fallers:false,weeklyRisers:false,weeklyFallers:false};
 const quickTemplates=[
 {label:"📚 Kitap okudum +5",sector:"reading",delta:5},
 {label:"💪 Spor yaptım +10",sector:"fitness",delta:10},
@@ -799,6 +799,33 @@ function renderMovers(){
  $("fallers").innerHTML=loss.length?loss.map(line).join("")+moreButton("fallers",lossAll.length,loss.length):'<p class="hint">Bugün henüz düşen hisse yok.</p>';
  $("moversDateNote").textContent=`${new Date().toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'})} · Günlük değişimler 00.00’da sıfırlanır; toplam puanlar korunur.`;
  $("neutralMovers").innerHTML=neutral.length?neutral.map(line).join(""):'<p class="hint">Bugün tüm hisselerde hareket var.</p>';
+ renderWeeklyMovers();
+}
+function renderWeeklyMovers(){
+ // Takvim günlerine göre bugün ve önceki 6 günü kapsar; gelecek tarihli işlemler sayılmaz.
+ const now=new Date(),start=new Date(now.getFullYear(),now.getMonth(),now.getDate()-6);
+ const weeklyTotals=new Map(sectorsList().map(s=>[s.id,{...s,delta:0,count:0}]));
+ for(const trade of data.trades){
+  const date=new Date(trade.time);
+  if(!Number.isFinite(date.getTime())||date<start||date>now)continue;
+  const item=weeklyTotals.get(trade.sector);
+  if(!item)continue;
+  const delta=Number(trade.delta);
+  if(!Number.isFinite(delta))continue;
+  item.delta+=delta;
+  item.count++;
+ }
+ const all=[...weeklyTotals.values()];
+ const risers=all.filter(s=>s.delta>0).sort((a,b)=>b.delta-a.delta||a.name.localeCompare(b.name,'tr'));
+ const fallers=all.filter(s=>s.delta<0).sort((a,b)=>a.delta-b.delta||a.name.localeCompare(b.name,'tr'));
+ const line=t=>`<div class="stock mover-click" data-mover-sector="${esc(t.id)}" role="button" tabindex="0" aria-label="${esc(t.name)} hissesini puanla"><div class="stock-main"><b>${esc(t.icon)} ${esc(t.name)}</b><div class="stock-sub">${esc(t.ticker)} · 7 günde ${t.count} işlem</div></div><b class="${t.delta>0?'up':'down'}">${signed(t.delta)}</b></div>`;
+ const renderList=(id,items,expanded,empty)=>{
+  const shown=expanded?items:items.slice(0,5);
+  $(id).innerHTML=shown.length?shown.map(line).join("")+(items.length>5&&!expanded?`<button type="button" class="mover-more" data-mover-more="${id}">Devamı (${items.length-5})</button>`:""):`<p class="hint">${empty}</p>`;
+ };
+ renderList("weeklyRisers",risers,moversExpanded.weeklyRisers,"Son 7 günde yükselen hisse yok.");
+ renderList("weeklyFallers",fallers,moversExpanded.weeklyFallers,"Son 7 günde düşen hisse yok.");
+ $("weeklyMoversNote").textContent=`${start.toLocaleDateString('tr-TR',{day:'numeric',month:'short'})} – ${now.toLocaleDateString('tr-TR',{day:'numeric',month:'short',year:'numeric'})} · Bugün dahil son 7 gün; hisse puanları ve geçmiş değişmez.`;
 }
 // Günlük hareket listelerindeki her hisse, mevcut puanlama formunu açar.
 const marketTradeOriginalParent=$("marketTrade").parentNode;
