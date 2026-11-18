@@ -7,7 +7,7 @@
 <meta name="description" content="Kişisel gelişim hisselerini, alışkanlıklarını, hedeflerini ve ilerlemeni takip et.">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/svg+xml" href="./icon.svg">
-<link rel="stylesheet" href="./terminal.css">
+
 <style>
 :root{--bg:#f4f7fc;--card:#fff;--ink:#17213a;--muted:#75839b;--line:#e5eaf3;--blue:#4169ef;--green:#00a878;--red:#e74f6b;--shadow:0 6px 24px #1b34520b}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);font:14px system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink)}
@@ -192,6 +192,7 @@ body.mover-modal-open{overflow:hidden}
 #marketTrade.mover-modal #marketTradeNextHint{color:#aef0cb}
 #marketTradeNextHint{line-height:1.5;margin:11px 0 0}
 </style>
+<link rel="stylesheet" href="./terminal.css">
 </head>
 <body>
 
@@ -964,7 +965,7 @@ setupScreens();
 showLimit();
 
 </script>
-<script defer src="./terminal.js"></script>
+<script src="./terminal.js"></script>
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
 import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged,setPersistence,browserLocalPersistence} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
