@@ -163,3 +163,6 @@ body.pro-detail-open{overflow:hidden}
 @media print{
  #pro-market-top,#pro-sector-section,#pro-stock-detail{display:none!important}
 }
+
+/* The pro chart replaces legacy duplicate HBX charts; underlying data and calculators remain intact. */
+#screen-market #performance,#screen-market #candleSection{display:none!important}
