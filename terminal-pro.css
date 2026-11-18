@@ -1,0 +1,165 @@
+/* Hayat Borsam Pro Terminal — market charts, sectors and stock profile */
+.pro-market-header{display:flex;gap:12px;justify-content:space-between;align-items:center;padding:18px 20px;margin:0 0 14px;background:#fff;border:1px solid var(--line);border-radius:16px}
+.pro-market-header h2{margin:4px 0 0;font-size:19px;font-weight:850;letter-spacing:-.5px}
+.pro-eyebrow{text-transform:uppercase;letter-spacing:.11em;font-size:10px;font-weight:800;color:#66809e}
+.pro-switch{display:flex;gap:4px;padding:4px;background:#eef3fa;border-radius:12px}
+.pro-switch button{min-height:38px;padding:8px 16px;background:transparent;color:#5b6f89;font-size:12px}
+.pro-switch button.pro-active{background:#fff;color:#1d54bd;box-shadow:0 2px 9px #233e5c1a}
+.pro-market-mode .pro-market-only[hidden],.pro-sectors-only[hidden]{display:none!important}
+#pro-market-top{margin:0 0 14px}
+#pro-market-top .pro-chart-card{margin:0}
+#screen-market.pro-sectors-active>#terminal-market-prelude,
+#screen-market.pro-sectors-active>#marketIndexSelector,
+#screen-market.pro-sectors-active>.market-index-panel{display:none!important}
+#screen-market.pro-sectors-active>#pro-market-top .pro-market-only{display:none!important}
+#screen-market:not(.pro-sectors-active)>#pro-sector-section{display:none!important}
+.pro-chart-card{padding:18px 19px 15px;overflow:hidden}
+.pro-chart-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;margin-bottom:12px}
+.pro-chart-head h3{margin:3px 0 4px;font-size:17px;letter-spacing:-.3px}
+.pro-chart-price{font-size:28px;font-weight:850;letter-spacing:-.9px;font-variant-numeric:tabular-nums}
+.pro-chart-change{font-size:12px;font-weight:800;padding:6px 8px;border-radius:8px;background:#edf8f2;color:#077858}
+.pro-chart-change.pro-neg{color:#b83d55;background:#fff1f3}
+.pro-chart-head p{color:var(--muted);font-size:11px;margin:5px 0}
+.pro-chart-controls{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid #ebeff5;border-bottom:1px solid #ebeff5;padding:10px 0}
+.pro-button-group{display:flex;gap:3px;align-items:center;flex-wrap:wrap;background:#f1f5fa;padding:3px;border-radius:11px}
+.pro-button-group button{padding:7px 9px;min-height:31px;line-height:1;font-size:11px;background:transparent;color:#566b85;border-radius:8px}
+.pro-button-group button.pro-active{background:#fff;box-shadow:0 1px 5px #20365815;color:#194dbe}
+.pro-indicators{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.pro-indicators button{display:flex;align-items:center;gap:6px;background:#f3f6fb;color:#63748b;font-size:11px;padding:7px 9px;min-height:30px;border:1px solid #e6ebf4}
+.pro-indicators button.pro-active{background:#e9f3ff;color:#2054ba;border-color:#cbdcf8}
+.pro-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+.pro-chart-body{position:relative;min-height:290px;background:linear-gradient(#fff,#fcfdff)}
+.pro-graph{display:block;width:100%;height:auto;min-height:260px;overflow:visible;touch-action:pan-y}
+.pro-graph .pro-gridline{stroke:#e7edf4;stroke-width:1;stroke-dasharray:3 5}
+.pro-graph .pro-axis{font:11px system-ui,sans-serif;fill:#7f8da1}
+.pro-graph .pro-crosshair{stroke:#6285b3;stroke-width:1;stroke-dasharray:4 4;pointer-events:none}
+.pro-graph .pro-region{fill:transparent;cursor:crosshair}
+.pro-tooltip{display:flex;align-items:center;flex-wrap:wrap;gap:7px 14px;min-height:33px;background:#f5f8fd;border:1px solid #ebeff7;border-radius:9px;padding:8px 11px;margin-top:0;font-size:11px;color:#516783;font-variant-numeric:tabular-nums}
+.pro-tooltip b{font-weight:800;color:#263e5d}
+.pro-chart-legend{display:flex;gap:11px;flex-wrap:wrap;font-size:10px;color:#73859a;margin:7px 0}
+.pro-chart-stats{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin:10px 0 0}
+.pro-chart-stats>div{background:#f6f8fc;border:1px solid #ecf0f6;border-radius:10px;padding:11px 10px;min-width:0}
+.pro-chart-stats small{display:block;color:#718198;font-size:10px;margin-bottom:6px}
+.pro-chart-stats b{display:block;font-size:14px;font-weight:800;color:#273d5c;word-break:break-word;font-variant-numeric:tabular-nums}
+.pro-chart-note{font-size:11px;line-height:1.55;color:#8291a5;margin:12px 0 0}
+.pro-sector-layout{display:grid;grid-template-columns:minmax(230px,310px) minmax(0,1fr);gap:14px}
+.pro-sector-side{padding:14px}
+.pro-sector-side h3,.pro-sector-details h3{font-size:15px;font-weight:850;margin:0 0 10px}
+.pro-sector-link{display:flex;align-items:center;gap:10px;text-align:left;background:#fff;color:#344a67;padding:13px 11px;border:1px solid #edf0f6;margin:4px 0;width:100%;border-radius:11px;min-height:55px}
+.pro-sector-link span{flex:1;min-width:0;font-size:12px;font-weight:750}
+.pro-sector-link small{color:#70819a;font-size:10px;display:block;margin-top:3px;font-weight:500}
+.pro-sector-link b{font-size:13px}
+.pro-sector-link.pro-active{background:#ecf4ff;color:#204f9f;border-color:#c4d9fb}
+.pro-sector-details{min-width:0;display:flex;flex-direction:column;gap:14px}
+.pro-sector-details>.card{margin:0}
+.pro-sector-heading{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.pro-sector-heading h2{font-size:21px;margin:5px 0}
+.pro-sector-heading p{font-size:11px;color:var(--muted);margin:0}
+.pro-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:14px}
+.pro-kpi{background:#f6f8fc;border:1px solid #e8edf4;border-radius:11px;padding:12px}
+.pro-kpi small{display:block;font-size:11px;color:#6d8198;margin-bottom:7px}
+.pro-kpi strong{font-size:19px;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.pro-sector-leaders{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pro-surface{background:#fff;border:1px solid var(--line);border-radius:15px;padding:16px}
+.pro-surface h3{font-size:14px;font-weight:800;margin:0 0 10px}
+.pro-sector-stocks{display:grid;gap:8px}
+.pro-sector-stock{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(75px,.7fr) minmax(85px,.8fr) auto;align-items:center;gap:9px;min-width:0;padding:11px 12px;border:1px solid #e8edf4;border-radius:11px;background:#fbfcff}
+.pro-sector-stock .main{min-width:0}
+.pro-sector-stock .main strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px}
+.pro-sector-stock small{color:#71839b;font-size:10px}
+.pro-sector-stock .price,.pro-sector-stock .delta{text-align:right;font-variant-numeric:tabular-nums;font-size:12px;font-weight:800}
+.pro-sector-stock button{min-height:32px;padding:7px 9px;font-size:11px}
+.pro-activity{display:grid;gap:7px}
+.pro-activity-row{display:flex;gap:8px;align-items:center;justify-content:space-between;border-bottom:1px solid #ecf0f5;padding:8px 0;font-size:12px}
+.pro-activity-row:last-child{border-bottom:0}
+.pro-activity-row span{flex:1;min-width:0;font-weight:650}
+.pro-activity-row small{font-size:11px;color:#72839a}
+.pro-return-positive{color:#078960}
+.pro-return-negative{color:#ca415c}
+.pro-return-neutral{color:#65758b}
+.pro-detail-overlay{position:fixed;inset:0;z-index:9000;background:#f5f7fb;overflow-y:auto;overscroll-behavior:contain}
+.pro-detail-overlay[hidden]{display:none!important}
+body.pro-detail-open{overflow:hidden}
+.pro-detail-shell{width:min(1180px,100%);margin:0 auto;padding:20px 18px 80px}
+.pro-detail-top{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:16px 19px;margin-bottom:14px}
+.pro-detail-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.pro-back{background:#eef3fb!important;color:#28496f!important;font-size:12px;min-height:40px;padding:9px 14px}
+.pro-detail-heading{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;flex-wrap:wrap;margin-top:17px}
+.pro-detail-heading h1{font-size:clamp(21px,3vw,30px);letter-spacing:-.8px;margin:4px 0}
+.pro-detail-heading .info{font-size:12px;color:#7a8a9e}
+.pro-detail-price{font-size:30px;font-weight:850;letter-spacing:-1px;text-align:right}
+.pro-detail-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.pro-detail-actions button{min-height:38px;font-size:12px;padding:9px 13px}
+.pro-detail-nav{position:sticky;top:0;z-index:2;display:flex;gap:5px;overflow-x:auto;scrollbar-width:thin;background:#fff;border:1px solid var(--line);border-radius:13px;padding:7px;margin:0 0 14px;box-shadow:0 4px 12px #1b2f4910}
+.pro-detail-nav button{flex:1;min-width:max-content;background:transparent;color:#647991;padding:11px 14px;font-size:12px;min-height:39px}
+.pro-detail-nav button.pro-active{background:#ebf3ff;color:#1b53b7}
+.pro-detail-content{display:grid;gap:14px}
+.pro-detail-content>.card{margin:0}
+.pro-detail-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr);gap:14px}
+.pro-stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.pro-detail-panel{background:#fff;border:1px solid var(--line);border-radius:15px;padding:18px}
+.pro-detail-panel h3{font-size:15px;margin:0 0 13px;font-weight:850}
+.pro-detail-row{display:flex;justify-content:space-between;align-items:start;gap:12px;padding:12px 0;border-bottom:1px solid #e9edf4}
+.pro-detail-row:last-child{border-bottom:0}
+.pro-detail-row strong{font-size:12px}
+.pro-detail-row small{display:block;color:#73839a;font-size:11px;margin-top:4px}
+.pro-detail-row .value{text-align:right;font-variant-numeric:tabular-nums;font-weight:800;font-size:12px}
+.pro-detail-row button{min-height:35px;padding:8px 10px;font-size:11px}
+.pro-detail-notearea{width:100%;min-height:220px;resize:vertical;font-size:14px;line-height:1.6;border-radius:11px;background:#fafcff}
+.pro-detail-notefoot{display:flex;justify-content:space-between;align-items:center;margin-top:9px;gap:12px}
+.pro-detail-notefoot small{color:#7a899c}
+.pro-empty{padding:20px 0;font-size:12px;color:#75859b}
+.pro-detail-tag{display:inline-flex;background:#f0f4fa;border-radius:8px;padding:6px 10px;font-size:11px;color:#52657d;font-weight:650}
+.pro-detail-tag.pro-done{background:#eaf7f1;color:#067b59}
+.pro-rank-layout{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pro-rank-table{display:grid;gap:7px}
+.pro-rank-table button{display:flex;align-items:center;gap:7px;justify-content:space-between;width:100%;background:#f8fafe;color:#273b56;border:1px solid #e9edf3;border-radius:9px;text-align:left;padding:10px}
+.pro-rank-table button small{color:#74849a;font-size:10px}
+.pro-sector-select{display:none}
+.pro-volume-note{margin-top:7px;color:#7b8ba0;font-size:10px}
+@media(max-width:1000px){
+ .pro-chart-stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .pro-sector-layout{grid-template-columns:230px minmax(0,1fr)}
+ .pro-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:760px){
+ .pro-market-header{padding:14px;flex-wrap:wrap}
+ .pro-market-header h2{font-size:17px}
+ .pro-switch{width:100%}
+ .pro-switch button{flex:1}
+ .pro-sector-layout{display:block}
+ .pro-sector-side{padding:12px;margin-bottom:12px}
+ .pro-sector-side .pro-sector-list{display:none}
+ .pro-sector-select{display:block;width:100%;min-height:46px;font-size:14px}
+ .pro-detail-grid{grid-template-columns:1fr}
+ .pro-stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .pro-sector-leaders{grid-template-columns:1fr}
+ .pro-chart-stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .pro-chart-head{align-items:flex-start}
+ .pro-chart-controls{gap:8px}
+ .pro-button-group button{padding:7px 9px;font-size:11px}
+ .pro-detail-shell{padding:9px 9px 120px}
+ .pro-detail-top{padding:13px;border-radius:13px}
+ .pro-detail-price{text-align:left;font-size:25px}
+ .pro-detail-heading{gap:8px}
+ .pro-detail-nav{border-radius:11px;padding:4px}
+ .pro-detail-nav button{padding:9px 11px;font-size:11px}
+ .pro-detail-panel{padding:14px}
+}
+@media(max-width:480px){
+ .pro-chart-card{padding:13px 10px}
+ .pro-chart-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+ .pro-chart-body{min-height:225px}
+ .pro-graph{min-height:215px}
+ .pro-sector-stock{grid-template-columns:minmax(0,1fr) 72px auto;gap:5px;padding:10px 8px}
+ .pro-sector-stock .delta{grid-column:2;grid-row:2}
+ .pro-sector-stock button{grid-column:3;grid-row:1/span 2}
+ .pro-sector-stock .price{font-size:11px}
+ .pro-kpis{gap:6px}
+ .pro-detail-shell{padding-top:6px}
+ .pro-detail-nav{position:sticky;top:0}
+ .pro-detail-actions button{flex:1}
+}
+@media print{
+ #pro-market-top,#pro-sector-section,#pro-stock-detail{display:none!important}
+}
