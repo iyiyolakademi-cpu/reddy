@@ -93,7 +93,7 @@ function actions(e){
  const target=e.target.closest("[data-open-screen],[data-sector-detail],[data-t-watch],[data-t-trade],[data-t-task],[data-t-task-delete],[data-t-goal],[data-t-goal-delete],[data-t-note]");
  if(!target)return;
  if(target.hasAttribute("data-open-screen")){window.proShowScreen(target.dataset.openScreen);return;}
- if(target.hasAttribute("data-sector-detail")){showStock(target.dataset.sectorDetail);return;}
+ if(target.hasAttribute("data-sector-detail")){if(window.HayatBorsamPro?.openStock)window.HayatBorsamPro.openStock(target.dataset.sectorDetail);else showStock(target.dataset.sectorDetail);return;}
  if(target.hasAttribute("data-t-watch")){toggleWatch(target.dataset.tWatch);return;}
  if(target.hasAttribute("data-t-trade")){const id=target.dataset.tTrade;closeModal();window.proShowScreen("market");openMoverTrade(id);return;}
  if(target.hasAttribute("data-t-task")){toggleTask(target.dataset.tTask);return;}
@@ -110,6 +110,7 @@ function renderTerminal(){
  q("terminal-hero-note").textContent=stocks().length+" hisse • "+today+" günlük işlem • Gerçek para işlemi değildir";
  for(const id of ["terminal-task-sector","terminal-goal-sector"]){const el=q(id),old=el.value;el.innerHTML=sectOptions(old);if(sector(old))el.value=old;}
  renderTicker();renderHome();renderMarket();renderTasks();renderGoals();renderAlerts();renderReport();renderAwards();
+ if(window.HayatBorsamPro?.refresh)window.HayatBorsamPro.refresh();
  if(openedStock)showStock(openedStock);
 }
 function renderTicker(){
@@ -247,6 +248,6 @@ function renderAwards(){
  const badges=[["İlk İşlem",n>=1,"İlk gelişim kaydı"],["İstikrarlı Başlangıç",s>=3,"3 günlük işlem serisi"],["7 Günlük Seri",s>=7,"7 günlük işlem serisi"],["100 İşlem",n>=100,"100 gelişim kaydı"],["Hedef Tamamlandı",completed>0,"İlk gerçek hedef"],["Plan Uygulayıcısı",taskDone>=10,"10 görev tamamla"]];
  q("terminal-achievements").innerHTML=badges.map(b=>'<span class="terminal-badge '+(b[1]?"":"locked")+'" title="'+safe(b[2])+'">'+(b[1]?"🏅 ":"🔒 ")+safe(b[0])+'</span>').join("");
 }
-window.HayatBorsamTerminal={refresh:renderTerminal,openStock:showStock};
+window.HayatBorsamTerminal={refresh:renderTerminal,openStock:id=>window.HayatBorsamPro?.openStock?window.HayatBorsamPro.openStock(id):showStock(id),completeTask:toggleTask,toggleWatch};
 init();
 })();
