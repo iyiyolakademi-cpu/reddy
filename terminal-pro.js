@@ -103,7 +103,7 @@ function chartSvg(rows,view,s){
  const yy=v=>BOTTOM-(v-yMin)/span*(BOTTOM-TOP),xx=i=>rows.length===1?(L+R)/2:L+i*(R-L)/(rows.length-1);
  const xCenter=i=>rows.length===1?(L+R)/2:xx(i);
  const stroke=rows[rows.length-1].close>=rows[0].open?"#079a75":"#d04b65";
- let out='<svg class="pro-graph" viewBox="0 0 '+W+' 332" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Kişisel gelişim puanlarının tarihsel grafiği" data-pro-svg="'+view+'">';
+ let out='<svg class="pro-graph" viewBox="0 0 '+W+' 332" preserveAspectRatio="xMidYMid meet" role="img" tabindex="0" aria-label="Kişisel gelişim puanlarının tarihsel grafiği; sol ve sağ yön tuşlarıyla tarihleri inceleyebilirsiniz" data-pro-svg="'+view+'">';
  out+='<defs><linearGradient id="pro-grad-'+view+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="'+stroke+'" stop-opacity=".20"/><stop offset="100%" stop-color="'+stroke+'" stop-opacity=".005"/></linearGradient></defs>';
  for(let i=0;i<=4;i++){const y=TOP+i*(BOTTOM-TOP)/4;out+='<line x1="'+L+'" y1="'+y+'" x2="'+R+'" y2="'+y+'" class="pro-gridline"/><text x="50" y="'+(y+4)+'" class="pro-axis" text-anchor="end">'+escPro(fmt(yMax-(yMax-yMin)*i/4))+'</text>';}
  const linePath=(get,filter=true)=>{let d="";rows.forEach((r,i)=>{const val=get(r);if(val===null||!Number.isFinite(val)){if(filter)d="";return;}d+=(d?" L":"M")+xx(i).toFixed(2)+" "+yy(val).toFixed(2);});return d;};
@@ -213,7 +213,7 @@ function isCompleted(t){
  if(p==="daily")return t.logs.some(l=>l.key===today);
  if(p==="monthly")return t.logs.some(l=>l.key===today.slice(0,7));
  const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()+4-(d.getDay()||7));
- const y=d.getFullYear(),first=new Date(y,0,1);const w=Math.ceil((Math.floor((d-first)/86400000)+1)/7);
+ const y=d.getFullYear(),first=new Date(y,0,1);const w=Math.ceil((((d-first)/86400000)+1)/7);
  return t.logs.some(l=>l.key===y+"-W"+String(w).padStart(2,"0"));
 }
 function transactions(id){
