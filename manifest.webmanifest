@@ -1,0 +1,19 @@
+{
+  "name": "Hayat Borsam — Kişisel Piyasa",
+  "short_name": "Hayat Borsam",
+  "description": "Kişisel gelişim hisseleri, alışkanlıklar, görevler ve performans raporları",
+  "lang": "tr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#102341",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
