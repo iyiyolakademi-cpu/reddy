@@ -2,7 +2,12 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hayat Borsam V13 | Firebase</title>
+<title>Hayat Borsam | Terminal 2.0</title>
+<meta name="theme-color" content="#102341">
+<meta name="description" content="Kişisel gelişim hisselerini, alışkanlıklarını, hedeflerini ve ilerlemeni takip et.">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="./icon.svg">
+<link rel="stylesheet" href="./terminal.css">
 <style>
 :root{--bg:#f4f7fc;--card:#fff;--ink:#17213a;--muted:#75839b;--line:#e5eaf3;--blue:#4169ef;--green:#00a878;--red:#e74f6b;--shadow:0 6px 24px #1b34520b}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);font:14px system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink)}
@@ -190,8 +195,8 @@ body.mover-modal-open{overflow:hidden}
 </head>
 <body>
 
-<div id="authCover"><div class="card"><h2>📈 Hayat Borsam V20</h2><p>31 hissen ve günlük işlemlerin Firebase'de güvenle saklanacak.</p><p id="authMessage" class="hint">Google hesabınla giriş yap.</p><button id="googleLogin" type="button">Google ile giriş yap</button><p class="hint">Yalnızca sana ait Google hesabını kullan. İlk girişte mevcut tarayıcı kayıtlarını aktarabilirsin.</p></div></div><main class="shell">
-<header class="top"><div><div class="logo">HAYAT<span>BORSAM</span> <span style="font-size:13px;color:#7383a1;font-weight:750;letter-spacing:0">| BEKO GÜCÜ</span></div><div class="sub">Kişisel gelişim endeksin</div></div><div class="header-right"><div class="tag">● KİŞİSEL PİYASA</div><details id="firebaseMenu" class="firebase-menu"><summary title="Bulut hesabı ve eşitleme" aria-label="Bulut hesabı ve eşitleme"><span class="cloud-icon">☁️</span><span class="cloud-label">Hesap</span><span class="cloud-dot" id="cloudDot"></span></summary><div class="firebase-popover"><strong>☁️ Firebase hesabım</strong><p id="syncState" role="status" aria-live="polite">Bağlantı bekleniyor…</p><p class="cloud-note">İşlemler otomatik kaydedilir. Gerekirse manuel eşitleyebilirsin.</p><div class="cloud-actions"><button type="button" id="syncNow">↻ Eşitle</button><button type="button" id="signOutBtn" class="ghost">Çıkış yap</button></div></div></details></div></header>
+<div id="authCover"><div class="card"><h2>📈 Hayat Borsam</h2><p>31 hissen ve günlük işlemlerin Firebase'de güvenle saklanacak.</p><p id="authMessage" class="hint">Google hesabınla giriş yap.</p><button id="googleLogin" type="button">Google ile giriş yap</button><p class="hint">Yalnızca sana ait Google hesabını kullan. İlk girişte mevcut tarayıcı kayıtlarını aktarabilirsin.</p></div></div><main class="shell">
+<header class="top"><div><div class="logo">HAYAT<span>BORSAM</span> <span style="font-size:13px;color:#7383a1;font-weight:750;letter-spacing:0">| TERMINAL 2.0</span></div><div class="sub">Kişisel gelişim endeksin</div></div><div class="header-right"><div class="tag">● KİŞİSEL PİYASA</div><details id="firebaseMenu" class="firebase-menu"><summary title="Bulut hesabı ve eşitleme" aria-label="Bulut hesabı ve eşitleme"><span class="cloud-icon">☁️</span><span class="cloud-label">Hesap</span><span class="cloud-dot" id="cloudDot"></span></summary><div class="firebase-popover"><strong>☁️ Firebase hesabım</strong><p id="syncState" role="status" aria-live="polite">Bağlantı bekleniyor…</p><p class="cloud-note">İşlemler otomatik kaydedilir. Gerekirse manuel eşitleyebilirsin.</p><div class="cloud-actions"><button type="button" id="syncNow">↻ Eşitle</button><button type="button" id="signOutBtn" class="ghost">Çıkış yap</button></div></div></details></div></header>
 <section class="card section" id="marketStatus"><div class="head"><h2>📊 Piyasa Durumu</h2><span id="marketMood" class="status-chip">Yatay Piyasa</span></div><p id="marketMoodText" class="chart-note"></p></section>
 <section class="grid" id="overview">
 <div class="card"><div class="metric-label">HBX • Hayat Endeksi</div><div class="metric" id="total">100,00</div><div class="hint" id="baseText">Başlangıç: 100,00</div></div>
@@ -268,10 +273,12 @@ body.mover-modal-open{overflow:hidden}
 <div id="screen-market" class="screen-page" hidden></div>
 <div id="screen-trade" class="screen-page" hidden></div>
 <div id="screen-history" class="screen-page" hidden></div>
+<div id="screen-plan" class="screen-page" hidden></div>
+<div id="screen-menu" class="screen-page" hidden></div>
 <footer>Hayat Borsası bir kişisel alışkanlık ve motivasyon aracıdır; puanlar kişisel değerini ölçmez. Giriş yapıldığında kayıtlar Firebase Firestore ile eşitlenir; ayrıca bu tarayıcıda yerel yedek tutulur. Düzenli JSON yedeği al.</footer>
 <nav class="mobile-nav" aria-label="Mobil gezinme">
-<a href="#screen-home" data-screen="home"><b>⌂</b>Ana Sayfa</a><a href="#screen-market" data-screen="market"><b>⌁</b>Piyasa</a>
-<a href="#screen-trade" data-screen="trade"><b>＋</b>İşlem</a><a href="#screen-history" data-screen="history"><b>▤</b>Geçmiş</a>
+<a href="#screen-home" data-screen="home"><b>⌂</b>Özet</a><a href="#screen-market" data-screen="market"><b>⌁</b>Piyasa</a>
+<a href="#screen-trade" data-screen="trade"><b>＋</b>İşlem</a><a href="#screen-plan" data-screen="plan"><b>▦</b>Plan</a><a href="#screen-menu" data-screen="menu"><b>☷</b>Menü</a>
 </nav></main>
 <script>
 "use strict";
@@ -310,7 +317,7 @@ for(const [id,v] of Object.entries(START_PRICES))if(!Number.isFinite(Number(data
 data.base=START_AVERAGE;
 function initialOf(id){return Number(data.initialPrices?.[id]??0)}
 function currentOf(id){return initialOf(id)+data.trades.filter(t=>t.sector===id&&Date.parse(t.time)<=Date.now()).reduce((a,t)=>a+t.delta,0)}
-function indexDelta(t){return t.delta/sectorsList().length}
+function indexDelta(t){return t.delta/(Number(t.indexDivisor)||Number(data.legacyIndexDivisor)||sectorsList().length)}
 function sectorsList(){return [...defaultSectors,...data.customSectors]}
 function marketEntity(id){
  if(id==="__hbx")return {id:"__hbx",name:"HBX • Hayat Endeksi",ticker:"HBX",icon:"📈",group:"Genel Endeks"};
@@ -663,7 +670,7 @@ $("marketTradeForm").addEventListener("submit",e=>{
  const allowed=remainingDelta(ratedSector,day,requested);
  if(Math.abs(allowed-requested)>0.000001){alert("Günlük ±10 sınırı aşılıyor. Kullanılabilir puan: "+signed(allowed));return}
  const ratedName=sectorsList().find(s=>s.id===ratedSector)?.name||"Hisse";
- data.trades.push({id:"market_"+Date.now()+"_"+Math.random().toString(36).slice(2),time,sector:ratedSector,description:description||(sign===0?"Değişim yok (0)":"Puan işlemi"),detail:"Piyasadan hızlı puanlama",delta:requested});
+ data.trades.push({id:"market_"+Date.now()+"_"+Math.random().toString(36).slice(2),time,sector:ratedSector,description:description||(sign===0?"Değişim yok (0)":"Puan işlemi"),detail:"Piyasadan hızlı puanlama",delta:requested,indexDivisor:sectorsList().length});
  if(!save())return;
  $("marketDescription").value="";
  showLimit();
@@ -684,7 +691,7 @@ $("prevMonth").onclick=()=>{calendarMonth=new Date(calendarMonth.getFullYear(),c
 $("nextMonth").onclick=()=>{calendarMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth()+1,1);render()};
 $("quickButtons").addEventListener("click",e=>{let b=e.target.closest("[data-quick]");if(!b)return;let t=quickTemplates[Number(b.dataset.quick)];if(!t)return;const allowed=remainingDelta(t.sector,localInputDate().slice(0,10),t.delta);
 if(Math.abs(allowed-t.delta)>0.000001){alert("Günlük ±10 puan limiti nedeniyle bu hızlı işlem eklenemiyor. Kalan: "+signed(allowed));return}
-data.trades.push({id:"quick_"+Date.now()+"_"+Math.random().toString(36).slice(2),time:localInputDate(),sector:t.sector,description:t.label,detail:"Hızlı işlem",delta:t.delta});save();showLimit()});
+data.trades.push({id:"quick_"+Date.now()+"_"+Math.random().toString(36).slice(2),time:localInputDate(),sector:t.sector,description:t.label,detail:"Hızlı işlem",delta:t.delta,indexDivisor:sectorsList().length});save();showLimit()});
 $("peopleDate").value=localInputDate();
 $("peoplePortfolio").addEventListener("click",e=>{const item=e.target.closest("[data-person-sector]");if(item)openPeopleTrade(item.dataset.personSector)});
 $("peopleMovers").addEventListener("click",e=>{const item=e.target.closest("[data-person-sector]");if(item)openPeopleTrade(item.dataset.personSector)});
@@ -737,7 +744,7 @@ $("tradeForm").addEventListener("submit",e=>{e.preventDefault();let a=Number($("
 if(Date.parse(date)>Date.now()+60000){alert("Gelecek tarihe işlem girilemez. Bugünü veya geçmiş bir günü seç.");return;}
 const requested=a*Number($("side").value),available=remainingDelta($("sector").value,date.slice(0,10),requested);
 if(Math.abs(available-requested)>0.000001){alert("Bu hissenin günlük tavan/taban sınırı ±10 puandır. Bu işlem limiti aşar. Kalan uygun miktar: "+signed(available));return}
-data.trades.push({id:((typeof crypto!=="undefined"&&crypto.randomUUID)?crypto.randomUUID():Date.now()+"_"+Math.random()),time:date,sector:$("sector").value,description:desc||"Puan işlemi",detail:$("detail").value.trim(),delta:requested});
+data.trades.push({id:((typeof crypto!=="undefined"&&crypto.randomUUID)?crypto.randomUUID():Date.now()+"_"+Math.random()),time:date,sector:$("sector").value,description:desc||"Puan işlemi",detail:$("detail").value.trim(),delta:requested,indexDivisor:sectorsList().length});
 if(save()){showLimit();$("description").value="";$("detail").value="";$("time").value=localInputDate()}
 });
 $("records").addEventListener("click",e=>{let b=e.target.closest("[data-remove]");if(b&&confirm("Bu işlemi silmek istiyor musun?")){data.trades=data.trades.filter(t=>t.id!==b.dataset.remove);save();showLimit()}});
@@ -776,7 +783,7 @@ function setupScreens(){
  layout.remove();
  const nav=document.querySelector(".mobile-nav");
  function show(name){
-   for(const n of ["home","market","trade","history"]){
+   for(const n of ["home","market","trade","history","plan","menu"]){
      const el=$("screen-"+n);el.hidden=n!==name;
    }
    nav.querySelectorAll("[data-screen]").forEach(a=>{
@@ -789,6 +796,7 @@ function setupScreens(){
  nav.addEventListener("click",e=>{const a=e.target.closest("[data-screen]");if(!a)return;e.preventDefault();show(a.dataset.screen)});
  $("indexSwitchCards").addEventListener("click",e=>{const b=e.target.closest("[data-index-view]");if(!b)return;selectedMarketIndex=b.dataset.indexView;render()});
  document.querySelectorAll("[data-screen-open]").forEach(b=>b.onclick=()=>show(b.dataset.screenOpen));
+ window.proShowScreen=show;
  show("home");
 }
 function daySectorSum(sector,date){
@@ -956,6 +964,7 @@ setupScreens();
 showLimit();
 
 </script>
+<script defer src="./terminal.js"></script>
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
 import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged,setPersistence,browserLocalPersistence} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
