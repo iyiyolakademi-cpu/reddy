@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Hayat Borsam">
+<rect width="512" height="512" rx="104" fill="#102341"/>
+<path d="M75 338L168 277L236 306L326 180L437 210" fill="none" stroke="#3ad7aa" stroke-width="28" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M76 393H435" stroke="#617b9d" stroke-width="14" stroke-linecap="round"/>
+<circle cx="326" cy="180" r="21" fill="#fff"/>
+</svg>
