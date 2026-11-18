@@ -15,6 +15,7 @@ function ensureData(){
  if(!Array.isArray(data.goalsV2))data.goalsV2=[];
  if(!Array.isArray(data.watchlistV2))data.watchlistV2=[];
  if(!data.stockNotesV2||typeof data.stockNotesV2!=="object")data.stockNotesV2={};
+ if(!Number.isFinite(data.legacyIndexDivisor)||data.legacyIndexDivisor<=0)data.legacyIndexDivisor=sectorsList().length;
 }
 function timelineRows(){return timeline().filter(x=>Date.parse(x.time)<=Date.now());}
 function stocks(){return sectorsList();}
@@ -27,7 +28,8 @@ function signs(v){return v>0?"up":v<0?"down":"neutral-delta";}
 function pill(v){return '<span class="terminal-chip '+(v<0?"negative":v===0?"neutral":"")+'">'+(v>0?"▲ ":v<0?"▼ ":"＝ ")+safe(money(Math.abs(v)))+'</span>';}
 function sectOptions(selected){return stocks().map(s=>'<option value="'+safe(s.id)+'"'+(selected===s.id?" selected":"")+'>'+safe(s.icon)+" "+safe(s.name)+'</option>').join("");}
 function currentIndex(){const rows=timelineRows();return rows.length?rows[rows.length-1].level:data.base;}
-function prevIndex(n){return currentIndex()-allRangeChange(n)/Math.max(1,stocks().length);}
+function rangeIndexChange(n){const cutoff=Date.now()-n*86400000;return data.trades.filter(t=>Date.parse(t.time)>=cutoff&&Date.parse(t.time)<=Date.now()).reduce((sum,t)=>sum+indexDelta(t),0);}
+function prevIndex(n){return currentIndex()-rangeIndexChange(n);}
 function streak(){const active=new Set(data.trades.map(t=>t.time.slice(0,10)));let d=new Date();if(!active.has(keyDay(d)))d.setDate(d.getDate()-1);let n=0;while(active.has(keyDay(d))&&n<1000){n++;d.setDate(d.getDate()-1);}return n;}
 function periodKey(period,d=new Date()){if(period==="monthly")return keyDay(d).slice(0,7);if(period==="weekly"){const c=new Date(d);c.setHours(12,0,0,0);c.setDate(c.getDate()+4-(c.getDay()||7));const y=c.getFullYear(),first=new Date(y,0,1),w=Math.ceil((((c-first)/86400000)+1)/7);return y+"-W"+String(w).padStart(2,"0");}return keyDay(d);}
 function isTaskDone(t){const k=periodKey(t.period);return Array.isArray(t.logs)&&t.logs.some(l=>l.key===k);}
@@ -96,10 +98,11 @@ function actions(e){
 }
 function renderTerminal(){
  ensureData();if(!q("terminal-market-prelude"))return;
- const total=currentIndex(),today=data.trades.filter(t=>t.time.slice(0,10)===keyDay()).length,dc=allRangeChange(1)/Math.max(1,stocks().length);
+ const total=currentIndex(),today=data.trades.filter(t=>t.time.slice(0,10)===keyDay()).length,dc=rangeIndexChange(1);
  q("terminal-main-index").textContent=money(total);
  q("terminal-main-delta").textContent=(dc>=0?"+":"")+money(dc)+" bugün";
  q("terminal-hero-note").textContent=stocks().length+" hisse • "+today+" günlük işlem • Gerçek para işlemi değildir";
+ for(const id of ["terminal-task-sector","terminal-goal-sector"]){const el=q(id),old=el.value;el.innerHTML=sectOptions(old);if(sector(old))el.value=old;}
  renderTicker();renderHome();renderMarket();renderTasks();renderGoals();renderReport();renderAwards();
  if(openedStock)showStock(openedStock);
 }
@@ -179,7 +182,7 @@ function toggleTask(id){
  }
  if(!sector(t.sector))return alert("Görevin bağlı olduğu hisse artık bulunmuyor.");
  const possible=Math.max(0,10-daySectorSum(t.sector,keyDay())),awarded=Math.min(t.points,possible),tradeId=awarded>0?uuid():null;
- if(awarded>0)data.trades.push({id:tradeId,time:localInputDate(),sector:t.sector,description:"Görev: "+t.title,detail:"Planlayıcıdan otomatik oluşturuldu.",delta:awarded,autoTaskId:t.id});
+ if(awarded>0)data.trades.push({id:tradeId,time:localInputDate(),sector:t.sector,description:"Görev: "+t.title,detail:"Planlayıcıdan otomatik oluşturuldu.",delta:awarded,autoTaskId:t.id,indexDivisor:stocks().length});
  t.logs.push({key:k,at:new Date().toISOString(),tradeId,awarded});
  save();if(t.points>awarded)alert("Görev tamamlandı. Hisse günlük +10 tavanına yaklaştığı için "+money(awarded)+" puan işlendi.");
 }
