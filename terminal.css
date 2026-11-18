@@ -175,3 +175,18 @@ body.mover-modal-open .terminal-modal-cover{display:none}
  .terminal-report{padding:0}
  .terminal-report .summary{grid-template-columns:repeat(3,1fr)}
 }
+
+/* Consistent light-mode order ticket */
+#marketTrade.mover-modal{background:#fff;color:#172238;border:1px solid #dfe6ef;box-shadow:0 25px 85px #0a203d4d}
+#marketTrade.mover-modal #marketTradeTitle{color:#172238!important}
+#marketTrade.mover-modal label{color:#50627b}
+#marketTrade.mover-modal .chart-note,#marketTrade.mover-modal .hint{color:#667790}
+#marketTrade.mover-modal .stock-extra-line{color:#34455f;background:#f5f8fd;border-color:#e1e8f2}
+#marketTrade.mover-modal .stock-extra-line .hint{color:#667790}
+#marketTrade.mover-modal #closeMarketTrade{background:#edf2f8;color:#213a63}
+#marketTrade.mover-modal #marketTradeNextHint{color:#078a66}
+@media print{
+ #screen-menu > :not(#terminal-report-card){display:none!important}
+ #terminal-report-card .terminal-heading .actions{display:none!important}
+ #terminal-report-card{margin:0!important}
+}
