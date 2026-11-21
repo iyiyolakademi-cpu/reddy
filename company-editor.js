@@ -47,16 +47,23 @@ function render(){
 function mount(){
  const menu=$("screen-menu");
  const anchor=menu?.querySelector(".terminal-menu-grid");
- if(!menu||!anchor||$("company-name-editor"))return;
+ if(!menu||!anchor)return false;
+ if($("company-name-editor"))return true;
  const section=document.createElement("section");
  section.id="company-name-editor";
  section.className="company-editor";
  section.innerHTML='<div class="company-editor-head"><b>Hisse ve Şirket İsimleri</b></div>';
  anchor.insertAdjacentElement("afterend",section);
  render();
+ return true;
 }
 const style=document.createElement("style");
 style.textContent='.company-editor{margin-top:14px;padding:16px;border:1px solid #e2e9f4;border-radius:14px;background:#fff}.company-editor-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px}.company-editor-head p,.company-editor-foot{margin:5px 0 0;color:#738198;font-size:12px;line-height:1.5}.company-editor-count{font-size:11px;color:#63718b;background:#f1f4fa;border-radius:20px;padding:6px 9px}.company-editor-list{display:grid;gap:9px;margin-top:12px}.company-editor-row{display:grid;grid-template-columns:minmax(150px,1fr) minmax(150px,1.2fr) minmax(90px,.65fr) auto;gap:9px;align-items:end;padding:11px;border:1px solid #e8edf5;border-radius:11px}.company-editor-id{min-width:0;align-self:center}.company-editor-id b,.company-editor-id small{display:block;overflow-wrap:anywhere}.company-editor-id small{color:#77859b;font-size:11px;margin-top:4px}.company-editor-row label{margin:0}.company-editor-row input{margin-top:5px}.company-editor-row button{min-height:42px;white-space:nowrap}.company-editor-warning,.company-editor-ok{margin-top:10px;padding:10px 12px;border-radius:10px;font-size:12px;line-height:1.5}.company-editor-warning{background:#fff5e8;color:#87551b}.company-editor-warning ul{margin:5px 0 0;padding-left:18px}.company-editor-ok{background:#edf9f3;color:#08764f}.company-editor-foot{margin-top:12px}@media(max-width:680px){.company-editor-row{grid-template-columns:1fr 1fr}.company-editor-id{grid-column:1/-1}.company-editor-row button{grid-column:1/-1;width:100%}}';
 document.head.appendChild(style);
-if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mount,{once:true});else mount();
+// terminal.js runs init() immediately before this file is loaded. Mount now;
+ // if the menu is not ready for any reason, observe it until it appears.
+if(!mount()){
+ const observer=new MutationObserver(()=>{if(mount())observer.disconnect();});
+ observer.observe(document.documentElement,{childList:true,subtree:true});
+}
 })();
