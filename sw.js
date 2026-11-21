@@ -1,5 +1,5 @@
-const CACHE="hayat-borsam-terminal-pro-v4-2026-11-22";
-const STATIC=["./","./index.html","./terminal.css","./terminal.js","./terminal-pro.css","./terminal-pro.js","./icon.svg","./apple-touch-icon.png","./manifest.webmanifest"];
+const CACHE="hayat-borsam-terminal-pro-v5-2026-11-22";
+const STATIC=["./","./index.html","./terminal.css","./terminal.js","./terminal-pro.css","./terminal-pro.js","./company-editor.js","./icon.svg","./apple-touch-icon.png","./manifest.webmanifest"];
 self.addEventListener("install",event=>{
  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(STATIC)).then(()=>self.skipWaiting()));
 });
