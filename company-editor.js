@@ -45,13 +45,14 @@ function render(){
  }));
 }
 function mount(){
- const host=$("terminal-tools-body");
- if(!host||$("company-name-editor"))return;
+ const menu=$("screen-menu");
+ const anchor=menu?.querySelector(".terminal-menu-grid");
+ if(!menu||!anchor||$("company-name-editor"))return;
  const section=document.createElement("section");
  section.id="company-name-editor";
  section.className="company-editor";
  section.innerHTML='<div class="company-editor-head"><b>Hisse ve Şirket İsimleri</b></div>';
- host.appendChild(section);
+ anchor.insertAdjacentElement("afterend",section);
  render();
 }
 const style=document.createElement("style");
