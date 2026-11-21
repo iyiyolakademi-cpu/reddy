@@ -325,7 +325,7 @@ data.base=START_AVERAGE;
 function initialOf(id){return Number(data.initialPrices?.[id]??0)}
 function currentOf(id){return initialOf(id)+data.trades.filter(t=>t.sector===id&&Date.parse(t.time)<=Date.now()).reduce((a,t)=>a+t.delta,0)}
 function indexDelta(t){return t.delta/(Number(t.indexDivisor)||Number(data.legacyIndexDivisor)||sectorsList().length)}
-function sectorsList(){return [...defaultSectors,...data.customSectors]}
+function sectorsList(){return [...defaultSectors,...data.customSectors].map(s=>({...s,...(data.companyNameOverrides?.[s.id]||{})}))}
 function marketEntity(id){
  if(id==="__hbx")return {id:"__hbx",name:"HBX • Hayat Endeksi",ticker:"HBX",icon:"📈",group:"Genel Endeks"};
  return sectorsList().find(s=>s.id===id)||{id,name:"Hisse",ticker:"DGR",icon:"📌",group:"Özel"};
@@ -973,6 +973,7 @@ showLimit();
 </script>
 <script src="./terminal.js"></script>
 <script src="./terminal-pro.js"></script>
+<script src="./company-editor.js"></script>
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
 import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged,setPersistence,browserLocalPersistence} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
